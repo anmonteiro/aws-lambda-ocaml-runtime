@@ -32,7 +32,7 @@ CLI](https://aws.amazon.com/cli/) to create a new Lambda function. Make sure to
 replace the execution role with an existing role in your account!
 
 ```bash
-$ aws lambda create-function --function-name rustTest \
+$ aws lambda create-function --function-name OCamlTest \
   --handler doesnt.matter \
   --zip-file file://./ocaml.zip \
   --runtime provided \
@@ -43,7 +43,7 @@ $ aws lambda create-function --function-name rustTest \
 You can now test the function using the AWS CLI or the AWS Lambda console
 
 ```bash
-$ aws lambda invoke --function-name rustTest \
+$ aws lambda invoke --function-name OCamlTest \
   --payload '{"firstName": "world"}' \
   output.json
 $ cat output.json  # Prints: {"message":"Hello, world!"}
