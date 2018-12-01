@@ -1,0 +1,7 @@
+(executable
+  (name basic)
+  (libraries lambda_runtime))
+
+(env
+  (static
+    (flags (:standard -ccopt -static))))

@@ -1,0 +1,5 @@
+(library
+  (public_name lambda_runtime)
+  (preprocess (pps ppx_deriving_yojson))
+  (libraries yojson ppx_deriving_yojson.runtime cohttp-lwt-unix logs logs.fmt fmt.tty)
+  (flags (:standard -w -9-39)))

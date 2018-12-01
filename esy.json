@@ -1,0 +1,21 @@
+{
+  "name": "ocaml-aws-lambda-runtime",
+  "version": "0.1.0",
+  "description": "An OCaml custom runtime for AWS Lambda",
+  "author": "António N. Monteiro <anmonteiro@gmail.com>",
+  "license": "MIT",
+  "repository": "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime",
+  "dependencies": {
+    "ocaml": " >= 4.4.0",
+    "@opam/dune": "*",
+    "@opam/yojson": "*",
+    "@opam/ppx_deriving_yojson": "*",
+    "@opam/cohttp-lwt-unix": "*",
+    "@opam/logs": "*",
+    "@opam/fmt": "*",
+    "@opam/result": "*"
+  },
+  "resolutions": {
+    "@opam/ppx_deriving_yojson": "ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#master"
+  }
+}
