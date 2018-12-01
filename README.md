@@ -23,7 +23,7 @@ The Dockerfile (in conjunction with the [`build.sh`](./build.sh) script) in this
 repo does just that. It builds a static binary called `bootstrap` and drops it
 in the target directory.
 
-```bash
+```shell
 $ ./build.sh && zip -j ocaml.zip bootstrap
 ```
 
@@ -31,7 +31,7 @@ Now that we have a deployment package (`ocaml.zip`), we can use the [AWS
 CLI](https://aws.amazon.com/cli/) to create a new Lambda function. Make sure to
 replace the execution role with an existing role in your account!
 
-```bash
+```shell
 $ aws lambda create-function --function-name OCamlTest \
   --handler doesnt.matter \
   --zip-file file://./ocaml.zip \
@@ -42,7 +42,7 @@ $ aws lambda create-function --function-name OCamlTest \
 
 You can now test the function using the AWS CLI or the AWS Lambda console
 
-```bash
+```shell
 $ aws lambda invoke --function-name OCamlTest \
   --payload '{"firstName": "world"}' \
   output.json

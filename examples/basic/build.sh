@@ -4,11 +4,11 @@ set -eo pipefail
 
 root_path=$PWD
 
-# Start in examples/rust/ even if run from root directory
+# Start in examples/basic/ even if run from root directory
 cd "$(dirname "$0")"
 
 rm -rf bootstrap
-docker build . --tag lambda
+docker build ../.. --tag lambda -f ./Dockerfile
 docker rm example || true
 docker create --name example lambda
 docker cp example:/app/bootstrap bootstrap
