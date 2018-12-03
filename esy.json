@@ -12,8 +12,10 @@
     "@opam/ppx_deriving_yojson": "*",
     "@opam/cohttp-lwt-unix": "*",
     "@opam/logs": "*",
-    "@opam/fmt": "*",
     "@opam/result": "*"
+  },
+  "devDependencies": {
+    "@opam/alcotest": "*"
   },
   "resolutions": {
     "@opam/ppx_deriving_yojson": "ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#master"

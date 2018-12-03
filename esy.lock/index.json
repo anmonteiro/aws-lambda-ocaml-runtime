@@ -1,5 +1,5 @@
 {
-  "checksum": "0abf44d61a91afabcfc6da03d4700b5a",
+  "checksum": "a2f0ec908bed3b2992d82cddcb27b304",
   "root": "ocaml-aws-lambda-runtime@link:./esy.json",
   "node": {
     "ocaml-aws-lambda-runtime@link:./esy.json": {
@@ -12,11 +12,10 @@
         "ocaml@4.7.1003", "@opam/yojson@opam:1.4.1@008b9b27",
         "@opam/result@opam:1.3@7af06772",
         "@opam/ppx_deriving_yojson@github:ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#master",
-        "@opam/logs@opam:0.6.2@2c895da3", "@opam/fmt@opam:0.8.5@393be6a6",
-        "@opam/dune@opam:1.5.1@e03be456",
+        "@opam/logs@opam:0.6.2@2c895da3", "@opam/dune@opam:1.5.1@e03be456",
         "@opam/cohttp-lwt-unix@opam:1.2.0@1bcdf5ad"
       ],
-      "devDependencies": []
+      "devDependencies": [ "@opam/alcotest@opam:0.8.4@5d18acce" ]
     },
     "ocaml@4.7.1003": {
       "id": "ocaml@4.7.1003",
@@ -80,6 +79,32 @@
         "@opam/ocamlfind@opam:1.8.0@6fa9aaf5",
         "@opam/ocamlbuild@opam:0.12.0@bbe76db8",
         "@opam/cmdliner@opam:1.0.3@76a49c3c", "@esy-ocaml/substs@0.0.1"
+      ],
+      "devDependencies": []
+    },
+    "@opam/uuidm@opam:0.9.6@77a67e08": {
+      "id": "@opam/uuidm@opam:0.9.6@77a67e08",
+      "name": "@opam/uuidm",
+      "version": "opam:0.9.6",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/98/98ef30cd99ad4e4f7b4c33affa19465b#md5:98ef30cd99ad4e4f7b4c33affa19465b",
+          "archive:http://erratique.ch/software/uuidm/releases/uuidm-0.9.6.tbz#md5:98ef30cd99ad4e4f7b4c33affa19465b"
+        ],
+        "opam": {
+          "name": "uuidm",
+          "version": "0.9.6",
+          "path": "esy.lock/opam/uuidm.0.9.6"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1003", "@opam/topkg@opam:1.0.0@e7eb4139",
+        "@opam/ocamlfind@opam:1.8.0@6fa9aaf5",
+        "@opam/ocamlbuild@opam:0.12.0@bbe76db8",
+        "@opam/cmdliner@opam:1.0.3@76a49c3c",
+        "@opam/base-bytes@opam:base@75bd4047", "@esy-ocaml/substs@0.0.1"
       ],
       "devDependencies": []
     },
@@ -1294,6 +1319,33 @@
         "@opam/ocamlfind@opam:1.8.0@6fa9aaf5",
         "@opam/ocamlbuild@opam:0.12.0@bbe76db8",
         "@opam/base-bytes@opam:base@75bd4047", "@esy-ocaml/substs@0.0.1"
+      ],
+      "devDependencies": []
+    },
+    "@opam/alcotest@opam:0.8.4@5d18acce": {
+      "id": "@opam/alcotest@opam:0.8.4@5d18acce",
+      "name": "@opam/alcotest",
+      "version": "opam:0.8.4",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/c9/c940f89a2bb2e23d3f1422ce61d1396b#md5:c940f89a2bb2e23d3f1422ce61d1396b",
+          "archive:https://github.com/mirage/alcotest/releases/download/0.8.4/alcotest-0.8.4.tbz#md5:c940f89a2bb2e23d3f1422ce61d1396b"
+        ],
+        "opam": {
+          "name": "alcotest",
+          "version": "0.8.4",
+          "path": "esy.lock/opam/alcotest.0.8.4"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1003", "@opam/uuidm@opam:0.9.6@77a67e08",
+        "@opam/result@opam:1.3@7af06772",
+        "@opam/jbuilder@opam:transition@8c8ec590",
+        "@opam/fmt@opam:0.8.5@393be6a6",
+        "@opam/cmdliner@opam:1.0.3@76a49c3c",
+        "@opam/astring@opam:0.8.3@921ee5d1", "@esy-ocaml/substs@0.0.1"
       ],
       "devDependencies": []
     },

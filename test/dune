@@ -1,0 +1,8 @@
+(executable
+  (name test)
+  (libraries alcotest lambda-runtime.private))
+
+(alias
+  (name runtest)
+  (deps (:test_exe test.exe))
+  (action (run %{test_exe})))

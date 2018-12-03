@@ -1,0 +1,22 @@
+opam-version: "2.0"
+maintainer: "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
+authors: [ "Antonio Nuno Monteiro <anmonteiro@gmail.com>" ]
+license: "MIT"
+homepage: "https://github.com/anmonteiro/aws-lambda-ocaml-runtime"
+bug-reports: "https://github.com/anmonteiro/aws-lambda-ocaml-runtime/issues"
+dev-repo: "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime.git"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "4.04"}
+  "dune" {build}
+  "result"
+  "yojson"
+  "ppx_deriving_yojson"
+  "cohttp-lwt-unix"
+  "logs"
+  "alcotest" {with-test}
+]
+synopsis:
+  "An OCaml custom runtime for AWS Lambda"
