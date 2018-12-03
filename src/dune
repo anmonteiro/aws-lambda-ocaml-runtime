@@ -1,5 +1,13 @@
 (library
-  (public_name lambda_runtime)
+  (name lambda_runtime)
+  (public_name lambda-runtime)
+  (modules lambda_runtime)
+  (libraries lambda-runtime.private))
+
+(library
+  (name lambda_runtime_private)
+  (public_name lambda-runtime.private)
   (preprocess (pps ppx_deriving_yojson))
-  (libraries yojson ppx_deriving_yojson.runtime cohttp-lwt-unix logs logs.fmt fmt.tty)
+  (modules client config context errors monads runtime util lambda_runtime_private)
+  (libraries yojson ppx_deriving_yojson.runtime cohttp-lwt-unix logs)
   (flags (:standard -w -9-39)))

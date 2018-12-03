@@ -1,6 +1,6 @@
 (executable
   (name basic)
-  (libraries lambda_runtime))
+  (libraries lambda-runtime logs.fmt fmt.tty))
 
 (env
   (static

@@ -33,7 +33,7 @@ WORKDIR /app
 
 COPY esy.json esy.json
 COPY esy.lock esy.lock
-RUN esy solve
+
 RUN esy fetch
 RUN esy build-package @esy-ocaml/substs
 RUN esy build-package @opam/base-unix
@@ -74,7 +74,6 @@ RUN esy build-package @opam/num
 RUN esy build-package @opam/parsexp
 RUN esy build-package @opam/sexplib
 RUN esy build-package @opam/ipaddr
-RUN esy build-package @opam/fmt
 RUN esy build-package @opam/logs
 RUN esy build-package @opam/conduit
 RUN esy build-package @opam/conduit-lwt
@@ -92,6 +91,6 @@ RUN esy build-package @opam/yojson
 RUN esy build-package @opam/ppx_deriving_yojson
 COPY . .
 
-RUN esy b dune build @all --profile=static
+RUN esy b dune build examples/basic/basic.exe --profile=static
 
 RUN mv $(esy bash -c 'echo $cur__target_dir/default/examples/basic/basic.exe') bootstrap
