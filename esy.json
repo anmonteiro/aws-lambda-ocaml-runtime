@@ -10,14 +10,17 @@
     "@opam/dune": "*",
     "@opam/yojson": "*",
     "@opam/ppx_deriving_yojson": "*",
-    "@opam/cohttp-lwt-unix": "*",
     "@opam/logs": "*",
-    "@opam/result": "*"
+    "@opam/result": "*",
+    "@opam/httpaf-lwt": "*",
+    "@opam/uri": "*"
   },
   "devDependencies": {
     "@opam/alcotest": "*"
   },
   "resolutions": {
-    "@opam/ppx_deriving_yojson": "ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#master"
+    "@opam/ppx_deriving_yojson": "ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#master",
+    "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#master",
+    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#master"
   }
 }
