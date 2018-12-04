@@ -177,7 +177,7 @@ let event_response client request_id output =
     Error err
 
 let make_runtime_error_request uri error =
-  let body = Errors.to_json error |> Yojson.Safe.to_string in
+  let body = Errors.to_lambda_error error |> Yojson.Safe.to_string in
   send_request
     ~meth:`POST
     ~additional_headers:[
@@ -311,7 +311,7 @@ let next_event client =
       match get_event_context headers with
       | Error x as err ->
         Logs.err (fun m ->
-          m "Failed to get event context: %s\n" (x |> Errors.to_json |> Yojson.Safe.to_string));
+          m "Failed to get event context: %s\n" (Errors.message x));
         err
       | Ok ctx ->
         let body_str = Lwt_main.run (read_response body) in

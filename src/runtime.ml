@@ -1,9 +1,7 @@
-open Errors
-
 type 'a runtime = {
   client: Client.t;
   settings: Config.function_settings;
-  handler: Yojson.Safe.json -> Context.t -> (Yojson.Safe.json, Errors.t) result;
+  handler: Yojson.Safe.json -> Context.t -> (Yojson.Safe.json, string) result;
   max_retries: int
 }
 
@@ -13,8 +11,7 @@ let make ~handler ~max_retries ~settings client =
 let rec get_next_event ?error runtime retries =
   match error with
   | Some err when retries > runtime.max_retries ->
-      let RuntimeError { request_id } | ApiError { request_id } = err in
-      begin match request_id with
+      begin match Errors.request_id err with
       | Some req_id ->
         Client.event_error runtime.client req_id err |> ignore
       | None ->
@@ -67,8 +64,9 @@ let start runtime =
           failwith "Could not send error response"
         end;
       end
-    | Error e ->
-      begin match Client.event_error runtime.client request_id e with
+    | Error msg ->
+      let handler_error = Errors.make_handler_error msg in
+      begin match Client.event_error runtime.client request_id handler_error with
       | Ok _ -> ()
       | Error e ->
         if not (Errors.is_recoverable e) then begin
