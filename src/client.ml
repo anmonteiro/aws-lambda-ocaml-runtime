@@ -4,7 +4,7 @@ module Constants = struct
   let api_error_content_type = "application/vnd.aws.lambda.error+json"
   let runtime_error_header = "Lambda-Runtime-Function-Error-Type"
 
-  module Headers = struct
+  module RequestHeaders = struct
     let request_id = "Lambda-Runtime-Aws-Request-Id"
     let function_arn = "Lambda-Runtime-Invoked-Function-Arn"
     let trace_id = "Lambda-Runtime-Trace-Id"
@@ -71,20 +71,87 @@ type t = string
 let make endpoint =
   endpoint
 
+let send_request ?(meth=`GET) ?(additional_headers=[]) ?body uri =
+  let open Lwt.Infix in
+  let open Httpaf in
+  let open Httpaf_lwt in
+  let response_handler notify_response_received response response_body =
+    Lwt.wakeup_later notify_response_received (Ok (response, response_body))
+  in
+  let error_handler notify_response_received error =
+    Lwt.wakeup_later notify_response_received (Error error)
+  in
+  let host = Uri.host_with_default uri in
+  let port = match Uri.port uri with
+  | None -> "80"
+  | Some p -> string_of_int p
+  in
+  Lwt_unix.getaddrinfo host port [Unix.(AI_FAMILY PF_INET)]
+    >>= fun addresses ->
+    let socket = Lwt_unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
+    Lwt_unix.connect socket (List.hd addresses).Unix.ai_addr
+    >>= fun () ->
+
+    let content_length = match body with
+    | None -> "0"
+    | Some body -> string_of_int (String.length body)
+    in
+    let request_headers = Request.create
+      meth
+      (Uri.path_and_query uri)
+      ~headers:(Headers.of_list ([
+        "Host", host;
+        "Content-Length", content_length;
+      ] @ additional_headers))
+    in
+
+    let response_received, notify_response_received = Lwt.wait () in
+    let response_handler = response_handler notify_response_received in
+    let error_handler = error_handler notify_response_received in
+
+    let request_body =
+      Client.request
+        socket
+        request_headers
+        ~error_handler
+        ~response_handler
+    in
+    begin match body with
+    | Some body -> Body.write_string request_body body
+    | None -> ()
+    end;
+    Body.close_writer request_body;
+    response_received
+
+let read_response response_body =
+  let buf = Buffer.create 1024 in
+  let body_read, notify_body_read = Lwt.wait () in
+  let rec read_fn () =
+    Httpaf.Body.schedule_read
+      response_body
+      ~on_eof:(fun () -> Lwt.wakeup_later notify_body_read (Buffer.contents buf))
+      ~on_read:(fun response_fragment ~off ~len ->
+        let response_fragment_bytes = Bytes.create len in
+        Lwt_bytes.blit_to_bytes
+          response_fragment off
+          response_fragment_bytes 0
+          len;
+        Buffer.add_bytes buf response_fragment_bytes;
+        read_fn ())
+  in
+  read_fn ();
+  body_read
+
 let make_runtime_post_request uri output =
-  let open Cohttp in
-  let open Cohttp_lwt in
-  let open Cohttp_lwt_unix in
   let body = Yojson.Safe.to_string output in
-  Client.call
-    ~headers:(Header.init_with "content-type" Constants.api_content_type)
-    ~body:(Body.of_string body)
-    `POST
+  send_request
+    ~meth:`POST
+    ~additional_headers:["Content-Type", Constants.api_content_type]
+    ~body
     uri
 
 let event_response client request_id output =
-  let open Cohttp in
-  let open Cohttp_lwt_unix in
+  let open Httpaf in
   let uri = Uri.of_string
     (Printf.sprintf
       "http://%s/%s/runtime/invocation/%s/response"
@@ -92,15 +159,17 @@ let event_response client request_id output =
   in
   let req = make_runtime_post_request uri output
   in
-  try
-    let { Response.status }, _ = Lwt_main.run req in
-    let code = Code.code_of_status status in
-    if not (Code.is_success code) then
-      Error (Errors.make_api_error ~recoverable:false (Printf.sprintf "Error %d while sending response" code))
+  match Lwt_main.run req with
+  | Ok ({ Response.status }, _) ->
+    if not (Status.is_successful status) then
+      let error = Errors.make_api_error
+        ~recoverable:false
+        (Printf.sprintf "Error %d while sending response" (Status.to_code status))
+      in
+      Error error
     else
       Ok ()
-  with
-  | _ ->
+  | Error _ ->
     let err = Errors.make_api_error
       ~recoverable:false
       (Printf.sprintf "Error when calling runtime API for request %s" request_id)
@@ -108,36 +177,35 @@ let event_response client request_id output =
     Error err
 
 let make_runtime_error_request uri error =
-  let open Cohttp in
-  let open Cohttp_lwt in
-  let open Cohttp_lwt_unix in
   let body = Errors.to_json error |> Yojson.Safe.to_string in
-  Client.call
-    ~headers:(Header.of_list
-              ["content-type", Constants.api_error_content_type;
-               Constants.runtime_error_header, "RuntimeError"])
-    ~body:(Body.of_string body)
-    `POST
+  send_request
+    ~meth:`POST
+    ~additional_headers:[
+      "Content-Type", Constants.api_error_content_type;
+      Constants.runtime_error_header, "RuntimeError"
+    ]
+    ~body
     uri
 
 let event_error client request_id err =
-  let open Cohttp in
-  let open Cohttp_lwt_unix in
+  let open Httpaf in
   let uri = Uri.of_string
     (Printf.sprintf
       "http://%s/%s/runtime/invocation/%s/error"
       client Constants.runtime_api_version request_id)
   in
   let req = make_runtime_error_request uri err in
-  try
-    let { Response.status }, _ = Lwt_main.run req in
-    let code = Code.code_of_status status in
-    if not (Code.is_success code) then
-      Error (Errors.make_api_error ~recoverable:true (Printf.sprintf "Error %d while sending response" code))
+  match Lwt_main.run req with
+  | Ok ({ Response.status }, _) ->
+    if not (Status.is_successful status) then
+      let error = Errors.make_api_error
+        ~recoverable:true
+        (Printf.sprintf "Error %d while sending response" (Status.to_code status))
+      in
+      Error error
     else
       Ok ()
-  with
-  | _ ->
+  | Error _ ->
     let err = Errors.make_api_error
       ~recoverable:true
       (Printf.sprintf "Error when calling runtime API for request %s" request_id)
@@ -157,6 +225,7 @@ let fail_init client err =
   | _ -> failwith "Error while sending init failed message"
 
 let get_event_context headers =
+  let open Httpaf in
   let report_error header =
     let err = Errors.make_api_error
       ~recoverable:true
@@ -164,22 +233,21 @@ let get_event_context headers =
     in
     Error err
   in
-  let open Cohttp in
   let open Constants in
-  match Header.get headers Headers.request_id with
-  | None -> report_error Headers.request_id
+  match Headers.get headers RequestHeaders.request_id with
+  | None -> report_error RequestHeaders.request_id
   | Some aws_request_id ->
-    begin match Header.get headers Headers.function_arn with
-    | None -> report_error Headers.function_arn
+    begin match Headers.get headers RequestHeaders.function_arn with
+    | None -> report_error RequestHeaders.function_arn
     | Some invoked_function_arn ->
-      begin match Header.get headers Headers.trace_id with
-      | None -> report_error Headers.trace_id
+      begin match Headers.get headers RequestHeaders.trace_id with
+      | None -> report_error RequestHeaders.trace_id
       | Some xray_trace_id ->
-        begin match Header.get headers Headers.deadline with
-        | None -> report_error Headers.deadline
+        begin match Headers.get headers RequestHeaders.deadline with
+        | None -> report_error RequestHeaders.deadline
         | Some deadline_str ->
           let deadline = Int64.of_string deadline_str in
-          let client_context = match Header.get headers Headers.client_context with
+          let client_context = match Headers.get headers RequestHeaders.client_context with
           | None -> None
           | Some ctx_json_str ->
             let ctx_json = Yojson.Safe.from_string ctx_json_str in
@@ -188,7 +256,7 @@ let get_event_context headers =
             | Ok client_ctx -> Some client_ctx
             end
           in
-          let identity = match Header.get headers Headers.cognito_identity with
+          let identity = match Headers.get headers RequestHeaders.cognito_identity with
           | None -> None
           | Some cognito_json_str ->
             let cognito_json = Yojson.Safe.from_string cognito_json_str in
@@ -211,20 +279,19 @@ let get_event_context headers =
     end
 
 let next_event client =
-  let open Cohttp in
-  let open Cohttp_lwt_unix in
+  let open Httpaf in
   let uri = Uri.of_string
     (Printf.sprintf "http://%s/%s/runtime/invocation/next" client Constants.runtime_api_version)
   in
   Printf.printf "Polling for next event. Uri: %s\n" (Uri.to_string uri);
-  try
-    (*
-     * Blocking for now. Lambdas can't process two events at the same time
-     * anyway.
-     *)
-    let { Response.status; headers }, body = Lwt_main.run (Client.get uri) in
-    let code = Code.code_of_status status in
-    if Code.is_client_error code then begin
+  (*
+   * Blocking for now. Lambdas can't process two events at the same time
+   * anyway.
+   *)
+  match Lwt_main.run (send_request uri) with
+  | Ok ({ Response.status; headers }, body) ->
+    let code = Status.to_code status in
+    if Status.is_client_error status then begin
       Logs.err (fun m ->
         m "Runtime API returned client error when polling for new events %d\n" code);
       let err = Errors.make_api_error
@@ -232,7 +299,7 @@ let next_event client =
         (Printf.sprintf "Error %d when polling for events" code)
       in
       Error err
-    end else if Code.is_server_error code then begin
+    end else if Status.is_server_error status then begin
       Logs.err (fun m ->
         m "Runtime API returned server error when polling for new events %d\n" code);
       let err = Errors.make_api_error
@@ -247,11 +314,10 @@ let next_event client =
           m "Failed to get event context: %s\n" (x |> Errors.to_json |> Yojson.Safe.to_string));
         err
       | Ok ctx ->
-        let body_str = Lwt_main.run (Cohttp_lwt.Body.to_string body) in
+        let body_str = Lwt_main.run (read_response body) in
         Ok (body_str, ctx)
       end
-  with
-  | _ ->
+  | Error _ ->
     let err = Errors.make_api_error
       ~recoverable:false
       "Server error when polling for new events"

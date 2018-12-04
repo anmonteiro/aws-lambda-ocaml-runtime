@@ -9,5 +9,5 @@
   (public_name lambda-runtime.private)
   (preprocess (pps ppx_deriving_yojson))
   (modules client config context errors monads runtime util lambda_runtime_private)
-  (libraries yojson ppx_deriving_yojson.runtime cohttp-lwt-unix logs)
+  (libraries yojson ppx_deriving_yojson.runtime httpaf-lwt uri logs)
   (flags (:standard -w -9-39)))
