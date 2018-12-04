@@ -54,7 +54,7 @@ type event_context = {
   aws_request_id: string;
   (* The X-Ray trace ID for the current invocation. *)
   xray_trace_id: string;
-  (* The execution deadline for the current invocation in nanoseconds. *)
+  (* The execution deadline for the current invocation in milliseconds. *)
   deadline: int64;
   (* The client context object sent by the AWS mobile SDK. This field is
   empty unless the function is invoked using an AWS mobile SDK. *)

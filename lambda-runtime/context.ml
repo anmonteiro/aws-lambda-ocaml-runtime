@@ -47,7 +47,7 @@ type t = {
   identity service. *)
   identity: Client.cognito_identity option;
 
-  (* the deadline for the current handler execution in nanoseconds based
+  (* the deadline for the current handler execution in milliseconds based
      on a unix `monotonic` clock. *)
   deadline: int64;
 }
