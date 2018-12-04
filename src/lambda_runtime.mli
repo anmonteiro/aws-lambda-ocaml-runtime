@@ -2,10 +2,6 @@ module Client : sig
   include module type of Lambda_runtime_private.Client
 end
 
-module Errors : sig
-  include module type of Lambda_runtime_private.Errors
-end
-
 module Context : sig
   type t = {
     (* the amount of memory allocated to the lambda function in mb.
@@ -68,4 +64,4 @@ module Context : sig
   }
 end
 
-val start: (Yojson.Safe.json -> Context.t -> (Yojson.Safe.json, Errors.t) result) -> unit
+val start: (Yojson.Safe.json -> Context.t -> (Yojson.Safe.json, string) result) -> unit
