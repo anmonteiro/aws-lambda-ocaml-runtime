@@ -101,7 +101,6 @@ let send_request ?(meth=`GET) ?(additional_headers=[]) ?body uri =
       (Uri.path_and_query uri)
       ~headers:(Headers.of_list ([
         "Host", host;
-        (* "Connection", "close"; *)
         "Content-Length", content_length;
       ] @ additional_headers))
     in

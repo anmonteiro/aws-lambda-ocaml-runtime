@@ -14,7 +14,9 @@ depends: [
   "result"
   "yojson"
   "ppx_deriving_yojson"
-  "cohttp-lwt-unix"
+  "httpaf"
+  "httpaf-lwt"
+  "uri"
   "logs"
   "alcotest" {with-test}
 ]
