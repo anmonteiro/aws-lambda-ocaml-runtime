@@ -2,7 +2,14 @@ module Client = Client
 module Context = Context
 module Errors = Errors
 module Config = Config
-module Runtime = Runtime
+
+module Id = struct
+  type t = Yojson.Safe.json
+  [@@deriving yojson]
+end
+
+module Runtime = Runtime.Make (Id) (Id)
+module Http = Lambda_http
 
 let start_with_runtime_client handler function_config client =
   let runtime = Runtime.make ~handler ~max_retries:3 ~settings:function_config client
