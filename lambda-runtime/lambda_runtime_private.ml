@@ -4,6 +4,7 @@ module Errors = Errors
 module Config = Config
 
 module Id = struct
+  [@@@ocaml.warning "-39"]
   type t = Yojson.Safe.json
   [@@deriving yojson]
 end
@@ -13,7 +14,8 @@ module Http = Lambda_http
 
 let start_with_runtime_client handler function_config client =
   let runtime = Runtime.make ~handler ~max_retries:3 ~settings:function_config client
-  in Runtime.start runtime
+  in
+  Lwt_main.run (Runtime.start runtime)
 
 let start handler =
   match Config.get_runtime_api_endpoint() with

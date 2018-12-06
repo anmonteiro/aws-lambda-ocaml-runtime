@@ -1,3 +1,7 @@
+open Lwt.Infix
+
+[@@@ocaml.warning "-39"]
+
 module Constants = struct
   let runtime_api_version = "2018-06-01"
   let api_content_type = "application/json"
@@ -72,7 +76,6 @@ let make endpoint =
   endpoint
 
 let send_request ?(meth=`GET) ?(additional_headers=[]) ?body uri =
-  let open Lwt.Infix in
   let open Httpaf in
   let open Httpaf_lwt in
   let response_handler notify_response_received response response_body =
@@ -157,24 +160,22 @@ let event_response client request_id output =
       "http://%s/%s/runtime/invocation/%s/response"
       client Constants.runtime_api_version request_id)
   in
-  let req = make_runtime_post_request uri output
-  in
-  match Lwt_main.run req with
+  make_runtime_post_request uri output >>= function
   | Ok ({ Response.status }, _) ->
     if not (Status.is_successful status) then
       let error = Errors.make_api_error
         ~recoverable:false
         (Printf.sprintf "Error %d while sending response" (Status.to_code status))
       in
-      Error error
+      Lwt_result.fail error
     else
-      Ok ()
+      Lwt_result.return ()
   | Error _ ->
     let err = Errors.make_api_error
       ~recoverable:false
       (Printf.sprintf "Error when calling runtime API for request %s" request_id)
     in
-    Error err
+    Lwt_result.fail err
 
 let make_runtime_error_request uri error =
   let body = Errors.to_lambda_error error |> Yojson.Safe.to_string in
@@ -194,35 +195,33 @@ let event_error client request_id err =
       "http://%s/%s/runtime/invocation/%s/error"
       client Constants.runtime_api_version request_id)
   in
-  let req = make_runtime_error_request uri err in
-  match Lwt_main.run req with
+  make_runtime_error_request uri err >>= function
   | Ok ({ Response.status }, _) ->
     if not (Status.is_successful status) then
       let error = Errors.make_api_error
         ~recoverable:true
         (Printf.sprintf "Error %d while sending response" (Status.to_code status))
       in
-      Error error
+      Lwt_result.fail error
     else
-      Ok ()
+      Lwt_result.return ()
   | Error _ ->
     let err = Errors.make_api_error
       ~recoverable:true
       (Printf.sprintf "Error when calling runtime API for request %s" request_id)
     in
-    Error err
+    Lwt_result.fail err
 
 let fail_init client err =
   let uri = Uri.of_string
     (Printf.sprintf
       "http://%s/%s/runtime/init/error" client Constants.runtime_api_version)
   in
-  let req = make_runtime_error_request uri err in
-  try
-    let _ = Lwt_main.run req in
-    ()
-  with
-  | _ -> failwith "Error while sending init failed message"
+  make_runtime_error_request uri err >>= function
+  | Ok _ -> Lwt_result.return ()
+  (* TODO: do we wanna "failwith" or just raise and  then have a generic
+  `Lwt.catch` that will `failwith`? *)
+  | Error _ -> failwith "Error while sending init failed message"
 
 let get_event_context headers =
   let open Httpaf in
@@ -284,11 +283,7 @@ let next_event client =
     (Printf.sprintf "http://%s/%s/runtime/invocation/next" client Constants.runtime_api_version)
   in
   Printf.printf "Polling for next event. Uri: %s\n" (Uri.to_string uri);
-  (*
-   * Blocking for now. Lambdas can't process two events at the same time
-   * anyway.
-   *)
-  match Lwt_main.run (send_request uri) with
+  send_request uri >>= function
   | Ok ({ Response.status; headers }, body) ->
     let code = Status.to_code status in
     if Status.is_client_error status then begin
@@ -298,7 +293,7 @@ let next_event client =
         ~recoverable:true
         (Printf.sprintf "Error %d when polling for events" code)
       in
-      Error err
+      Lwt_result.fail err
     end else if Status.is_server_error status then begin
       Logs.err (fun m ->
         m "Runtime API returned server error when polling for new events %d\n" code);
@@ -306,20 +301,20 @@ let next_event client =
         ~recoverable:false
         "Server error when polling for new events"
       in
-      Error err
+      Lwt_result.fail err
     end else begin
       match get_event_context headers with
-      | Error x as err ->
+      | Error err ->
         Logs.err (fun m ->
-          m "Failed to get event context: %s\n" (Errors.message x));
-        err
+          m "Failed to get event context: %s\n" (Errors.message err));
+        Lwt_result.fail err
       | Ok ctx ->
-        let body_str = Lwt_main.run (read_response body) in
-        Ok (body_str, ctx)
+        read_response body >>= fun body_str ->
+        Lwt_result.return (body_str, ctx)
       end
   | Error _ ->
     let err = Errors.make_api_error
       ~recoverable:false
       "Server error when polling for new events"
     in
-    Error err
+    Lwt_result.fail err

@@ -18,4 +18,4 @@
    lambda_runtime_private
    lambda_http)
   (libraries yojson ppx_deriving_yojson.runtime httpaf-lwt uri logs)
-  (flags (:standard -w -9-39)))
+  (flags (:standard -w -9)))

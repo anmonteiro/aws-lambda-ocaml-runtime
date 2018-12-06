@@ -1,3 +1,5 @@
+[@@@ocaml.warning "-39"]
+
 type error_record = {
   msg: string;
   (* stack_trace: string option; (* Option<backtrace::Backtrace>, *) *)
