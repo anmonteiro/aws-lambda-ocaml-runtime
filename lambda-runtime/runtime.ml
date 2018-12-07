@@ -65,32 +65,34 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
   let invoke runtime event ctx =
     runtime.handler event ctx
 
-  let start runtime =
+  let rec start runtime =
     let open Lwt.Infix in
-    let rec inner () =
-      get_next_event runtime 0 >>= fun (event, ctx) ->
-      let request_id = ctx.aws_request_id in
-      match invoke runtime event ctx with
-      | Ok response ->
-        let response_json = Response.to_yojson response in
-        Client.event_response runtime.client request_id response_json >>= begin function
-        | Ok _ -> inner ()
-        | Error e ->
-          if not (Errors.is_recoverable e) then
-            Client.fail_init runtime.client e >>= fun _ ->
-            failwith "Could not send error response";
-          else
-            inner ()
-        end
-      | Error msg ->
-        let handler_error = Errors.make_handler_error msg in
-        Client.event_error runtime.client request_id handler_error >>= function
-        | Ok _ -> inner ()
-        | Error e ->
-          if not (Errors.is_recoverable e) then
-            Client.fail_init runtime.client e >>= fun _ ->
-            failwith "Could not send error response";
-          else
-            inner ()
-    in inner ()
+    get_next_event runtime 0 >>= fun (event, ctx) ->
+    let request_id = ctx.aws_request_id in
+    match invoke runtime event ctx with
+    | Ok response ->
+      let response_json = Response.to_yojson response in
+      Client.event_response runtime.client request_id response_json >>= begin function
+      | Ok _ -> start runtime
+      | Error e ->
+        if not (Errors.is_recoverable e) then
+          Client.fail_init runtime.client e >>= fun _ ->
+          Logs_lwt.err (fun m ->
+            m "Could not send error response %s" (Errors.message e)) >>= fun () ->
+          failwith "Could not send error response";
+        else
+          start runtime
+      end
+    | Error msg ->
+      let handler_error = Errors.make_handler_error msg in
+      Client.event_error runtime.client request_id handler_error >>= function
+      | Ok _ -> start runtime
+      | Error e ->
+        if not (Errors.is_recoverable e) then
+          Logs_lwt.err (fun m ->
+            m "Could not send error response %s" (Errors.message e)) >>= fun () ->
+          Client.fail_init runtime.client e >>= fun _ ->
+          failwith "Could not send error response";
+        else
+          start runtime
 end

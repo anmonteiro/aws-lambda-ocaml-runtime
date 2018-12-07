@@ -282,21 +282,22 @@ let next_event client =
   let uri = Uri.of_string
     (Printf.sprintf "http://%s/%s/runtime/invocation/next" client Constants.runtime_api_version)
   in
-  Printf.printf "Polling for next event. Uri: %s\n" (Uri.to_string uri);
+  Logs_lwt.info (fun m ->
+    m "Polling for next event. Uri: %s\n" (Uri.to_string uri)) >>= fun () ->
   send_request uri >>= function
   | Ok ({ Response.status; headers }, body) ->
     let code = Status.to_code status in
     if Status.is_client_error status then begin
-      Logs.err (fun m ->
-        m "Runtime API returned client error when polling for new events %d\n" code);
+      Logs_lwt.err (fun m ->
+        m "Runtime API returned client error when polling for new events %d\n" code) >>= fun () ->
       let err = Errors.make_api_error
         ~recoverable:true
         (Printf.sprintf "Error %d when polling for events" code)
       in
       Lwt_result.fail err
     end else if Status.is_server_error status then begin
-      Logs.err (fun m ->
-        m "Runtime API returned server error when polling for new events %d\n" code);
+      Logs_lwt.err (fun m ->
+        m "Runtime API returned server error when polling for new events %d\n" code) >>= fun () ->
       let err = Errors.make_api_error
         ~recoverable:false
         "Server error when polling for new events"
@@ -305,8 +306,8 @@ let next_event client =
     end else begin
       match get_event_context headers with
       | Error err ->
-        Logs.err (fun m ->
-          m "Failed to get event context: %s\n" (Errors.message err));
+        Logs_lwt.err (fun m ->
+          m "Failed to get event context: %s\n" (Errors.message err)) >>= fun () ->
         Lwt_result.fail err
       | Ok ctx ->
         read_response body >>= fun body_str ->
