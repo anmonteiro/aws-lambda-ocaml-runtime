@@ -7,12 +7,16 @@ type error_record = {
   recoverable: bool;
 }
 
+[@@@ocaml.warning "-39"]
+
 type lambda_error = {
   error_message: string [@key "errorMessage"];
   error_type: string [@key "errorType"];
   (* TODO: do we need stack_trace / stackTrace even if always null? *)
 }
 [@@deriving yojson]
+
+[@@@ocaml.warning "+39"]
 
 type _ t =
   | RuntimeError : error_record -> [`unhandled] t
