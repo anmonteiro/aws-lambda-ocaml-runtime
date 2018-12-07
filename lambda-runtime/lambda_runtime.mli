@@ -65,3 +65,5 @@ module Context : sig
 end
 
 val start: (Yojson.Safe.json -> Context.t -> (Yojson.Safe.json, string) result) -> unit
+
+val io_start: (Yojson.Safe.json -> Context.t -> (Yojson.Safe.json, string) result Lwt.t) -> unit
