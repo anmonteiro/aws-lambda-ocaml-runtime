@@ -1,7 +1,5 @@
 open Lwt.Infix
 
-[@@@ocaml.warning "-39"]
-
 module Constants = struct
   let runtime_api_version = "2018-06-01"
   let api_content_type = "application/json"
@@ -17,6 +15,8 @@ module Constants = struct
     let cognito_identity = "Lambda-Runtime-Cognito-Identity"
   end
 end
+
+[@@@ocaml.warning "-39"]
 
 type client_application = {
     (* The mobile app installation id *)
@@ -69,6 +69,8 @@ type event_context = {
   identity: cognito_identity option;
 }
 [@@deriving yojson]
+
+[@@@ocaml.warning "+39"]
 
 type t = string
 

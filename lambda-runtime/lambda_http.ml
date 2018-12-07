@@ -55,3 +55,5 @@ type api_gateway_proxy_response = {
   is_base64_encoded: bool [@key "isBase64Encoded"];
 }
 [@@deriving yojson]
+
+[@@@ocaml.warning "+39"]
