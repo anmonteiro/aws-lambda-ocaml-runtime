@@ -52,13 +52,14 @@ let test_runtime handler test_fn =
     | Ok settings ->
       let runtime = Runtime.make
         ~handler
+        ~lift:Lwt.return
         ~max_retries:3
         ~settings
         client
       in
       let output = Runtime.invoke runtime (`String "test") (MockConfigProvider.test_context 10)
       in
-      test_fn output
+      test_fn (Lwt_main.run output)
 
 let suite = [
   ("simple handler invocation", `Quick, fun () ->

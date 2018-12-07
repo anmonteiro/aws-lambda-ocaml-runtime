@@ -8,15 +8,16 @@ module type LambdaIO = sig
 end
 
 module Make (Event : LambdaIO) (Response : LambdaIO) = struct
-  type runtime = {
+  type 'a runtime = {
     client: Client.t;
     settings: Config.function_settings;
-    handler: Event.t -> Context.t -> (Response.t, string) result;
-    max_retries: int
+    handler: Event.t -> Context.t -> 'a;
+    max_retries: int;
+    lift: 'a -> (Response.t, string) result Lwt.t;
   }
 
-  let make ~handler ~max_retries ~settings client =
-    { client; settings; handler; max_retries }
+  let make ~handler ~max_retries ~settings ~lift client =
+    { client; settings; max_retries; handler; lift;  }
 
   let rec get_next_event ?error runtime retries =
     match error with
@@ -62,14 +63,14 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
         end
       | Error e -> get_next_event ~error:e runtime (retries + 1)
 
-  let invoke runtime event ctx =
-    runtime.handler event ctx
+  let invoke { lift; handler } event ctx =
+    lift (handler event ctx)
 
   let rec start runtime =
     let open Lwt.Infix in
     get_next_event runtime 0 >>= fun (event, ctx) ->
     let request_id = ctx.aws_request_id in
-    match invoke runtime event ctx with
+    invoke runtime event ctx >>= function
     | Ok response ->
       let response_json = Response.to_yojson response in
       Client.event_response runtime.client request_id response_json >>= begin function
