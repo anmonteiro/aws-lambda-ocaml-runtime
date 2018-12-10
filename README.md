@@ -10,7 +10,7 @@ See the [`examples`](./examples) folder.
 
 ## Deploying
 
-**Note**: Based on the instuctions in this [blog
+**Note**: Based on the instructions in this [blog
 post](https://aws.amazon.com/blogs/opensource/rust-runtime-for-aws-lambda/) and
 the Rust custom runtime
 [repository](https://github.com/awslabs/aws-lambda-rust-runtime)
