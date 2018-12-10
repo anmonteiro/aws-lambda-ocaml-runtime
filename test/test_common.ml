@@ -9,6 +9,8 @@ let yojson = (module struct
   let equal = (=)
 end : Alcotest.TESTABLE with type t = Yojson.Safe.json)
 
+let id: 'a. 'a -> 'a = fun x -> x
+
 let error = ref false
 
 module MockConfigProvider = struct
@@ -49,3 +51,57 @@ module MockConfigProvider = struct
     deadline = get_deadline(deadline);
   }
 end
+
+module type Runtime = sig
+  type request
+  type response
+  type 'a runtime = {
+    client : Client.t;
+    settings : Config.function_settings;
+    handler : request -> Context.t -> 'a;
+    max_retries : int;
+    lift : 'a -> (response, string) result Lwt.t;
+  }
+
+  val make :
+    handler:(request -> Context.t -> 'a) ->
+    max_retries:int ->
+    settings:Config.function_settings ->
+    lift:('a -> (response, string) result Lwt.t) ->
+    Client.t -> 'a runtime
+
+  val get_next_event :
+    ?error:[ `unhandled ] Errors.t ->
+    'a runtime ->
+    int -> (request * Context.t) Lwt.t
+  val invoke :
+    'a runtime ->
+    request ->
+    Context.t ->
+    (response, string) result Lwt.t
+  val start : 'a runtime -> 'b Lwt.t
+end
+
+let test_runtime_generic
+  (type request)
+  (type response)
+  (module Runtime : Runtime with type request = request
+                             and type response = response)
+  ~lift request handler test_fn =
+  match MockConfigProvider.get_runtime_api_endpoint () with
+  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
+  | Ok runtime_api_endpoint ->
+    let client = Client.make runtime_api_endpoint in
+    match MockConfigProvider.get_function_settings () with
+    | Error _ -> Alcotest.fail "Could not load environment config"
+    | Ok settings ->
+      let runtime = Runtime.make
+        ~handler
+        ~lift
+        ~max_retries:3
+        ~settings
+        client
+      in
+      let output = Runtime.invoke runtime request (MockConfigProvider.test_context 10)
+      in
+      test_fn (Lwt_main.run output)

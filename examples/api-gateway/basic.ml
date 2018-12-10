@@ -3,7 +3,6 @@ open Lambda_runtime_private.Http
 module StringMap = Map.Make(String)
 
 let my_handler evt _context =
-  Logs.debug (fun m -> m "Dont even make it here");
   Ok {
     status_code = 200;
     headers = StringMap.empty;

@@ -35,55 +35,23 @@ let test_fixture path =
     Alcotest.check yojson "roundtripping" (order_keys fixture) (API_gateway_request.to_yojson req |> order_keys)
   | Error err -> Alcotest.fail err
 
-let test_runtime handler test_fn =
-  match MockConfigProvider.get_runtime_api_endpoint () with
-  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
-  | Ok runtime_api_endpoint ->
-    let client = Client.make runtime_api_endpoint in
-    match MockConfigProvider.get_function_settings () with
-    | Error _ -> Alcotest.fail "Could not load environment config"
-    | Ok settings ->
-      let runtime = Runtime.make
-        ~handler
-        ~lift:Lwt.return
-        ~max_retries:3
-        ~settings
-        client
-      in
-      let fixture = read_all (Printf.sprintf "fixtures/apigw_real.json") |> Yojson.Safe.from_string
-      in
-      match API_gateway_request.of_yojson fixture with
-      | Ok req ->
-        let output = Runtime.invoke runtime req (MockConfigProvider.test_context 10)
-        in
-        test_fn (Lwt_main.run output)
-      | Error err -> Alcotest.fail err
+module Apigw_runtime = struct
+  type request = api_gateway_proxy_request
+  type response = api_gateway_proxy_response
+  include Runtime
+end
 
-let id: 'a. 'a -> 'a = fun x -> x
+let request =
+  let fixture = read_all (Printf.sprintf "fixtures/apigw_real.json")
+  |> Yojson.Safe.from_string
+  in
+  match API_gateway_request.of_yojson fixture with
+  | Ok req -> req
+  | Error err ->
+    failwith (Printf.sprintf "Failed to parse API Gateway fixture into a mock request: %s\n" err)
 
-let test_async_runtime handler test_fn =
-  match MockConfigProvider.get_runtime_api_endpoint () with
-  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
-  | Ok runtime_api_endpoint ->
-    let client = Client.make runtime_api_endpoint in
-    match MockConfigProvider.get_function_settings () with
-    | Error _ -> Alcotest.fail "Could not load environment config"
-    | Ok settings ->
-      let runtime = Runtime.make
-        ~handler
-        ~lift:id
-        ~max_retries:3
-        ~settings
-        client
-      in
-      let fixture = read_all (Printf.sprintf "fixtures/apigw_real.json") |> Yojson.Safe.from_string
-      in
-      match API_gateway_request.of_yojson fixture with
-      | Ok req ->
-        let output = Runtime.invoke runtime req (MockConfigProvider.test_context 10)
-        in
-        test_fn (Lwt_main.run output)
-      | Error err -> Alcotest.fail err
+let test_runtime = test_runtime_generic (module Apigw_runtime) ~lift:Lwt.return request
+let test_async_runtime = test_runtime_generic (module Apigw_runtime) ~lift:id request
 
 module StringMap = Map.Make(String)
 let response = {

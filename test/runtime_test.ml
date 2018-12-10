@@ -1,45 +1,15 @@
 open Lambda_runtime_private
 open Test_common
 
-let test_runtime handler test_fn =
-  match MockConfigProvider.get_runtime_api_endpoint () with
-  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
-  | Ok runtime_api_endpoint ->
-    let client = Client.make runtime_api_endpoint in
-    match MockConfigProvider.get_function_settings () with
-    | Error _ -> Alcotest.fail "Could not load environment config"
-    | Ok settings ->
-      let runtime = Runtime.make
-        ~handler
-        ~lift:Lwt.return
-        ~max_retries:3
-        ~settings
-        client
-      in
-      let output = Runtime.invoke runtime (`String "test") (MockConfigProvider.test_context 10)
-      in
-      test_fn (Lwt_main.run output)
+module Json_runtime = struct
+  type request = Yojson.Safe.json
+  type response = Yojson.Safe.json
+  include Runtime
+end
 
-let id: 'a. 'a -> 'a = fun x -> x
-
-let test_async_runtime handler test_fn =
-  match MockConfigProvider.get_runtime_api_endpoint () with
-  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
-  | Ok runtime_api_endpoint ->
-    let client = Client.make runtime_api_endpoint in
-    match MockConfigProvider.get_function_settings () with
-    | Error _ -> Alcotest.fail "Could not load environment config"
-    | Ok settings ->
-      let runtime = Runtime.make
-        ~handler
-        ~lift:id
-        ~max_retries:3
-        ~settings
-        client
-      in
-      let output = Runtime.invoke runtime (`String "test") (MockConfigProvider.test_context 10)
-      in
-      test_fn (Lwt_main.run output)
+let request  = `String "test"
+let test_runtime = test_runtime_generic (module Json_runtime) ~lift:Lwt.return request
+let test_async_runtime = test_runtime_generic (module Json_runtime) ~lift:id request
 
 let suite = [
   ("successful handler invocation", `Quick, fun () ->
