@@ -49,6 +49,8 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
             runtime.settings in
           Lwt.return (ev, handler_ctx)
         | Error err ->
+          Logs_lwt.err (fun m ->
+            m "Could not parse event to type: %s" err) >>= fun () ->
           let error = Errors.make_runtime_error
             ~recoverable:true
             ~request_id:invocation_ctx.aws_request_id
@@ -64,6 +66,7 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
       | Error e -> get_next_event ~error:e runtime (retries + 1)
 
   let invoke { lift; handler } event ctx =
+    (* TODO: wrap in try / with. Add a test that raises *)
     lift (handler event ctx)
 
   let rec start runtime =

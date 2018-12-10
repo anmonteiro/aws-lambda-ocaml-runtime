@@ -21,5 +21,8 @@ module StringMap = struct
       end
     in
     f empty items
+  | `Null -> Ok empty
   | _ -> Error "expected an object"
 end
+
+let id: 'a. 'a -> 'a = fun x -> x
