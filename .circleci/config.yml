@@ -100,7 +100,7 @@ jobs:
       - checkout
       - run:
           name: 'Note esy.lock checksum for cache'
-          command: find -s esy.lock -type f -exec md5 {} \; | md5 > ../esy-checksum
+          command: find esy.lock -type f -exec md5sum {} \; | sort -k 2 | md5sum > ../esy-checksum
       - restore_cache:
           <<: *esy_cache_key
       - restore_cache:
