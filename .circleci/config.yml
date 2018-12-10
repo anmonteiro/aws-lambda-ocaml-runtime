@@ -4,10 +4,10 @@ common_cache_key: &common_cache_key
   key: dependency-cache-{{ checksum "../ocaml-version" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "lambda-runtime.opam" }}
 
 esy_cache_key: &esy_cache_key
-  key: esy-cache-{{ checksum "esy.json" }}-{{ checksum "esy.lock" }}-{{ checksum ".circleci/config.yml" }}
+  key: esy-cache-{{ checksum "esy.json" }}-{{ checksum "../esy-checksum" }}-{{ checksum ".circleci/config.yml" }}
 
 esy_post_build_cache_key: &esy_post_build_cache_key
-  key: esy-post-build-cache-{{ checksum "esy.json" }}-{{ checksum "esy.lock" }}-{{ checksum ".circleci/config.yml" }}
+  key: esy-post-build-cache-{{ checksum "esy.json" }}-{{ checksum "../esy-checksum" }}-{{ checksum ".circleci/config.yml" }}
 
 opam-steps: &opam-steps
   steps:
@@ -32,7 +32,7 @@ opam-steps: &opam-steps
           opam install -y dune
     - run:
         name: 'Clean'
-        command: dune clean
+        command: rm -rf ./_build
     - run:
         name: 'opam pin'
         command: |
@@ -89,7 +89,7 @@ jobs:
       - TERM: dumb
       - OCAML_VERSION: "4.07.1"
     <<: *opam-steps
-  esy_build:
+  esy:
     docker:
       - image: circleci/node:7.10
       # - image: ocaml/opam2:debian-9-ocaml-4.06
@@ -98,6 +98,9 @@ jobs:
       - NPM_CONFIG_PREFIX: "~/.npm-global"
     steps:
       - checkout
+      - run:
+          name: 'Note esy.lock checksum for cache'
+          command: find -s esy.lock -type f -exec md5 {} \; | md5 > ../esy-checksum
       - restore_cache:
           <<: *esy_cache_key
       - restore_cache:
@@ -143,4 +146,4 @@ workflows:
       - 4.05.0
       - 4.06.1
       - 4.07.1
-      - esy_build
+      - esy
