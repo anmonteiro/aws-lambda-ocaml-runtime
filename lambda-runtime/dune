@@ -1,7 +1,7 @@
 (library
   (name lambda_runtime)
   (public_name lambda-runtime)
-  (modules lambda_runtime)
+  (modules lambda_runtime runtime_intf)
   (libraries lambda-runtime.private))
 
 (library

@@ -51,18 +51,18 @@ module MockConfigProvider = struct
 end
 
 module type Runtime = sig
-  type request
+  type event
   type response
   type 'a runtime = {
     client : Client.t;
     settings : Config.function_settings;
-    handler : request -> Context.t -> 'a;
+    handler : event -> Context.t -> 'a;
     max_retries : int;
     lift : 'a -> (response, string) result Lwt.t;
   }
 
   val make :
-    handler:(request -> Context.t -> 'a) ->
+    handler:(event -> Context.t -> 'a) ->
     max_retries:int ->
     settings:Config.function_settings ->
     lift:('a -> (response, string) result Lwt.t) ->
@@ -71,21 +71,21 @@ module type Runtime = sig
   val get_next_event :
     ?error:[ `unhandled ] Errors.t ->
     'a runtime ->
-    int -> (request * Context.t) Lwt.t
+    int -> (event * Context.t) Lwt.t
   val invoke :
     'a runtime ->
-    request ->
+    event ->
     Context.t ->
     (response, string) result Lwt.t
   val start : 'a runtime -> 'b Lwt.t
 end
 
 let test_runtime_generic
-  (type request)
+  (type event)
   (type response)
-  (module Runtime : Runtime with type request = request
+  (module Runtime : Runtime with type event = event
                              and type response = response)
-  ~lift request handler test_fn =
+  ~lift event handler test_fn =
   match MockConfigProvider.get_runtime_api_endpoint () with
   | Error _ -> Alcotest.fail "Could not get runtime endpoint"
   | Ok runtime_api_endpoint ->
@@ -100,6 +100,6 @@ let test_runtime_generic
         ~settings
         client
       in
-      let output = Runtime.invoke runtime request (MockConfigProvider.test_context 10)
+      let output = Runtime.invoke runtime event (MockConfigProvider.test_context 10)
       in
       test_fn (Lwt_main.run output)

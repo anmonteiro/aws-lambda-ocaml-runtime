@@ -35,12 +35,6 @@ let test_fixture path =
     Alcotest.check yojson "roundtripping" (order_keys fixture) (API_gateway_request.to_yojson req |> order_keys)
   | Error err -> Alcotest.fail err
 
-module Apigw_runtime = struct
-  type request = api_gateway_proxy_request
-  type response = api_gateway_proxy_response
-  include Runtime
-end
-
 let request =
   let fixture = read_all (Printf.sprintf "fixtures/apigw_real.json")
   |> Yojson.Safe.from_string
@@ -50,8 +44,8 @@ let request =
   | Error err ->
     failwith (Printf.sprintf "Failed to parse API Gateway fixture into a mock request: %s\n" err)
 
-let test_runtime = test_runtime_generic (module Apigw_runtime) ~lift:Lwt.return request
-let test_async_runtime = test_runtime_generic (module Apigw_runtime) ~lift:id request
+let test_runtime = test_runtime_generic (module Http) ~lift:Lwt.return request
+let test_async_runtime = test_runtime_generic (module Http) ~lift:Util.id request
 
 module StringMap = Map.Make(String)
 let response = {

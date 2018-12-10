@@ -1,15 +1,9 @@
 open Lambda_runtime_private
 open Test_common
 
-module Json_runtime = struct
-  type request = Yojson.Safe.json
-  type response = Yojson.Safe.json
-  include Runtime
-end
-
 let request  = `String "test"
-let test_runtime = test_runtime_generic (module Json_runtime) ~lift:Lwt.return request
-let test_async_runtime = test_runtime_generic (module Json_runtime) ~lift:id request
+let test_runtime = test_runtime_generic (module Json) ~lift:Lwt.return request
+let test_async_runtime = test_runtime_generic (module Json) ~lift:Util.id request
 
 let suite = [
   ("successful handler invocation", `Quick, fun () ->

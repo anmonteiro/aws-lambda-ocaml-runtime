@@ -20,15 +20,15 @@ end
 
 type client_application = {
     (* The mobile app installation id *)
-    installation_id: string [@key "installationId"];
+    installation_id: string;
     (* The app title for the mobile app as registered with AWS' mobile services. *)
-    app_title: string [@key "appTitle"];
+    app_title: string option [@default None];
     (* The version name of the application as registered with AWS' mobile services. *)
-    app_version_name: string [@key "appVersionName"];
+    app_version_name: string;
     (* The app version code. *)
-    app_version_code: string [@key "appVersionCode"];
+    app_version_code: string;
     (* The package name for the mobile application invoking the function *)
-    app_package_name: string [@key "appPackageName"];
+    app_package_name: string;
 }
 [@@deriving yojson]
 
@@ -38,7 +38,7 @@ type client_context = {
   (* Custom properties attached to the mobile event context. *)
   custom: Yojson.Safe.json;
   (* Environment settings from the mobile client. *)
-  environment: Yojson.Safe.json;
+  env: Yojson.Safe.json;
 }
 [@@deriving yojson]
 
@@ -50,6 +50,8 @@ type cognito_identity = {
   identity_pool_id: string;
 }
 [@@deriving yojson]
+
+[@@@ocaml.warning "+39"]
 
 type event_context = {
   (* The ARN of the Lambda function being invoked. *)
@@ -68,9 +70,6 @@ type event_context = {
   credentials issues by Amazon Cognito Identity Pools. *)
   identity: cognito_identity option;
 }
-[@@deriving yojson]
-
-[@@@ocaml.warning "+39"]
 
 type t = string
 

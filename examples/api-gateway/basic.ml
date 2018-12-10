@@ -18,4 +18,4 @@ let setup_log ?style_renderer level =
 
 let () =
   setup_log (Some Logs.Debug);
-  Lambda_runtime_private.Http.start my_handler
+  Lambda_runtime_private.Http.lambda my_handler
