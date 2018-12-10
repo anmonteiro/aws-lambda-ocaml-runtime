@@ -48,7 +48,7 @@ opam-steps: &opam-steps
         command: |
           source ~/.bash_profile
           eval `opam config env`
-          opam pin add -y lambda-runtime .
+          opam pin add -t -y lambda-runtime .
           dune build @all
           dune runtest --no-buffer
     - run:
@@ -56,13 +56,6 @@ opam-steps: &opam-steps
         command: git diff --exit-code
 
 jobs:
-  4.03.0:
-    docker:
-      - image: ocaml/opam2:debian-9-ocaml-4.03
-    environment:
-      - TERM: dumb
-      - OCAML_VERSION: "4.03.0"
-    <<: *opam-steps
   4.04.2:
     docker:
       - image: ocaml/opam2:debian-9-ocaml-4.04
@@ -143,7 +136,6 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-      - 4.03.0
       - 4.04.2
       - 4.05.0
       - 4.06.1
