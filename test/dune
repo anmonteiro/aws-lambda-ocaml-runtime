@@ -4,5 +4,5 @@
 
 (alias
   (name runtest)
-  (deps (:test_exe test.exe))
+  (deps (:test_exe test.exe) (source_tree "fixtures"))
   (action (run %{test_exe})))

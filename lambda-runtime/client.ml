@@ -221,7 +221,7 @@ let fail_init client err =
   in
   make_runtime_error_request uri err >>= function
   | Ok _ -> Lwt_result.return ()
-  (* TODO: do we wanna "failwith" or just raise and  then have a generic
+  (* TODO: do we wanna "failwith" or just raise and then have a generic
   `Lwt.catch` that will `failwith`? *)
   | Error _ -> failwith "Error while sending init failed message"
 
