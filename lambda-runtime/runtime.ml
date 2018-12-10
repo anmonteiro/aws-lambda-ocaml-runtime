@@ -8,6 +8,9 @@ module type LambdaIO = sig
 end
 
 module Make (Event : LambdaIO) (Response : LambdaIO) = struct
+  type event = Event.t
+  type response = Response.t
+
   type 'a runtime = {
     client: Client.t;
     settings: Config.function_settings;
@@ -99,4 +102,27 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
           failwith "Could not send error response";
         else
           start runtime
+
+  let start_with_runtime_client ~lift handler function_config client =
+    let runtime = make
+      ~max_retries:3
+      ~settings:function_config client
+      ~lift
+      ~handler
+    in
+    Lwt_main.run (start runtime)
+
+  let start_lambda ~lift handler =
+    match Config.get_runtime_api_endpoint() with
+    | Ok endpoint ->
+      begin match Config.get_function_settings() with
+      | Ok function_config ->
+        let client = Client.make(endpoint) in
+        start_with_runtime_client ~lift handler function_config client
+      | Error msg -> failwith msg
+      end
+    | Error msg -> failwith msg
+
+  let lambda handler = start_lambda ~lift:Lwt.return handler
+  let io_lambda handler = start_lambda ~lift:Util.id handler
 end
