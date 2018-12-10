@@ -66,7 +66,7 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
       | Error e -> get_next_event ~error:e runtime (retries + 1)
 
   let invoke { lift; handler } event ctx =
-    (* TODO: wrap in try / with. Add a test that raises *)
+    (* TODO: wrap in try / with? Add a test that raises *)
     lift (handler event ctx)
 
   let rec start runtime =

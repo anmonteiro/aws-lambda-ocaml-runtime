@@ -9,8 +9,6 @@ let yojson = (module struct
   let equal = (=)
 end : Alcotest.TESTABLE with type t = Yojson.Safe.json)
 
-let id: 'a. 'a -> 'a = fun x -> x
-
 let error = ref false
 
 module MockConfigProvider = struct
