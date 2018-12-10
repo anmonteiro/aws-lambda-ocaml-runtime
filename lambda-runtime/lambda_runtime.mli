@@ -66,6 +66,11 @@ module Context : sig
   }
 end
 
+module Make (Event : Runtime_intf.LambdaIO) (Response : Runtime_intf.LambdaIO):
+  Runtime_intf.LambdaRuntime with type event = Event.t
+                              and type response = Response.t
+
+
 module Json : sig
   include Runtime_intf.LambdaRuntime with type event = Yojson.Safe.json
                                       and type response = Yojson.Safe.json
@@ -102,7 +107,6 @@ module Http : sig
     request_id: string [@key "requestId"];
     identity: api_gateway_request_identity;
     resource_path: string [@key "resourcePath"];
-    (* authorizer: Yojson.Safe.json StringMap.t; *)
     authorizer: string StringMap.t option [@default None];
     http_method: string [@key "httpMethod"];
     protocol: string option [@default None];
@@ -134,6 +138,8 @@ module Http : sig
   [@@deriving yojson]
 
   [@@@ocaml.warning "+39"]
+
+  module StringMap : module type of Util.StringMap
 
   include Runtime_intf.LambdaRuntime with type event = api_gateway_proxy_request
                                       and type response = api_gateway_proxy_response

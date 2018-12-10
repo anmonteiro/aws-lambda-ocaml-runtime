@@ -47,7 +47,6 @@ let request =
 let test_runtime = test_runtime_generic (module Http) ~lift:Lwt.return request
 let test_async_runtime = test_runtime_generic (module Http) ~lift:Util.id request
 
-module StringMap = Map.Make(String)
 let response = {
   status_code = 200;
   headers = StringMap.empty;

@@ -10,5 +10,7 @@ module Id = struct
   [@@deriving yojson]
 end
 
+module Make = Runtime.Make
+
 module Json = Runtime.Make (Id) (Id)
 module Http = Lambda_http
