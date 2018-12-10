@@ -13,9 +13,7 @@
     "@opam/logs": "*",
     "@opam/result": "*",
     "@opam/httpaf-lwt": "*",
-    "@opam/uri": "*"
-  },
-  "devDependencies": {
+    "@opam/uri": "*",
     "@opam/alcotest": "*"
   },
   "resolutions": {
