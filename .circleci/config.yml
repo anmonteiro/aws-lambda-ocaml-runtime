@@ -36,7 +36,6 @@ opam-steps: &opam-steps
     - run:
         name: 'opam pin'
         command: |
-          opam pin add httpaf -y --dev-repo
           opam pin add httpaf-lwt -y git+https://github.com/inhabitedtype/httpaf
           opam pin add -y lambda-runtime .
     - save_cache:

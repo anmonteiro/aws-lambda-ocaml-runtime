@@ -1,9 +1,9 @@
 module StringMap = struct
   include Map.Make(String)
   let find_opt k t =
-    try
-     Some (find k t)
-    with Not_found -> None
+    match find k t with
+    | v -> Some v
+    | exception Not_found -> None
 
   let to_yojson a_to_yojson t =
     let items = List.map (fun (key, v) -> key, a_to_yojson v) (bindings t)

@@ -42,10 +42,10 @@ let get_function_settings ?(env=env) () =
   in
   match get_env_vars () with
   | Some function_name, Some version, Some memory_str, Some log_stream, Some log_group ->
-    begin try
-      let memory_size = int_of_string memory_str in
+    begin match int_of_string memory_str with
+    | memory_size ->
       Ok { function_name; memory_size; version; log_stream; log_group}
-    with
-    | _ -> Error (Printf.sprintf "Memory value from environment is not an int: %s" memory_str)
+    | exception Failure _ ->
+      Error (Printf.sprintf "Memory value from environment is not an int: %s" memory_str)
     end
   | _ -> Error "Could not find runtime API environment variables to determine function settings."

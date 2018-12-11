@@ -13,12 +13,11 @@
     "@opam/logs": "*",
     "@opam/result": "*",
     "@opam/httpaf-lwt": "*",
+    "@opam/lwt": "*",
     "@opam/uri": "*",
     "@opam/alcotest": "*"
   },
   "resolutions": {
-    "@opam/ppx_deriving_yojson": "ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#master",
-    "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#master",
-    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#master"
+    "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#master"
   }
 }
