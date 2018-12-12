@@ -1,6 +1,6 @@
 (executable
   (name test)
-  (libraries alcotest lambda-runtime.private))
+  (libraries alcotest lambda-runtime.private lambda-runtime now_lambda base64))
 
 (alias
   (name runtest)

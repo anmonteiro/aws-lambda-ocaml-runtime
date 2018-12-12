@@ -73,6 +73,4 @@ module API_gateway_response = struct
   [@@deriving yojson]
 end
 
-module StringMap = Util.StringMap
-
 include Runtime.Make (API_gateway_request) (API_gateway_response)

@@ -1,5 +1,7 @@
 open Lambda_runtime_private
 
+let id: 'a. 'a -> 'a = fun x -> x
+
 let yojson = (module struct
   type t = Yojson.Safe.json
 
@@ -68,16 +70,11 @@ module type Runtime = sig
     lift:('a -> (response, string) result Lwt.t) ->
     Client.t -> 'a runtime
 
-  val get_next_event :
-    ?error:[ `unhandled ] Errors.t ->
-    'a runtime ->
-    int -> (event * Context.t) Lwt.t
   val invoke :
     'a runtime ->
     event ->
     Context.t ->
     (response, string) result Lwt.t
-  val start : 'a runtime -> 'b Lwt.t
 end
 
 let test_runtime_generic
@@ -103,3 +100,41 @@ let test_runtime_generic
       let output = Runtime.invoke runtime event (MockConfigProvider.test_context 10)
       in
       test_fn (Lwt_main.run output)
+
+let read_all path =
+  let file = open_in path in
+  try
+      really_input_string file (in_channel_length file)
+  with exn ->
+    close_in file;
+    raise exn
+
+let rec order_keys = function
+| `Assoc kvs ->
+  let bindings = List.map (fun (k, v) -> k, order_keys v) kvs in
+  `Assoc (List.sort (fun (k1, _) (k2, _) -> compare k1 k2) bindings)
+| x -> x
+
+let test_fixture
+  (module Request: Lambda_runtime__Runtime_intf.LambdaIO)
+  ?(transform_fixture=id) fixture =
+  let fixture = read_all (Printf.sprintf "fixtures/%s.json" fixture) |> Yojson.Safe.from_string
+  in
+  match Request.of_yojson fixture with
+  | Ok req ->
+    Alcotest.check yojson "roundtripping"
+      (fixture |> transform_fixture |> order_keys)
+      (Request.to_yojson req |> order_keys)
+  | Error err -> Alcotest.fail err
+
+let make_test_request
+  (type a)
+  (module Request: Lambda_runtime__Runtime_intf.LambdaIO with type t = a)
+  fixture =
+  let fixture = read_all (Printf.sprintf "fixtures/%s.json" fixture)
+  |> Yojson.Safe.from_string
+  in
+  match Request.of_yojson fixture with
+  | Ok req -> req
+  | Error err ->
+    failwith (Printf.sprintf "Failed to parse API Gateway fixture into a mock request: %s\n" err)

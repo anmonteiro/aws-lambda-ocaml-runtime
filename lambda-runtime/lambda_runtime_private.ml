@@ -3,6 +3,7 @@ module Context = Context
 module Errors = Errors
 module Config = Config
 module Util = Util
+module StringMap = Util.StringMap
 
 module Id = struct
   [@@@ocaml.warning "-39"]

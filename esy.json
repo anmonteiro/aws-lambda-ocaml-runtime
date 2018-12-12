@@ -15,6 +15,7 @@
     "@opam/httpaf-lwt": "*",
     "@opam/lwt": "*",
     "@opam/uri": "*",
+    "@opam/base64": "*",
     "@opam/alcotest": "*"
   },
   "resolutions": {

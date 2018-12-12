@@ -1,0 +1,5 @@
+{
+  "Action": "Invoke",
+  "body":
+    "{\"path\":\"\\/\",\"method\":\"GET\",\"host\":\"now-custom-runtime-echo-nwksbhnl0.now.sh\",\"headers\":{\"x-now-trace\":\",bru1\",\"accept\":\"text\\/html,application\\/xhtml+xml,application\\/xml;q=0.9,image\\/webp,image\\/apng,*\\/*;q=0.8\",\"host\":\"now-custom-runtime-echo-nwksbhnl0.now.sh\",\"x-forwarded-proto\":\"https\",\"cf-ray\":\"4879392c2aab6260-MAD\",\"upgrade-insecure-requests\":\"1\",\"x-forwarded-for\":\"81.193.239.136\",\"cf-ipcountry\":\"PT\",\"connection\":\"Keep-Alive\",\"x-real-ip\":\"81.193.239.136\",\"accept-encoding\":\"gzip\",\"true-client-ip\":\"81.193.239.136\",\"cf-connecting-ip\":\"81.193.239.136\",\"cf-visitor\":\"{\\\"scheme\\\":\\\"https\\\"}\",\"cookie\":\"__cfduid=d0f3e8a925d3e2e996ade5b440d23c5ff1544484607\",\"accept-language\":\"en-US,en;q=0.9\",\"cache-control\":\"max-age=0\",\"user-agent\":\"Mozilla\\/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/71.0.3578.80 Safari\\/537.36\"}}"
+}
