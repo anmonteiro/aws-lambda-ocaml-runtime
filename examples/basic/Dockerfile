@@ -85,6 +85,7 @@ RUN esy build-package @opam/seq
 RUN esy build-package @opam/re
 RUN esy build-package @opam/stringext
 RUN esy build-package @opam/uri
+RUN esy build-package @opam/base64
 
 COPY . .
 

@@ -89,6 +89,6 @@ RUN esy build-package @opam/base64
 
 COPY . .
 
-RUN esy b dune build examples/asynchronous-handler/basic.exe --profile=static
+RUN esy b dune build examples/now-lambda/basic.exe --profile=static
 
-RUN mv $(esy bash -c 'echo $cur__target_dir/default/examples/asynchronous-handler/basic.exe') bootstrap
+RUN mv $(esy bash -c 'echo $cur__target_dir/default/examples/now-lambda/basic.exe') bootstrap

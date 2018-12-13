@@ -66,6 +66,8 @@ module Context : sig
   }
 end
 
+module StringMap : module type of Util.StringMap
+
 module Make (Event : Runtime_intf.LambdaIO) (Response : Runtime_intf.LambdaIO):
   Runtime_intf.LambdaRuntime with type event = Event.t
                               and type response = Response.t
@@ -79,7 +81,6 @@ end
 
 module Http : sig
   open Util
-  [@@@ocaml.warning "-39"]
 
   (* APIGatewayRequestIdentity contains identity information for the request caller. *)
   type api_gateway_request_identity = {
@@ -96,7 +97,6 @@ module Http : sig
     user_agent: string option [@key "userAgent"];
     user: string option;
   }
-  [@@deriving yojson]
 
   (* APIGatewayProxyRequestContext contains the information to identify the AWS account and resources invoking the
   Lambda function. It also includes Cognito identity information for the caller. *)
@@ -113,7 +113,6 @@ module Http : sig
     path: string option [@default None];
     api_id: string [@key "apiId"] (* The API Gateway REST API ID *)
   }
-  [@@deriving yojson { strict = false }]
 
   type api_gateway_proxy_request = {
     resource: string;
@@ -127,7 +126,6 @@ module Http : sig
     body: string option;
     is_base64_encoded: bool [@key "isBase64Encoded"];
   }
-  [@@deriving yojson { strict = false }]
 
   type api_gateway_proxy_response = {
     status_code: int [@key "statusCode"];
@@ -135,11 +133,6 @@ module Http : sig
     body: string;
     is_base64_encoded: bool [@key "isBase64Encoded"];
   }
-  [@@deriving yojson]
-
-  [@@@ocaml.warning "+39"]
-
-  module StringMap : module type of Util.StringMap
 
   include Runtime_intf.LambdaRuntime with type event = api_gateway_proxy_request
                                       and type response = api_gateway_proxy_response

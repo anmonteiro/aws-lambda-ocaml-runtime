@@ -1,5 +1,5 @@
 {
-  "checksum": "64f5b226cefac6408723b4450d77104a",
+  "checksum": "11188e73ed9bf5e0cfcebce937b1c1ce",
   "root": "ocaml-aws-lambda-runtime@link:./esy.json",
   "node": {
     "ocaml-aws-lambda-runtime@link:./esy.json": {
@@ -14,7 +14,7 @@
         "@opam/ppx_deriving_yojson@opam:3.1@beac8c86",
         "@opam/lwt@opam:4.1.0@114c53b7", "@opam/logs@opam:0.6.2@2c895da3",
         "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#master",
-        "@opam/dune@opam:1.6.2@1683022f",
+        "@opam/dune@opam:1.6.2@1683022f", "@opam/base64@opam:2.3.0@3c508ebe",
         "@opam/alcotest@opam:0.8.4@5d18acce"
       ],
       "devDependencies": []
@@ -469,7 +469,7 @@
         "path:esy.lock/opam-override/ocamlfind.1.8.0/package.json"
       ],
       "dependencies": [
-        "ocaml@4.7.1003", "@opam/conf-m4@opam:1@d4932910",
+        "ocaml@4.7.1003", "@opam/conf-m4@opam:1@b1a6a3a8",
         "@esy-ocaml/substs@0.0.1"
       ],
       "devDependencies": []
@@ -853,8 +853,8 @@
       ],
       "devDependencies": []
     },
-    "@opam/conf-which@opam:1@2dd0e651": {
-      "id": "@opam/conf-which@opam:1@2dd0e651",
+    "@opam/conf-which@opam:1@d5e0c6d7": {
+      "id": "@opam/conf-which@opam:1@d5e0c6d7",
       "name": "@opam/conf-which",
       "version": "opam:1",
       "source": {
@@ -870,8 +870,8 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1" ],
       "devDependencies": []
     },
-    "@opam/conf-m4@opam:1@d4932910": {
-      "id": "@opam/conf-m4@opam:1@d4932910",
+    "@opam/conf-m4@opam:1@b1a6a3a8": {
+      "id": "@opam/conf-m4@opam:1@b1a6a3a8",
       "name": "@opam/conf-m4",
       "version": "opam:1",
       "source": {
@@ -927,7 +927,7 @@
       "dependencies": [
         "ocaml@4.7.1003", "@opam/jbuilder@opam:transition@8c8ec590",
         "@opam/easy-format@opam:1.3.1@85a6474a",
-        "@opam/conf-which@opam:1@2dd0e651", "@esy-ocaml/substs@0.0.1"
+        "@opam/conf-which@opam:1@d5e0c6d7", "@esy-ocaml/substs@0.0.1"
       ],
       "devDependencies": []
     },
@@ -951,6 +951,29 @@
       "dependencies": [
         "ocaml@4.7.1003", "@opam/jbuilder@opam:transition@8c8ec590",
         "@opam/base-bigarray@opam:base@7db92857", "@esy-ocaml/substs@0.0.1"
+      ],
+      "devDependencies": []
+    },
+    "@opam/base64@opam:2.3.0@3c508ebe": {
+      "id": "@opam/base64@opam:2.3.0@3c508ebe",
+      "name": "@opam/base64",
+      "version": "opam:2.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/f0/f0b29524dbaff3ac6eb4d6c578b1b80d#md5:f0b29524dbaff3ac6eb4d6c578b1b80d",
+          "archive:https://github.com/mirage/ocaml-base64/releases/download/v2.3.0/base64-v2.3.0.tbz#md5:f0b29524dbaff3ac6eb4d6c578b1b80d"
+        ],
+        "opam": {
+          "name": "base64",
+          "version": "2.3.0",
+          "path": "esy.lock/opam/base64.2.3.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/dune@opam:1.6.2@1683022f",
+        "@opam/base-bytes@opam:base@75bd4047", "@esy-ocaml/substs@0.0.1"
       ],
       "devDependencies": []
     },

@@ -13,39 +13,11 @@ let apigw_response = (module struct
   let equal = (=)
 end : Alcotest.TESTABLE with type t = api_gateway_proxy_response)
 
-let read_all path =
-  let file = open_in path in
-  try
-      really_input_string file (in_channel_length file)
-  with exn ->
-    close_in file;
-    raise exn
+let request = Test_common.make_test_request (module API_gateway_request) "apigw_real"
 
-let rec order_keys = function
-| `Assoc kvs ->
-  let bindings = List.map (fun (k, v) -> k, order_keys v) kvs in
-  `Assoc (List.sort (fun (k1, _) (k2, _) -> compare k1 k2) bindings)
-| x -> x
-
-let test_fixture path =
-  let fixture = read_all (Printf.sprintf "fixtures/%s" path) |> Yojson.Safe.from_string
-  in
-  match API_gateway_request.of_yojson fixture with
-  | Ok req ->
-    Alcotest.check yojson "roundtripping" (order_keys fixture) (API_gateway_request.to_yojson req |> order_keys)
-  | Error err -> Alcotest.fail err
-
-let request =
-  let fixture = read_all (Printf.sprintf "fixtures/apigw_real.json")
-  |> Yojson.Safe.from_string
-  in
-  match API_gateway_request.of_yojson fixture with
-  | Ok req -> req
-  | Error err ->
-    failwith (Printf.sprintf "Failed to parse API Gateway fixture into a mock request: %s\n" err)
-
+let test_fixture = Test_common.test_fixture (module API_gateway_request)
 let test_runtime = test_runtime_generic (module Http) ~lift:Lwt.return request
-let test_async_runtime = test_runtime_generic (module Http) ~lift:Util.id request
+let test_async_runtime = test_runtime_generic (module Http) ~lift:id request
 
 let response = {
   status_code = 200;
@@ -56,9 +28,9 @@ let response = {
 
 let suite = [
   ("deserialize (mock) API Gateway Proxy Request", `Quick, fun () ->
-    test_fixture "apigw.json");
+    test_fixture "apigw");
   ("deserialize (real world) API Gateway Proxy Request", `Quick, fun () ->
-    test_fixture "apigw_real_trimmed.json");
+    test_fixture "apigw_real_trimmed");
   ("successful handler invocation", `Quick, fun () ->
     let handler _event _ctx = Ok response in
     test_runtime handler (fun output ->

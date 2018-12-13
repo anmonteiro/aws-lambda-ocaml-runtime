@@ -38,6 +38,7 @@ opam-steps: &opam-steps
         command: |
           opam pin add httpaf-lwt -y git+https://github.com/inhabitedtype/httpaf
           opam pin add -y lambda-runtime .
+          opam pin add -y now-lambda .
     - save_cache:
         <<: *common_cache_key
         paths:
