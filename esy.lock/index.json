@@ -1,5 +1,5 @@
 {
-  "checksum": "11188e73ed9bf5e0cfcebce937b1c1ce",
+  "checksum": "5ee4b228501063475fcede71c20642a9",
   "root": "ocaml-aws-lambda-runtime@link:./esy.json",
   "node": {
     "ocaml-aws-lambda-runtime@link:./esy.json": {
@@ -13,11 +13,11 @@
         "@opam/uri@opam:2.1.0@6f0935bc", "@opam/result@opam:1.3@7af06772",
         "@opam/ppx_deriving_yojson@opam:3.1@beac8c86",
         "@opam/lwt@opam:4.1.0@114c53b7", "@opam/logs@opam:0.6.2@2c895da3",
-        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#master",
+        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913",
         "@opam/dune@opam:1.6.2@1683022f", "@opam/base64@opam:2.3.0@3c508ebe",
         "@opam/alcotest@opam:0.8.4@5d18acce"
       ],
-      "devDependencies": []
+      "devDependencies": [ "@opam/reason@opam:3.3.7@66899f53" ]
     },
     "ocaml@4.7.1003": {
       "id": "ocaml@4.7.1003",
@@ -263,6 +263,33 @@
       "dependencies": [
         "ocaml@4.7.1003", "@opam/jbuilder@opam:transition@8c8ec590",
         "@esy-ocaml/substs@0.0.1"
+      ],
+      "devDependencies": []
+    },
+    "@opam/reason@opam:3.3.7@66899f53": {
+      "id": "@opam/reason@opam:3.3.7@66899f53",
+      "name": "@opam/reason",
+      "version": "opam:3.3.7",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/01/01625d9f44a059f429db1bc1f94d811e#md5:01625d9f44a059f429db1bc1f94d811e",
+          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.3.7.tgz#md5:01625d9f44a059f429db1bc1f94d811e"
+        ],
+        "opam": {
+          "name": "reason",
+          "version": "3.3.7",
+          "path": "esy.lock/opam/reason.3.3.7"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1003", "@opam/result@opam:1.3@7af06772",
+        "@opam/ocamlfind@opam:1.8.0@6fa9aaf5",
+        "@opam/ocaml-migrate-parsetree@opam:1.1.0@48c1552a",
+        "@opam/merlin-extend@opam:0.3@77408bd7",
+        "@opam/menhir@opam:20181113@4d481c26",
+        "@opam/dune@opam:1.6.2@1683022f", "@esy-ocaml/substs@0.0.1"
       ],
       "devDependencies": []
     },
@@ -542,6 +569,54 @@
       ],
       "devDependencies": []
     },
+    "@opam/merlin-extend@opam:0.3@77408bd7": {
+      "id": "@opam/merlin-extend@opam:0.3@77408bd7",
+      "name": "@opam/merlin-extend",
+      "version": "opam:0.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/9c/9c6dfd4f53328f02f12fcc265f4e2dda#md5:9c6dfd4f53328f02f12fcc265f4e2dda",
+          "archive:https://github.com/let-def/merlin-extend/archive/v0.3.tar.gz#md5:9c6dfd4f53328f02f12fcc265f4e2dda"
+        ],
+        "opam": {
+          "name": "merlin-extend",
+          "version": "0.3",
+          "path": "esy.lock/opam/merlin-extend.0.3"
+        }
+      },
+      "overrides": [
+        "path:esy.lock/opam-override/merlin-extend.0.3/package.json"
+      ],
+      "dependencies": [
+        "ocaml@4.7.1003", "@opam/ocamlfind@opam:1.8.0@6fa9aaf5",
+        "@opam/cppo@opam:1.6.5@b397a057", "@esy-ocaml/substs@0.0.1"
+      ],
+      "devDependencies": []
+    },
+    "@opam/menhir@opam:20181113@4d481c26": {
+      "id": "@opam/menhir@opam:20181113@4d481c26",
+      "name": "@opam/menhir",
+      "version": "opam:20181113",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/69/69ce441a06ea131cd43e7b44c4303f3c#md5:69ce441a06ea131cd43e7b44c4303f3c",
+          "archive:https://gitlab.inria.fr/fpottier/menhir/repository/20181113/archive.tar.gz#md5:69ce441a06ea131cd43e7b44c4303f3c"
+        ],
+        "opam": {
+          "name": "menhir",
+          "version": "20181113",
+          "path": "esy.lock/opam/menhir.20181113"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1003", "@opam/ocamlfind@opam:1.8.0@6fa9aaf5",
+        "@opam/ocamlbuild@opam:0.12.0@bbe76db8", "@esy-ocaml/substs@0.0.1"
+      ],
+      "devDependencies": []
+    },
     "@opam/lwt@opam:4.1.0@114c53b7": {
       "id": "@opam/lwt@opam:4.1.0@114c53b7",
       "name": "@opam/lwt",
@@ -616,14 +691,14 @@
       ],
       "devDependencies": []
     },
-    "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#master": {
+    "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913": {
       "id":
-        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#master",
+        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913",
       "name": "@opam/httpaf-lwt",
-      "version": "github:inhabitedtype/httpaf:httpaf-lwt.opam#master",
+      "version": "github:inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913",
       "source": {
         "type": "install",
-        "source": [ "github:inhabitedtype/httpaf:httpaf-lwt.opam#master" ]
+        "source": [ "github:inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913" ]
       },
       "overrides": [],
       "dependencies": [
