@@ -1,4 +1,7 @@
-open Lambda_runtime_private
+module Errors = Lambda_runtime__.Errors
+module Config = Lambda_runtime__.Config
+module Context = Lambda_runtime__.Context
+module Client = Lambda_runtime__.Client
 
 let id: 'a. 'a -> 'a = fun x -> x
 

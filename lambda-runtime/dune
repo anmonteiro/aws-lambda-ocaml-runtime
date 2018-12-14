@@ -1,21 +1,6 @@
 (library
   (name lambda_runtime)
   (public_name lambda-runtime)
-  (modules lambda_runtime runtime_intf)
-  (libraries lambda-runtime.private))
-
-(library
-  (name lambda_runtime_private)
-  (public_name lambda-runtime.private)
   (preprocess (pps ppx_deriving_yojson))
-  (modules
-   client
-   config
-   context
-   errors
-   runtime
-   util
-   lambda_runtime_private
-   lambda_http)
   (libraries yojson ppx_deriving_yojson.runtime httpaf-lwt uri logs.lwt)
   (flags (:standard -w -9)))

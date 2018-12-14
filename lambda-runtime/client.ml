@@ -124,7 +124,7 @@ let send_request ?(meth=`GET) ?(additional_headers=[]) ?body uri =
     | Some body -> Body.write_string request_body body
     | None -> ()
     end;
-    Body.close_writer request_body;
+    Body.flush request_body (fun () -> Body.close_writer request_body);
     response_received
 
 let read_response response_body =

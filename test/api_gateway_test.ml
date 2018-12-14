@@ -1,25 +1,26 @@
-open Lambda_runtime_private
-open Http
+open Lambda_runtime
 open Test_common
 
+module Http = Lambda_runtime__.Lambda_http
+
 let apigw_response = (module struct
-  type t = api_gateway_proxy_response
+  type t = Http.api_gateway_proxy_response
 
   let pp formatter t =
     Format.pp_print_text
       formatter
-      (t |> API_gateway_response.to_yojson |> Yojson.Safe.pretty_to_string)
+      (t |> Http.API_gateway_response.to_yojson |> Yojson.Safe.pretty_to_string)
 
   let equal = (=)
-end : Alcotest.TESTABLE with type t = api_gateway_proxy_response)
+end : Alcotest.TESTABLE with type t = Http.api_gateway_proxy_response)
 
-let request = Test_common.make_test_request (module API_gateway_request) "apigw_real"
+let request = Test_common.make_test_request (module Http.API_gateway_request) "apigw_real"
 
-let test_fixture = Test_common.test_fixture (module API_gateway_request)
+let test_fixture = Test_common.test_fixture (module Http.API_gateway_request)
 let test_runtime = test_runtime_generic (module Http) ~lift:Lwt.return request
 let test_async_runtime = test_runtime_generic (module Http) ~lift:id request
 
-let response = {
+let response = Http.{
   status_code = 200;
   headers = StringMap.empty;
   body = "Hello";
@@ -45,7 +46,7 @@ let suite = [
       match output with
       | Ok response ->
         let result_str = response
-        |> API_gateway_response.to_yojson
+        |> Http.API_gateway_response.to_yojson
         |> Yojson.Safe.pretty_to_string
         in
         Alcotest.fail

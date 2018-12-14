@@ -1,9 +1,3 @@
-open Lambda_runtime_private
-
-module Client : sig
-  include module type of Client
-end
-
 module Context : sig
   type t = {
     (* the amount of memory allocated to the lambda function in mb.
@@ -84,56 +78,60 @@ module Http : sig
 
   (* APIGatewayRequestIdentity contains identity information for the request caller. *)
   type api_gateway_request_identity = {
-    cognito_identity_pool_id: string option [@key "cognitoIdentityPoolId"];
-    account_id: string option [@key "accountId"];
-    cognito_identity_id: string option [@key "cognitoIdentityId"];
+    cognito_identity_pool_id: string option;
+    account_id: string option;
+    cognito_identity_id: string option;
     caller: string option;
-    access_key: string option [@key "accessKey"] ;
-    api_key: string option [@key "apiKey"] [@default None];
-    source_ip: string [@key "sourceIp"];
-    cognito_authentication_type: string option [@key "cognitoAuthenticationType"];
-    cognito_authentication_provider: string option [@key "cognitoAuthenticationProvider"];
-    user_arn: string option [@key "userArn"];
-    user_agent: string option [@key "userAgent"];
+    access_key: string option;
+    api_key: string option;
+    source_ip: string;
+    cognito_authentication_type: string option;
+    cognito_authentication_provider: string option;
+    user_arn: string option;
+    user_agent: string option;
     user: string option;
   }
 
   (* APIGatewayProxyRequestContext contains the information to identify the AWS account and resources invoking the
   Lambda function. It also includes Cognito identity information for the caller. *)
   type api_gateway_proxy_request_context = {
-    account_id: string [@key "accountId"];
-    resource_id: string [@key "resourceId"];
+    account_id: string;
+    resource_id: string;
     stage: string;
-    request_id: string [@key "requestId"];
+    request_id: string;
     identity: api_gateway_request_identity;
-    resource_path: string [@key "resourcePath"];
-    authorizer: string StringMap.t option [@default None];
-    http_method: string [@key "httpMethod"];
-    protocol: string option [@default None];
-    path: string option [@default None];
-    api_id: string [@key "apiId"] (* The API Gateway REST API ID *)
+    resource_path: string;
+    authorizer: string StringMap.t option;
+    http_method: string;
+    protocol: string option;
+    path: string option;
+    api_id: string (* The API Gateway REST API ID *)
   }
 
   type api_gateway_proxy_request = {
     resource: string;
     path: string;
-    http_method: string [@key "httpMethod"];
+    http_method: string;
     headers: string StringMap.t;
-    query_string_parameters: string StringMap.t [@key "queryStringParameters"] [@default StringMap.empty];
-    path_parameters: string StringMap.t [@key "pathParameters"] [@default StringMap.empty];
-    stage_variables: string StringMap.t [@key "stageVariables"] [@default StringMap.empty];
-    request_context: api_gateway_proxy_request_context [@key "requestContext"];
+    query_string_parameters: string StringMap.t;
+    path_parameters: string StringMap.t;
+    stage_variables: string StringMap.t;
+    request_context: api_gateway_proxy_request_context;
     body: string option;
-    is_base64_encoded: bool [@key "isBase64Encoded"];
+    is_base64_encoded: bool;
   }
 
   type api_gateway_proxy_response = {
-    status_code: int [@key "statusCode"];
+    status_code: int;
     headers: string StringMap.t;
     body: string;
-    is_base64_encoded: bool [@key "isBase64Encoded"];
+    is_base64_encoded: bool;
   }
 
   include Runtime_intf.LambdaRuntime with type event = api_gateway_proxy_request
                                       and type response = api_gateway_proxy_response
+end
+
+module Runtime_intf : sig
+  include module type of Runtime_intf
 end

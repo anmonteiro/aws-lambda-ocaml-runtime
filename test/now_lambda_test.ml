@@ -14,7 +14,7 @@ let now_lambda_response = (module struct
   let equal = (=)
 end : Alcotest.TESTABLE with type t = Types.now_proxy_response)
 
-module Runtime = Lambda_runtime_private__Runtime.Make (Types.Now_request) (Types.Now_response)
+module Runtime = Lambda_runtime__.Runtime.Make (Types.Now_request) (Types.Now_response)
 
 let request = Test_common.make_test_request (module Types.Now_request) "now_with_body"
 
