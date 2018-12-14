@@ -15,10 +15,10 @@
     "@opam/httpaf-lwt": "*",
     "@opam/lwt": "*",
     "@opam/uri": "*",
-    "@opam/base64": "*",
-    "@opam/alcotest": "*"
+    "@opam/base64": "*"
   },
   "devDependencies": {
+    "@opam/alcotest": "*",
     "@opam/reason": "*"
   },
   "resolutions": {
