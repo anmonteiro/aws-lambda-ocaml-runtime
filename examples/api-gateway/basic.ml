@@ -1,13 +1,16 @@
-open Lambda_runtime_private.Http
+open Lambda_runtime
 
 module StringMap = Map.Make(String)
 
-let my_handler evt _context =
-  Ok {
+let my_handler (evt : Http.api_gateway_proxy_request) _context =
+  let body = match evt.Http.body with
+  | None -> "" | Some body -> body
+  in
+  Ok Http.{
     status_code = 200;
     headers = StringMap.empty;
-    body = API_gateway_request.to_yojson evt |> Yojson.Safe.to_string;
-    is_base64_encoded= false
+    body;
+    is_base64_encoded = false
   }
 
 let setup_log ?style_renderer level =
@@ -18,4 +21,4 @@ let setup_log ?style_renderer level =
 
 let () =
   setup_log (Some Logs.Debug);
-  Lambda_runtime_private.Http.lambda my_handler
+  Http.lambda my_handler

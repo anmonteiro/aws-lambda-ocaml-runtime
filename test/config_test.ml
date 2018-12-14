@@ -1,4 +1,6 @@
-open Lambda_runtime_private
+open Lambda_runtime
+
+module Config = Lambda_runtime__.Config
 
 let set_endpoint_env_var () =
   let open Config in
@@ -23,8 +25,6 @@ let unset_env_vars () =
   Unix.putenv Env_vars.lambda_log_stream_name "";
   Unix.putenv Env_vars.lambda_log_group_name "";
   ()
-
-module StringMap = Map.Make(String)
 
 let get_env () =
   let env_lst = Array.to_list (Unix.environment ()) in

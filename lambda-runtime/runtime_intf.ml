@@ -6,7 +6,6 @@ module type LambdaIO = sig
 end
 
 module type LambdaRuntime = sig
-  open Lambda_runtime_private
   type event
   type response
 
