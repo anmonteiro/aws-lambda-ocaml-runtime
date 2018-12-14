@@ -10,7 +10,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1003", "@opam/yojson@opam:1.4.1@008b9b27",
-        "@opam/uri@opam:2.0.0@af6903f6", "@opam/result@opam:1.3@7af06772",
+        "@opam/uri@opam:2.1.0@6f0935bc", "@opam/result@opam:1.3@7af06772",
         "@opam/ppx_deriving_yojson@opam:3.1@beac8c86",
         "@opam/lwt@opam:4.1.0@114c53b7", "@opam/logs@opam:0.6.2@2c895da3",
         "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#master",
@@ -84,20 +84,20 @@
       ],
       "devDependencies": []
     },
-    "@opam/uri@opam:2.0.0@af6903f6": {
-      "id": "@opam/uri@opam:2.0.0@af6903f6",
+    "@opam/uri@opam:2.1.0@6f0935bc": {
+      "id": "@opam/uri@opam:2.1.0@6f0935bc",
       "name": "@opam/uri",
-      "version": "opam:2.0.0",
+      "version": "opam:2.1.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/81/810f631627c1113e5e0c39e1f28025e9#md5:810f631627c1113e5e0c39e1f28025e9",
-          "archive:https://github.com/mirage/ocaml-uri/releases/download/v2.0.0/uri-v2.0.0.tbz#md5:810f631627c1113e5e0c39e1f28025e9"
+          "archive:https://opam.ocaml.org/cache/md5/36/36b973b283cce2f3b31b121eccc5c2d1#md5:36b973b283cce2f3b31b121eccc5c2d1",
+          "archive:https://github.com/mirage/ocaml-uri/releases/download/v2.1.0/uri-v2.1.0.tbz#md5:36b973b283cce2f3b31b121eccc5c2d1"
         ],
         "opam": {
           "name": "uri",
-          "version": "2.0.0",
-          "path": "esy.lock/opam/uri.2.0.0"
+          "version": "2.1.0",
+          "path": "esy.lock/opam/uri.2.1.0"
         }
       },
       "overrides": [],

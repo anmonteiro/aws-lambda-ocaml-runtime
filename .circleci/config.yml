@@ -36,6 +36,7 @@ opam-steps: &opam-steps
     - run:
         name: 'opam pin'
         command: |
+          opam install alcotest
           opam pin add httpaf-lwt -y git+https://github.com/inhabitedtype/httpaf
           opam pin add -y lambda-runtime .
           opam pin add -y now-lambda .
@@ -49,6 +50,7 @@ opam-steps: &opam-steps
           source ~/.bash_profile
           eval `opam config env`
           opam pin add -t -y lambda-runtime .
+          opam pin add -t -y now-lambda .
           dune build @all
           dune runtest --no-buffer
     - run:
