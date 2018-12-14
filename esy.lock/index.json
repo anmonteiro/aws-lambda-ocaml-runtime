@@ -1,5 +1,5 @@
 {
-  "checksum": "5187a02250649997e8a966f5e8f88557",
+  "checksum": "5ee4b228501063475fcede71c20642a9",
   "root": "ocaml-aws-lambda-runtime@link:./esy.json",
   "node": {
     "ocaml-aws-lambda-runtime@link:./esy.json": {
@@ -14,12 +14,10 @@
         "@opam/ppx_deriving_yojson@opam:3.1@beac8c86",
         "@opam/lwt@opam:4.1.0@114c53b7", "@opam/logs@opam:0.6.2@2c895da3",
         "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913",
-        "@opam/dune@opam:1.6.2@1683022f", "@opam/base64@opam:2.3.0@3c508ebe"
-      ],
-      "devDependencies": [
-        "@opam/reason@opam:3.3.7@66899f53",
+        "@opam/dune@opam:1.6.2@1683022f", "@opam/base64@opam:2.3.0@3c508ebe",
         "@opam/alcotest@opam:0.8.4@5d18acce"
-      ]
+      ],
+      "devDependencies": [ "@opam/reason@opam:3.3.7@66899f53" ]
     },
     "ocaml@4.7.1003": {
       "id": "ocaml@4.7.1003",
