@@ -8,6 +8,9 @@ dev-repo: "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime.git"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
+install: [
+  ["dune" "install" "--prefix" prefix name]
+]
 depends: [
   "ocaml" {>= "4.04"}
   "dune" {build}
