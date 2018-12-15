@@ -1,5 +1,6 @@
 (executable
   (name basic)
+  (public_name basic)
   (libraries now-lambda logs.fmt fmt.tty)
   (flags (:standard -w -9)))
 
