@@ -69,8 +69,12 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
       | Error e -> get_next_event ~error:e runtime (retries + 1)
 
   let invoke { lift; handler } event ctx =
-    (* TODO: wrap in try / with? Add a test that raises *)
-    lift (handler event ctx)
+    Lwt.catch
+      (fun () -> lift (handler event ctx))
+      (fun exn ->
+        let backtrace = Printexc.get_backtrace () in
+        let exn_str = Printexc.to_string exn in
+        Lwt.return (Error (Printf.sprintf "Handler raised: %s\n%s" exn_str backtrace)))
 
   let rec start runtime =
     let open Lwt.Infix in
