@@ -18,9 +18,6 @@
     "@opam/base64": "*",
     "@opam/alcotest": "*"
   },
-  "devDependencies": {
-    "@opam/reason": "*"
-  },
   "resolutions": {
     "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913"
   }
