@@ -1,0 +1,43 @@
+{
+  "name": "now-lambda-reason",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "esy": {
+    "build": [
+      [
+        "dune",
+        "build",
+        "--root",
+        "."
+      ]
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opam/now-lambda": "*",
+    "@opam/lambda-runtime": "*",
+    "@opam/logs": "*",
+    "@opam/fmt": "*",
+    "@opam/reason": "*"
+  },
+  "resolutions": {
+    "@opam/now-lambda": {
+      "source": "link:../../now-lambda.opam",
+      "override": {
+        "buildsInSource": false
+      }
+    },
+    "@opam/lambda-runtime": {
+      "source": "link:../../lambda-runtime.opam",
+      "override": {
+        "buildsInSource": false
+      }
+    },
+    "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913"
+  }
+}
