@@ -3,6 +3,4 @@
  (public_name now-lambda)
  (libraries lambda-runtime yojson ppx_deriving_yojson.runtime base64)
  (preprocess
-  (pps ppx_deriving_yojson))
- (flags
-  (:standard -w -9)))
+  (pps ppx_deriving_yojson)))

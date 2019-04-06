@@ -7,15 +7,11 @@ type error_record =
     recoverable : bool
   }
 
-[@@@ocaml.warning "-39"]
-
 type lambda_error =
   { error_message : string [@key "errorMessage"]
   ; error_type : string [@key "errorType"]
   }
 [@@deriving yojson]
-
-[@@@ocaml.warning "+39"]
 
 type _ t =
   | RuntimeError : error_record -> [ `unhandled ] t
@@ -40,21 +36,21 @@ let make_handler_error msg =
     { error_message = msg; error_type = Constants.error_type_handled }
 
 let is_recoverable = function
-  | ApiError { recoverable } | RuntimeError { recoverable } ->
+  | ApiError { recoverable; _ } | RuntimeError { recoverable; _ } ->
     recoverable
 
 let message : type a. a t -> string = function
-  | HandlerError { error_message } ->
+  | HandlerError { error_message; _ } ->
     error_message
-  | ApiError { msg } ->
+  | ApiError { msg; _ } ->
     msg
-  | RuntimeError { msg } ->
+  | RuntimeError { msg; _ } ->
     msg
 
 let request_id = function
-  | ApiError { request_id } ->
+  | ApiError { request_id; _ } ->
     request_id
-  | RuntimeError { request_id } ->
+  | RuntimeError { request_id; _ } ->
     request_id
 
 let to_lambda_error : type a. ?handled:bool -> a t -> Yojson.Safe.json =

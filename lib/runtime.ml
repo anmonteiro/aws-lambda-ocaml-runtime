@@ -68,7 +68,7 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
         end
       | Error e -> get_next_event ~error:e runtime (retries + 1)
 
-  let invoke { lift; handler } event ctx =
+  let invoke { lift; handler; _ } event ctx =
     Lwt.catch
       (fun () -> lift (handler event ctx))
       (fun exn ->

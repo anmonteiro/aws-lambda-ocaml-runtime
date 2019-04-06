@@ -24,8 +24,6 @@ module Constants = struct
   end
 end
 
-[@@@ocaml.warning "-39"]
-
 type client_application =
   { (* The mobile app installation id *)
     installation_id : string
@@ -61,8 +59,6 @@ type cognito_identity =
     identity_pool_id : string
   }
 [@@deriving yojson]
-
-[@@@ocaml.warning "+39"]
 
 type event_context =
   { (* The ARN of the Lambda function being invoked. *)
@@ -175,7 +171,7 @@ let event_response client request_id output =
          request_id)
   in
   make_runtime_post_request uri output >>= function
-  | Ok ({ Response.status }, _) ->
+  | Ok ({ Response.status; _ }, _) ->
     if not (Status.is_successful status) then
       let error =
         Errors.make_api_error
@@ -219,7 +215,7 @@ let event_error client request_id err =
          request_id)
   in
   make_runtime_error_request uri err >>= function
-  | Ok ({ Response.status }, _) ->
+  | Ok ({ Response.status; _ }, _) ->
     if not (Status.is_successful status) then
       let error =
         Errors.make_api_error
@@ -333,7 +329,7 @@ let next_event client =
       m "Polling for next event. Uri: %s\n" (Uri.to_string uri))
   >>= fun () ->
   send_request uri >>= function
-  | Ok ({ Response.status; headers }, body) ->
+  | Ok ({ Response.status; headers; _ }, body) ->
     let code = Status.to_code status in
     if Status.is_client_error status then
       Logs_lwt.err (fun m ->

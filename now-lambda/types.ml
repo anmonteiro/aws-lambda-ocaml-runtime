@@ -1,5 +1,3 @@
-[@@@ocaml.warning "-39"]
-
 type now_proxy_request_internal =
   { path : string
   ; http_method : string [@key "method"]
@@ -33,18 +31,12 @@ type now_event =
   }
 [@@deriving of_yojson]
 
-[@@@ocaml.warning "+39"]
-
 module Now_request = struct
-  [@@@ocaml.warning "-39-32"]
-
   type t = now_proxy_request [@@deriving yojson]
-
-  [@@@ocaml.warning "+39"]
 
   let of_yojson json =
     match now_event_of_yojson json with
-    | Ok { body = body_str } ->
+    | Ok { body = body_str; _ } ->
       (match
          Yojson.Safe.from_string body_str
          |> now_proxy_request_internal_of_yojson
@@ -74,7 +66,5 @@ module Now_request = struct
 end
 
 module Now_response = struct
-  [@@@ocaml.warning "-39"]
-
   type t = now_proxy_response [@@deriving yojson]
 end
