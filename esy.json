@@ -1,5 +1,5 @@
 {
-  "name": "ocaml-aws-lambda-runtime",
+  "name": "aws-lambda-ocaml-runtime",
   "version": "0.1.0",
   "description": "An OCaml custom runtime for AWS Lambda",
   "author": "António N. Monteiro <anmonteiro@gmail.com>",
@@ -19,7 +19,9 @@
     "@opam/alcotest": "*"
   },
   "devDependencies": {
-    "@opam/reason": "*"
+    "@opam/reason": "*",
+    "@opam/merlin": "*",
+    "@opam/ocamlformat": "*"
   },
   "resolutions": {
     "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#ea1b913"
