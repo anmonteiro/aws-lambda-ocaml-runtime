@@ -1,7 +1,8 @@
 (executable
-  (name basic)
-  (libraries lambda-runtime logs.fmt fmt.tty))
+ (name basic)
+ (libraries lambda-runtime logs.fmt fmt.tty))
 
 (env
-  (static
-    (flags (:standard -ccopt -static))))
+ (static
+  (flags
+   (:standard -ccopt -static))))

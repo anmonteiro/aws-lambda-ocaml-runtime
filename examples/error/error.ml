@@ -1,5 +1,4 @@
-let my_handler _evt _context =
-  Error "Failed for some reason"
+let my_handler _evt _context = Error "Failed for some reason"
 
 let setup_log ?style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();

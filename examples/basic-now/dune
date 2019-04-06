@@ -1,8 +1,12 @@
 (executable
- (name error)
+ (name basic)
  (libraries lambda-runtime logs.fmt fmt.tty))
 
 (env
  (static
   (flags
    (:standard -ccopt -static))))
+
+(alias
+ (name example)
+ (deps basic.exe))
