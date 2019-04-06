@@ -1,5 +1,4 @@
 open Lambda_runtime
-
 module Config = Lambda_runtime__.Config
 
 let set_endpoint_env_var () =
@@ -28,34 +27,52 @@ let unset_env_vars () =
 
 let get_env () =
   let env_lst = Array.to_list (Unix.environment ()) in
-  List.fold_left (fun m var ->
-    match String.split_on_char '=' var with
-    | k::v::_ -> StringMap.add k v m
-    | _ -> m)
-    (StringMap.empty) env_lst
+  List.fold_left
+    (fun m var ->
+      match String.split_on_char '=' var with
+      | k :: v :: _ ->
+        StringMap.add k v m
+      | _ ->
+        m)
+    StringMap.empty
+    env_lst
 
 let setup_and_run f () =
-  begin
-    unset_env_vars ();
-    set_endpoint_env_var();
-    set_lambda_env_vars();
-    f ()
-  end
+  unset_env_vars ();
+  set_endpoint_env_var ();
+  set_lambda_env_vars ();
+  f ()
 
-let suite = [
-  ("config from env vars", `Quick, setup_and_run @@ fun () ->
-    match Config.get_function_settings ~env:(get_env ()) () with
-    | Ok env_settings ->
-      Alcotest.(check int "memory size read from env" 128 env_settings.Config.memory_size)
-    | Error e -> Alcotest.fail e);
-  ("errors when vars are not set up", `Quick, fun () ->
-    unset_env_vars ();
-    match Config.get_function_settings () with
-    | Ok _env_settings -> Alcotest.fail "Expected env to not be setup"
-    | Error _e -> Alcotest.(check pass "" 1 1));
-  ("errors when runtime API endpoint is not set up", `Quick, fun () ->
-    unset_env_vars ();
-    match Config.get_runtime_api_endpoint () with
-    | Ok _endpoint -> Alcotest.fail "Expected env to not be setup"
-    | Error _e -> Alcotest.(check pass "" 1 1));
-]
+let suite =
+  [ ( "config from env vars"
+    , `Quick
+    , setup_and_run @@ fun () ->
+      match Config.get_function_settings ~env:(get_env ()) () with
+      | Ok env_settings ->
+        Alcotest.(
+          check
+            int
+            "memory size read from env"
+            128
+            env_settings.Config.memory_size)
+      | Error e ->
+        Alcotest.fail e )
+  ; ( "errors when vars are not set up"
+    , `Quick
+    , fun () ->
+        unset_env_vars ();
+        match Config.get_function_settings () with
+        | Ok _env_settings ->
+          Alcotest.fail "Expected env to not be setup"
+        | Error _e ->
+          Alcotest.(check pass "" 1 1) )
+  ; ( "errors when runtime API endpoint is not set up"
+    , `Quick
+    , fun () ->
+        unset_env_vars ();
+        match Config.get_runtime_api_endpoint () with
+        | Ok _endpoint ->
+          Alcotest.fail "Expected env to not be setup"
+        | Error _e ->
+          Alcotest.(check pass "" 1 1) )
+  ]

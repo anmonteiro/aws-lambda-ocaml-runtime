@@ -1,5 +1,4 @@
-let my_handler evt _context =
-  Ok evt
+let my_handler evt _context = Ok evt
 
 let setup_log ?style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();

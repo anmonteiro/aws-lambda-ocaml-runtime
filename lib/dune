@@ -1,0 +1,8 @@
+(library
+ (name lambda_runtime)
+ (public_name lambda-runtime)
+ (preprocess
+  (pps ppx_deriving_yojson))
+ (libraries yojson ppx_deriving_yojson.runtime httpaf-lwt uri logs.lwt)
+ (flags
+  (:standard -w -9)))
