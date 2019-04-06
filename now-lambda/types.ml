@@ -48,7 +48,11 @@ module Now_request = struct
       | Ok { body; encoding; path; http_method; host; headers } ->
         let body = match body, encoding with
         | None, _ -> None
-        | Some body, Some "base64" -> B64.decode_opt body
+        | Some body, Some "base64" ->
+            begin match Base64.decode body with
+            | Ok body -> Some body
+            | Error _ -> None
+            end
         | Some body, _ -> Some body
         in
         Ok { path; http_method; host; headers; body }

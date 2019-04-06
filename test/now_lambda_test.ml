@@ -27,7 +27,7 @@ let transform_b64_encoding = function
   | `Assoc kvs ->
     let kvs' = kvs
     |> List.map (function
-    | "body" as k, `String s -> k, `String (B64.decode s)
+    | "body" as k, `String s -> k, `String (Base64.decode_exn s)
     | x -> x)
     (* Encoding is not part of the public format  *)
     |> List.filter (function

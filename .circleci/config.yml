@@ -38,9 +38,9 @@ opam-steps: &opam-steps
         command: |
           opam install reason
           opam install alcotest
+          opam pin add httpaf -y git+https://github.com/inhabitedtype/httpaf
           opam pin add httpaf-lwt -y git+https://github.com/inhabitedtype/httpaf
-          opam pin add -y lambda-runtime .
-          opam pin add -y now-lambda .
+          opam install -t --deps-only .
     - save_cache:
         <<: *common_cache_key
         paths:
@@ -105,7 +105,7 @@ jobs:
           <<: *esy_post_build_cache_key
       - run:
           name: "Install esy"
-          command: npm install -g esy@0.4.3
+          command: npm install -g esy@0.5.6
       # - run:
       #     name: 'Clean'
       #     command: make clean-for-ci
