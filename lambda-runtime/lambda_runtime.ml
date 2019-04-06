@@ -7,4 +7,4 @@ module Make = Runtime.Make
 module Json = Lambda_json
 module Http = Lambda_http
 
-module Runtime_intf = Runtime_intf
+ module Runtime_intf = Runtime_intf

@@ -51,6 +51,7 @@ type t = {
      on a unix `monotonic` clock. *)
   deadline: int64;
 }
+[@@deriving yojson]
 
 let make
     ~invoked_function_arn

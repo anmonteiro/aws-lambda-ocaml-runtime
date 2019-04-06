@@ -57,10 +57,27 @@ module Context : sig
     (* the deadline for the current handler execution in nanoseconds based
       on a unix `monotonic` clock. *)
     deadline: int64;
-  }
+  } [@@deriving yojson]
 end
 
 module StringMap : module type of Util.StringMap
+
+module Runtime_intf : sig
+  module type LambdaIO = sig
+    type t
+
+    val of_yojson: Yojson.Safe.json -> (t, string) result
+    val to_yojson: t -> Yojson.Safe.json
+  end
+  module type LambdaRuntime = sig
+    type event
+    type response
+
+    val lambda: (event -> Context.t -> (response, string) result) -> unit
+
+    val io_lambda: (event -> Context.t -> (response, string) result Lwt.t) -> unit
+  end
+end
 
 module Make (Event : Runtime_intf.LambdaIO) (Response : Runtime_intf.LambdaIO):
   Runtime_intf.LambdaRuntime with type event = Event.t
@@ -130,8 +147,4 @@ module Http : sig
 
   include Runtime_intf.LambdaRuntime with type event = api_gateway_proxy_request
                                       and type response = api_gateway_proxy_response
-end
-
-module Runtime_intf : sig
-  include module type of Runtime_intf
 end
