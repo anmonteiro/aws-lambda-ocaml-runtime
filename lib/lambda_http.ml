@@ -1,7 +1,5 @@
 open Util
 
-[@@@ocaml.warning "-39"]
-
 (* APIGatewayRequestIdentity contains identity information for the request
    caller. *)
 type api_gateway_request_identity =
@@ -66,17 +64,11 @@ type api_gateway_proxy_response =
   }
 [@@deriving yojson]
 
-[@@@ocaml.warning "+39"]
-
 module API_gateway_request = struct
-  [@@@ocaml.warning "-39"]
-
   type t = api_gateway_proxy_request [@@deriving yojson]
 end
 
 module API_gateway_response = struct
-  [@@@ocaml.warning "-39"]
-
   type t = api_gateway_proxy_response [@@deriving yojson]
 end
 
