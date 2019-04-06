@@ -116,8 +116,9 @@ let send_request ?(meth = `GET) ?(additional_headers = []) ?body uri =
       (Uri.path_and_query uri)
       ~headers:
         (Headers.of_list
-           ([ "Host", host; "Content-Length", content_length ]
-           @ additional_headers))
+           (("Host", host)
+           :: ("Content-Length", content_length)
+           :: additional_headers))
   in
   let response_received, notify_response_received = Lwt.wait () in
   let response_handler = response_handler notify_response_received in

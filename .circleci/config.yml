@@ -64,7 +64,8 @@ opam-steps: &opam-steps
             echo "unsupported OCaml version for ocamlformat"
           ;;
           *)
-            dune build @fmt --auto-promote
+            # https://github.com/ocaml-ppx/ocamlformat/issues/754
+            dune build @fmt --auto-promote || true
             git diff --exit-code
           esac
     - run:
