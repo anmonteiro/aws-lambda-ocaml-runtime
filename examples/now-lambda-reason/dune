@@ -1,8 +1,6 @@
 (executable
  (name basic)
- (libraries now-lambda logs.fmt fmt.tty)
- (flags
-  (:standard -w -9)))
+ (libraries now-lambda logs.fmt fmt.tty))
 
 (env
  (static

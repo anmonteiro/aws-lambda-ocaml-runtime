@@ -1,4 +1,4 @@
-let my_handler { Now_lambda.body; host } _context =
+let my_handler { Now_lambda.body; host; _ } _context =
   let body =
     match body with
     | Some body ->
