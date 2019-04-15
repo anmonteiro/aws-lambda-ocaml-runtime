@@ -1,5 +1,5 @@
 (*----------------------------------------------------------------------------
- *  Copyright (c) 2018 António Nuno Monteiro
+ *  Copyright (c) 2019 António Nuno Monteiro
  *
  *  All rights reserved.
  *
@@ -30,22 +30,23 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module type LambdaIO = sig
-  type t
+module StringMap = Lambda_runtime.StringMap
 
-  val of_yojson : Yojson.Safe.json -> (t, string) result
+let decode_body ~encoding body =
+  match body, encoding with
+  | None, _ ->
+    None
+  | Some body, Some "base64" ->
+    (match Base64.decode body with Ok body -> Some body | Error _ -> None)
+  | Some body, _ ->
+    (* base64 is the only supported encoding *)
+    Some body
 
-  val to_yojson : t -> Yojson.Safe.json
-end
+let string_map_to_headers ?(init = Httpaf.Headers.empty) map =
+  StringMap.fold
+    (fun name value hs -> Httpaf.Headers.add hs name value)
+    map
+    init
 
-module type LambdaRuntime = sig
-  type event
-
-  type response
-
-  val lambda : (event -> Context.t -> (response, string) result) -> unit
-
-  val io_lambda
-    :  (event -> Context.t -> (response, string) result Lwt.t)
-    -> unit
-end
+let headers_to_string_map hs =
+  Httpaf.Headers.fold ~f:StringMap.add ~init:StringMap.empty hs

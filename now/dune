@@ -1,6 +1,6 @@
 (library
- (name now_lambda)
- (public_name now-lambda)
+ (name now)
+ (public_name now)
  (libraries lambda-runtime yojson ppx_deriving_yojson.runtime base64 httpaf)
  (preprocess
   (pps ppx_deriving_yojson)))

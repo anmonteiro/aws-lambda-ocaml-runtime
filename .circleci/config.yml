@@ -52,7 +52,7 @@ opam-steps: &opam-steps
           source ~/.bash_profile
           eval `opam config env`
           opam pin add -t -y lambda-runtime .
-          opam pin add -t -y now-lambda .
+          opam pin add -t -y now .
           dune build @all
           dune runtest --no-buffer
     - run:
