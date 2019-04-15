@@ -22,7 +22,7 @@ type t =
        the lambda runtime apis as a header. developers can use this value with
        the aws sdk to create new, custom sub-segments to the current
        invocation. *)
-    xray_trace_id : string
+    xray_trace_id : string option
   ; (* the name of the cloudwatch log stream for the current execution
        environment. this value is extracted from the
        `aws_lambda_log_stream_name` environment variable set by the lambda
