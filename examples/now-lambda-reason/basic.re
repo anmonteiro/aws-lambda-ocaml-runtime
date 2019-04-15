@@ -93,7 +93,7 @@ let read_response = response_body => {
   body_read;
 };
 
-let my_handler = (_, _context) => {
+let my_handler = (reqd, _context) => {
   let uri =
     Uri.of_string(
       "http://api.giphy.com/v1/gifs/random?tag=cat&api_key=hamBGlVDz0XI5tYtxTuPgudCVhHSNX8q&limit=1",
@@ -121,7 +121,9 @@ let my_handler = (_, _context) => {
                 Httpaf.Headers.of_list([("content-type", "text/html")]),
               `OK,
             );
-          Lwt.return(Ok(Now_lambda.respond_with_string(response, body)));
+          Lwt.return(
+            Ok(Now_lambda.Reqd.respond_with_string(reqd, response, body)),
+          );
         }
       )
     | Error(_) => Lwt.return(Error("Failed for some reason"))

@@ -1,11 +1,9 @@
-include Lambda_runtime.Make (Types.Now_request) (Types.Now_response)
+include Lambda_runtime.Make (Reqd) (Response)
 
-type handler_response = Types.Now_response.t
+(* Proxy to http/af for Headers, Request and Response for convenience *)
+module Headers = Httpaf.Headers
+module Request = Httpaf.Request
+module Response = Httpaf.Response
 
-let respond_with_string response str = response, str
-
-let respond_with_bigstring response ?(off = 0) ?len bstr =
-  let len =
-    match len with Some len -> len | None -> Bigstringaf.length bstr
-  in
-  response, Bigstringaf.substring ~off ~len bstr
+(* Request descriptor for Now.sh requests *)
+module Reqd = Reqd

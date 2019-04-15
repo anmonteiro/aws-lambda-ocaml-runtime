@@ -1,6 +1,8 @@
-open Httpaf
+open Now_lambda
 
-let my_handler ({ Request.headers; _ }, body) _context =
+let my_handler reqd _context =
+  let { Request.headers; _ } = Reqd.request reqd in
+  let body = Reqd.request_body reqd in
   let host = Headers.get_exn headers "host" in
   let body =
     match body with
@@ -14,7 +16,7 @@ let my_handler ({ Request.headers; _ }, body) _context =
       ~headers:(Headers.of_list [ "Content-Type", "application/json" ])
       `OK
   in
-  Ok (Now_lambda.respond_with_string response body)
+  Ok (Reqd.respond_with_string reqd response body)
 
 let setup_log ?style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();

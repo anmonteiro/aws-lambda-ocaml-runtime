@@ -38,54 +38,54 @@ let response =
 let suite =
   [ ( "deserialize (mock) API Gateway Proxy Request"
     , `Quick
-    , fun () -> test_fixture "apigw" )
+    , test_fixture "apigw" )
   ; ( "deserialize (real world) API Gateway Proxy Request"
     , `Quick
-    , fun () -> test_fixture "apigw_real_trimmed" )
+    , test_fixture "apigw_real_trimmed" )
   ; ( "successful handler invocation"
     , `Quick
-    , fun () ->
-        let handler _event _ctx = Ok response in
-        test_runtime handler (fun output ->
-            match output with
-            | Ok result ->
-              Alcotest.check
-                apigw_response
-                "runtime invoke output"
-                response
-                result
-            | Error e ->
-              Alcotest.fail e) )
+    , test_runtime
+        (fun _event _ctx -> Ok response)
+        (fun output ->
+          match output with
+          | Ok result ->
+            Alcotest.check
+              apigw_response
+              "runtime invoke output"
+              response
+              result
+          | Error e ->
+            Alcotest.fail e) )
   ; ( "failed handler invocation"
     , `Quick
-    , fun () ->
-        let handler _event _ctx = Error "I failed" in
-        test_runtime handler (fun output ->
-            match output with
-            | Ok response ->
-              let result_str =
-                response
-                |> Http.API_gateway_response.to_yojson
-                |> Yojson.Safe.pretty_to_string
-              in
-              Alcotest.fail
-                (Printf.sprintf
-                   "Expected to get an error but the call succeeded with: %s"
-                   result_str)
-            | Error e ->
-              Alcotest.(check string "Runtime invoke error" "I failed" e)) )
+    , test_runtime
+        (fun _event _ctx -> Error "I failed")
+        (fun output ->
+          match output with
+          | Ok response ->
+            let result_str =
+              response
+              |> Http.API_gateway_response.to_yojson
+              |> Yojson.Safe.pretty_to_string
+            in
+            Alcotest.fail
+              (Printf.sprintf
+                 "Expected to get an error but the call succeeded with: %s"
+                 result_str)
+          | Error e ->
+            Alcotest.(check string "Runtime invoke error" "I failed" e)) )
   ; ( "simple asynchronous handler invocation"
     , `Quick
-    , fun () ->
-        let handler _event _ctx = Lwt_result.return response in
-        test_async_runtime handler (fun output ->
-            match output with
-            | Ok result ->
-              Alcotest.check
-                apigw_response
-                "runtime invoke output"
-                response
-                result
-            | Error e ->
-              Alcotest.fail e) )
+    , test_async_runtime
+        (fun _event _ctx -> Lwt_result.return response)
+        (fun output ->
+          match output with
+          | Ok result ->
+            Alcotest.check
+              apigw_response
+              "runtime invoke output"
+              response
+              result
+          | Error e ->
+            Alcotest.fail e) )
   ]
