@@ -121,9 +121,7 @@ let my_handler = (reqd, _context) => {
                 Httpaf.Headers.of_list([("content-type", "text/html")]),
               `OK,
             );
-          Lwt.return(
-            Ok(Now.Reqd.respond_with_string(reqd, response, body)),
-          );
+          Lwt.return(Now.Reqd.respond_with_string(reqd, response, body));
         }
       )
     | Error(_) => Lwt.return(Error("Failed for some reason"))
