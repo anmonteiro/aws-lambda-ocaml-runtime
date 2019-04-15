@@ -5,7 +5,7 @@ let now_lambda_response =
   (module struct
     open Types
 
-    type t = now_proxy_response
+    type t = Now_lambda.response
 
     let pp formatter t =
       Format.pp_print_text
@@ -15,7 +15,7 @@ let now_lambda_response =
     let equal = ( = )
   end
   : Alcotest.TESTABLE
-    with type t = Types.now_proxy_response)
+    with type t = Now_lambda.response)
 
 module Runtime =
   Lambda_runtime__.Runtime.Make (Types.Now_request) (Types.Now_response)
@@ -53,13 +53,7 @@ let test_runtime =
 
 let test_async_runtime = test_runtime_generic (module Runtime) ~lift:id request
 
-let response =
-  Types.
-    { status_code = 200
-    ; headers = Lambda_runtime.StringMap.empty
-    ; body = "Hello"
-    ; encoding = None
-    }
+let response = Httpaf.Response.create `OK, ""
 
 let suite =
   [ ( "deserialize Now Proxy Request without HTTP Body"

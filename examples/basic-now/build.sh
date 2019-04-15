@@ -8,7 +8,7 @@ root_path=$PWD
 cd "$(dirname "$0")"
 
 rm -rf bootstrap
-docker build ../.. --tag lambda -f ./opam.Dockerfile
+docker build ../.. --tag lambda -f ./Dockerfile
 docker rm example || true
 docker create --name example lambda
 docker cp example:/app/bootstrap bootstrap

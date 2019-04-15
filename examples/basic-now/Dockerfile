@@ -8,7 +8,7 @@ RUN mkdir /esy
 WORKDIR /esy
 
 ENV NPM_CONFIG_PREFIX=/esy
-RUN npm install -g --unsafe-perm esy@0.4.7
+RUN npm install -g --unsafe-perm esy@0.5.6
 
 # now that we have esy installed we need a proper runtime
 
@@ -20,7 +20,7 @@ WORKDIR /
 
 COPY --from=build /esy /esy
 
-RUN apk add --no-cache ca-certificates wget bash curl perl-utils git patch gcc g++ musl-dev make m4
+RUN apk add --no-cache ca-certificates wget bash curl perl-utils git patch gcc g++ musl-dev make m4 gmp-dev linux-headers
 
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
 RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
@@ -31,6 +31,18 @@ ENV PATH=/esy/bin:$PATH
 RUN mkdir /app
 WORKDIR /app
 
+RUN echo ' \
+{\
+  "name": "package-base", \
+  "dependencies": { \
+    "ocaml": "~4.7.1000", \
+    "@opam/dune": "*" \
+  } \
+} \
+' > esy.json
+
+RUN esy
+
 COPY esy.json esy.json
 COPY esy.lock esy.lock
 
@@ -39,6 +51,6 @@ RUN esy true
 
 COPY . .
 
-RUN esy b dune build examples/basic/basic.exe --profile=static
+RUN esy b dune build examples/basic-now/basic.exe --profile=static
 
-RUN mv $(esy bash -c 'echo $cur__target_dir/default/examples/basic/basic.exe') bootstrap
+RUN mv $(esy bash -c 'echo $cur__target_dir/default/examples/basic-now/basic.exe') bootstrap
