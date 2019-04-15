@@ -59,7 +59,11 @@ module Reqd : sig
 
   val response_exn : t -> Httpaf.Response.t
 
-  val respond_with_string : t -> Httpaf.Response.t -> string -> response
+  val respond_with_string
+    :  t
+    -> Httpaf.Response.t
+    -> string
+    -> (response, string) result
 
   val respond_with_bigstring
     :  t
@@ -67,7 +71,7 @@ module Reqd : sig
     -> ?off:int
     -> ?len:int
     -> Bigstringaf.t
-    -> response
+    -> (response, string) result
 end
 
 include

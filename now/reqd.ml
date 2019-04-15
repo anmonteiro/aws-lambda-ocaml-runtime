@@ -69,9 +69,9 @@ let respond_with_string t response str =
   | Waiting ->
     let ret = response, str in
     t.response_state <- Complete ret;
-    ret
+    Ok ret
   | Complete _ ->
-    failwith "Now_lambda.Reqd.respond_with_string: Response already complete"
+    Error "Now_lambda.Reqd.respond_with_string: Response already complete"
 
 let respond_with_bigstring t response ?(off = 0) ?len bstr =
   match t.response_state with
@@ -81,10 +81,9 @@ let respond_with_bigstring t response ?(off = 0) ?len bstr =
     in
     let ret = response, Bigstringaf.substring ~off ~len bstr in
     t.response_state <- Complete ret;
-    ret
+    Ok ret
   | Complete _ ->
-    failwith
-      "Now_lambda.Reqd.respond_with_bigstring: Response already complete"
+    Error "Now_lambda.Reqd.respond_with_bigstring: Response already complete"
 
 (* Serializing / Deserializing *)
 

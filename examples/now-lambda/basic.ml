@@ -16,7 +16,7 @@ let my_handler reqd _context =
       ~headers:(Headers.of_list [ "Content-Type", "application/json" ])
       `OK
   in
-  Ok (Reqd.respond_with_string reqd response body)
+  Reqd.respond_with_string reqd response body
 
 let setup_log ?style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();
