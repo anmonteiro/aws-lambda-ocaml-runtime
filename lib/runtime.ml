@@ -31,11 +31,9 @@ module Make (Event : LambdaIO) (Response : LambdaIO) = struct
         | None ->
           Client.fail_init runtime.client err
         end |> ignore;
-        (*
-        * these errors are not recoverable. Either we can't communicate with the
-        * runtime APIs or we cannot parse the event. panic to restart the
-        * environment.
-        *)
+        (* These errors are not recoverable. Either we can't communicate with the
+         * runtime APIs or we cannot parse the event. panic to restart the
+         * environment. *)
         failwith "Could not retrieve next event"
     | _ ->
       Client.next_event runtime.client >>= function

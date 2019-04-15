@@ -1,11 +1,12 @@
 open Test_common
-module Types = Now_lambda__Types
+open Now_lambda__
+open Types
 
 let now_lambda_response =
   (module struct
     open Types
 
-    type t = Now_lambda.response
+    type t = Now_response.t
 
     let pp formatter t =
       Format.pp_print_text
@@ -15,7 +16,7 @@ let now_lambda_response =
     let equal = ( = )
   end
   : Alcotest.TESTABLE
-    with type t = Now_lambda.response)
+    with type t = Now_response.t)
 
 module Runtime =
   Lambda_runtime__.Runtime.Make (Types.Now_request) (Types.Now_response)

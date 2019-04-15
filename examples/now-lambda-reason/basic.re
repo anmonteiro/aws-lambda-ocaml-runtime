@@ -115,19 +115,13 @@ let my_handler = (_, _context) => {
             |> Util.member("url")
             |> Util.to_string;
           let body = Printf.sprintf("<img src=\"%s\">", img_url);
-          Lwt.return(
-            Ok(
-              Now_lambda.{
-                status_code: 200,
-                headers:
-                  Lambda_runtime.StringMap.(
-                    empty |> add("content-type", "text/html")
-                  ),
-                body,
-                encoding: None,
-              },
-            ),
-          );
+          let response =
+            Httpaf.Response.create(
+              ~headers=
+                Httpaf.Headers.of_list([("content-type", "text/html")]),
+              `OK,
+            );
+          Lwt.return(Ok(Now_lambda.respond_with_string(response, body)));
         }
       )
     | Error(_) => Lwt.return(Error("Failed for some reason"))
