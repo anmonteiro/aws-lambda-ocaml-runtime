@@ -93,7 +93,7 @@ let read_response = response_body => {
   body_read;
 };
 
-let my_handler = (_, _context) => {
+let my_handler = (reqd, _context) => {
   let uri =
     Uri.of_string(
       "http://api.giphy.com/v1/gifs/random?tag=cat&api_key=hamBGlVDz0XI5tYtxTuPgudCVhHSNX8q&limit=1",
@@ -115,18 +115,14 @@ let my_handler = (_, _context) => {
             |> Util.member("url")
             |> Util.to_string;
           let body = Printf.sprintf("<img src=\"%s\">", img_url);
+          let response =
+            Httpaf.Response.create(
+              ~headers=
+                Httpaf.Headers.of_list([("content-type", "text/html")]),
+              `OK,
+            );
           Lwt.return(
-            Ok(
-              Now_lambda.{
-                status_code: 200,
-                headers:
-                  Lambda_runtime.StringMap.(
-                    empty |> add("content-type", "text/html")
-                  ),
-                body,
-                encoding: None,
-              },
-            ),
+            Ok(Now_lambda.Reqd.respond_with_string(reqd, response, body)),
           );
         }
       )

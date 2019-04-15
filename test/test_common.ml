@@ -95,6 +95,7 @@ let test_runtime_generic
     event
     handler
     test_fn
+    ()
   =
   match MockConfigProvider.get_runtime_api_endpoint () with
   | Error _ ->
@@ -131,6 +132,7 @@ let test_fixture
     (module Request : Lambda_runtime__Runtime_intf.LambdaIO)
     ?(transform_fixture = id)
     fixture
+    ()
   =
   let fixture =
     read_all (Printf.sprintf "fixtures/%s.json" fixture)

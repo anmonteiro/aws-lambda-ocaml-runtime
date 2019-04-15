@@ -1,16 +1,9 @@
-type now_proxy_request = Types.now_proxy_request =
-  { path : string
-  ; http_method : string
-  ; host : string
-  ; headers : string Lambda_runtime.StringMap.t
-  ; body : string option
-  }
+include Lambda_runtime.Make (Reqd) (Response)
 
-type now_proxy_response = Types.now_proxy_response =
-  { status_code : int
-  ; headers : string Lambda_runtime.StringMap.t
-  ; body : string
-  ; encoding : string option
-  }
+(* Proxy to http/af for Headers, Request and Response for convenience *)
+module Headers = Httpaf.Headers
+module Request = Httpaf.Request
+module Response = Httpaf.Response
 
-include Lambda_runtime.Make (Types.Now_request) (Types.Now_response)
+(* Request descriptor for Now.sh requests *)
+module Reqd = Reqd
