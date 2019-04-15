@@ -1,9 +1,9 @@
 open Test_common
-module Now_lambda = Now_lambda__
+module Now = Now__
 
 let now_lambda_response =
   (module struct
-    open Now_lambda
+    open Now
 
     type t = Response.t
 
@@ -15,13 +15,11 @@ let now_lambda_response =
     let equal = ( = )
   end
   : Alcotest.TESTABLE
-    with type t = Now_lambda.Response.t)
+    with type t = Now.Response.t)
 
-module Runtime =
-  Lambda_runtime__.Runtime.Make (Now_lambda.Reqd) (Now_lambda.Response)
+module Runtime = Lambda_runtime__.Runtime.Make (Now.Reqd) (Now.Response)
 
-let request =
-  Test_common.make_test_request (module Now_lambda.Reqd) "now_with_body"
+let request = Test_common.make_test_request (module Now.Reqd) "now_with_body"
 
 let transform_internal json =
   match Yojson.Safe.Util.member "body" json with
@@ -46,7 +44,7 @@ let transform_b64_encoding = function
   | _ ->
     failwith "Expected body to be string"
 
-let test_fixture = Test_common.test_fixture (module Now_lambda.Reqd)
+let test_fixture = Test_common.test_fixture (module Now.Reqd)
 
 let test_runtime =
   test_runtime_generic (module Runtime) ~lift:Lwt.return request
@@ -88,7 +86,7 @@ let suite =
           | Ok response ->
             let result_str =
               response
-              |> Now_lambda.Response.to_yojson
+              |> Now.Response.to_yojson
               |> Yojson.Safe.pretty_to_string
             in
             Alcotest.fail

@@ -1,4 +1,4 @@
-open Now_lambda
+open Now
 
 let my_handler reqd _context =
   let { Request.headers; _ } = Reqd.request reqd in
@@ -26,4 +26,4 @@ let setup_log ?style_renderer level =
 
 let () =
   setup_log (Some Logs.Debug);
-  Now_lambda.lambda my_handler
+  Now.lambda my_handler

@@ -122,7 +122,7 @@ let my_handler = (reqd, _context) => {
               `OK,
             );
           Lwt.return(
-            Ok(Now_lambda.Reqd.respond_with_string(reqd, response, body)),
+            Ok(Now.Reqd.respond_with_string(reqd, response, body)),
           );
         }
       )
@@ -139,5 +139,5 @@ let setup_log = (~style_renderer=?, level) => {
 
 let () = {
   setup_log(Some(Logs.Debug));
-  Now_lambda.io_lambda(my_handler);
+  Now.io_lambda(my_handler);
 };

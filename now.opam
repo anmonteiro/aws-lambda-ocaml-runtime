@@ -1,7 +1,7 @@
 opam-version: "2.0"
 maintainer: "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
 authors: [ "Antonio Nuno Monteiro <anmonteiro@gmail.com>" ]
-license: "MIT"
+license: "BSD-3-clause"
 homepage: "https://github.com/anmonteiro/aws-lambda-ocaml-runtime"
 bug-reports: "https://github.com/anmonteiro/aws-lambda-ocaml-runtime/issues"
 dev-repo: "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime.git"
@@ -21,3 +21,9 @@ depends: [
 ]
 synopsis:
   "An OCaml custom runtime for AWS Lambda"
+description:
+  """
+  lambda-runtime is an OCaml custom runtime for AWS Lambda. The now package
+  provides an adapter and API for lambda-runtime that works with ZEIT's now.sh
+  v2 service.
+  """

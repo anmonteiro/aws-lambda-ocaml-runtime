@@ -1,5 +1,5 @@
 (*----------------------------------------------------------------------------
- *  Copyright (c) 2018 António Nuno Monteiro
+ *  Copyright (c) 2019 António Nuno Monteiro
  *
  *  All rights reserved.
  *
@@ -30,22 +30,41 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module type LambdaIO = sig
-  type t
+module StringMap = Lambda_runtime.StringMap
+module Response = Httpaf.Response
 
-  val of_yojson : Yojson.Safe.json -> (t, string) result
+type now_proxy_response =
+  { status_code : int [@key "statusCode"]
+  ; headers : string StringMap.t
+  ; body : string
+  ; encoding : string option
+  }
+[@@deriving yojson]
 
-  val to_yojson : t -> Yojson.Safe.json
-end
+type t = Response.t * string
 
-module type LambdaRuntime = sig
-  type event
+let to_yojson ({ Response.status; headers; _ }, body) =
+  let now_proxy_response =
+    { status_code = Httpaf.Status.to_code status
+    ; headers = Message.headers_to_string_map headers
+    ; body
+    ; encoding = None
+    }
+  in
+  now_proxy_response_to_yojson now_proxy_response
 
-  type response
-
-  val lambda : (event -> Context.t -> (response, string) result) -> unit
-
-  val io_lambda
-    :  (event -> Context.t -> (response, string) result Lwt.t)
-    -> unit
-end
+let of_yojson json =
+  match now_proxy_response_of_yojson json with
+  | Error _ as error ->
+    error
+  | Ok { status_code; headers; body; encoding } ->
+    let headers = Message.string_map_to_headers headers in
+    let status = Httpaf.Status.of_code status_code in
+    let body =
+      match Message.decode_body ~encoding (Some body) with
+      | Some body ->
+        body
+      | None ->
+        ""
+    in
+    Ok (Response.create ~headers status, body)

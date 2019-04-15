@@ -1,5 +1,5 @@
 (*----------------------------------------------------------------------------
- *  Copyright (c) 2018 António Nuno Monteiro
+ *  Copyright (c) 2019 António Nuno Monteiro
  *
  *  All rights reserved.
  *
@@ -30,22 +30,12 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module type LambdaIO = sig
-  type t
+include Lambda_runtime.Make (Reqd) (Response)
 
-  val of_yojson : Yojson.Safe.json -> (t, string) result
+(* Proxy to http/af for Headers, Request and Response for convenience *)
+module Headers = Httpaf.Headers
+module Request = Httpaf.Request
+module Response = Httpaf.Response
 
-  val to_yojson : t -> Yojson.Safe.json
-end
-
-module type LambdaRuntime = sig
-  type event
-
-  type response
-
-  val lambda : (event -> Context.t -> (response, string) result) -> unit
-
-  val io_lambda
-    :  (event -> Context.t -> (response, string) result Lwt.t)
-    -> unit
-end
+(* Request descriptor for Now.sh requests *)
+module Reqd = Reqd
