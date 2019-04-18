@@ -41,7 +41,7 @@ type now_proxy_request =
   ; body : string option [@default None]
   ; encoding : string option [@default None]
   }
-[@@deriving yojson]
+[@@deriving of_yojson]
 
 type now_event =
   { action : string [@key "Action"]
@@ -80,20 +80,3 @@ let of_yojson json =
         (Printf.sprintf "Failed to parse event to Now request type: %s" error))
   | Error _ ->
     Error "Failed to parse event to Now request type"
-
-let to_yojson ({ Request.meth; target; headers; _ }, body) =
-  let now_proxy_request =
-    { path = target
-    ; http_method = Httpaf.Method.to_string meth
-    ; host =
-        (match Httpaf.Headers.get headers "Host" with
-        | None ->
-          ""
-        | Some host ->
-          host)
-    ; headers = Message.headers_to_string_map headers
-    ; body
-    ; encoding = None
-    }
-  in
-  now_proxy_request_to_yojson now_proxy_request
