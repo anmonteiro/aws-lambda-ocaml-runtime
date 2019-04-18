@@ -39,7 +39,7 @@ opam-steps: &opam-steps
         command: |
           opam install reason
           opam install alcotest
-          opam pin add httpaf -y git+https://github.com/inhabitedtype/httpaf
+          opam pin add httpaf -y --dev-repo
           opam pin add httpaf-lwt -y git+https://github.com/inhabitedtype/httpaf
           opam install -t --deps-only .
     - save_cache:
