@@ -87,31 +87,7 @@ end
 
 module StringMap : module type of Util.StringMap
 
-module Runtime_intf : sig
-  module type LambdaEvent = sig
-    type t
-
-    val of_yojson : Yojson.Safe.json -> (t, string) result
-  end
-
-  module type LambdaResponse = sig
-    type t
-
-    val to_yojson : t -> Yojson.Safe.json
-  end
-
-  module type LambdaRuntime = sig
-    type event
-
-    type response
-
-    val lambda : (event -> Context.t -> (response, string) result) -> unit
-
-    val io_lambda
-      :  (event -> Context.t -> (response, string) result Lwt.t)
-      -> unit
-  end
-end
+module Runtime_intf : module type of Runtime_intf
 
 module Make
     (Event : Runtime_intf.LambdaEvent)
