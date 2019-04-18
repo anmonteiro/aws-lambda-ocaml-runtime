@@ -1,5 +1,5 @@
 {
-  "checksum": "ecfb08e5bf27344dd381c4138fe2f721",
+  "checksum": "f779f26f45f91ef056e854b3deaade81",
   "root": "aws-lambda-ocaml-runtime@link-dev:./esy.json",
   "node": {
     "ocaml@4.7.1004@d41d8cd9": {
@@ -26,8 +26,8 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/yojson@opam:1.5.0@890db858",
         "@opam/uri@opam:2.2.0@dfca6d0f", "@opam/result@opam:1.3@bee8bf2e",
         "@opam/ppx_deriving_yojson@opam:3.3@80aab5d8",
-        "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/logs@opam:0.6.2@1b881f5c",
-        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#53042e5@d41d8cd9",
+        "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/logs@opam:0.6.3@80c08d15",
+        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#50e690f@d41d8cd9",
         "@opam/dune@opam:1.9.1@61bdaadf", "@opam/base64@opam:3.2.0@e1bac209",
         "@opam/alcotest@opam:0.8.5@0b35b339"
       ],
@@ -906,35 +906,32 @@
         "@opam/result@opam:1.3@bee8bf2e", "@opam/mmap@opam:1.1.0@6f2a1426"
       ]
     },
-    "@opam/logs@opam:0.6.2@1b881f5c": {
-      "id": "@opam/logs@opam:0.6.2@1b881f5c",
+    "@opam/logs@opam:0.6.3@80c08d15": {
+      "id": "@opam/logs@opam:0.6.3@80c08d15",
       "name": "@opam/logs",
-      "version": "opam:0.6.2",
+      "version": "opam:0.6.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/19/19f824c02c83c6dddc3bfb6459e4743e#md5:19f824c02c83c6dddc3bfb6459e4743e",
-          "archive:http://erratique.ch/software/logs/releases/logs-0.6.2.tbz#md5:19f824c02c83c6dddc3bfb6459e4743e"
+          "archive:https://opam.ocaml.org/cache/md5/37/370e4c802588f73d0777c59bc414b57b#md5:370e4c802588f73d0777c59bc414b57b",
+          "archive:https://erratique.ch/software/logs/releases/logs-0.6.3.tbz#md5:370e4c802588f73d0777c59bc414b57b"
         ],
         "opam": {
           "name": "logs",
-          "version": "0.6.2",
-          "path": "esy.lock/opam/logs.0.6.2"
+          "version": "0.6.3",
+          "path": "esy.lock/opam/logs.0.6.3"
         }
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/topkg@opam:1.0.0@61f4ccf9",
-        "@opam/result@opam:1.3@bee8bf2e",
         "@opam/ocamlfind@opam:1.8.0@f744a0c5",
         "@opam/ocamlbuild@opam:0.14.0@427a2331",
         "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/fmt@opam:0.8.6@a06c130d",
         "@opam/cmdliner@opam:1.0.3@96d31520",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
-      "devDependencies": [
-        "ocaml@4.7.1004@d41d8cd9", "@opam/result@opam:1.3@bee8bf2e"
-      ]
+      "devDependencies": [ "ocaml@4.7.1004@d41d8cd9" ]
     },
     "@opam/jbuilder@opam:transition@58bdfe0a": {
       "id": "@opam/jbuilder@opam:transition@58bdfe0a",
@@ -958,36 +955,36 @@
         "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.9.1@61bdaadf"
       ]
     },
-    "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#53042e5@d41d8cd9": {
+    "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#50e690f@d41d8cd9": {
       "id":
-        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#53042e5@d41d8cd9",
+        "@opam/httpaf-lwt@github:inhabitedtype/httpaf:httpaf-lwt.opam#50e690f@d41d8cd9",
       "name": "@opam/httpaf-lwt",
-      "version": "github:inhabitedtype/httpaf:httpaf-lwt.opam#53042e5",
+      "version": "github:inhabitedtype/httpaf:httpaf-lwt.opam#50e690f",
       "source": {
         "type": "install",
-        "source": [ "github:inhabitedtype/httpaf:httpaf-lwt.opam#53042e5" ]
+        "source": [ "github:inhabitedtype/httpaf:httpaf-lwt.opam#50e690f" ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
-        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#53042e5@d41d8cd9",
+        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#50e690f@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@b0dea04f",
         "@opam/dune@opam:1.9.1@61bdaadf", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.7.1004@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
-        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#53042e5@d41d8cd9",
+        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#50e690f@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@b0dea04f"
       ]
     },
-    "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#53042e5@d41d8cd9": {
+    "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#50e690f@d41d8cd9": {
       "id":
-        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#53042e5@d41d8cd9",
+        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#50e690f@d41d8cd9",
       "name": "@opam/httpaf",
-      "version": "github:inhabitedtype/httpaf:httpaf.opam#53042e5",
+      "version": "github:inhabitedtype/httpaf:httpaf.opam#50e690f",
       "source": {
         "type": "install",
-        "source": [ "github:inhabitedtype/httpaf:httpaf.opam#53042e5" ]
+        "source": [ "github:inhabitedtype/httpaf:httpaf.opam#50e690f" ]
       },
       "overrides": [],
       "dependencies": [
