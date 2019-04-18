@@ -88,10 +88,14 @@ end
 module StringMap : module type of Util.StringMap
 
 module Runtime_intf : sig
-  module type LambdaIO = sig
+  module type LambdaEvent = sig
     type t
 
     val of_yojson : Yojson.Safe.json -> (t, string) result
+  end
+
+  module type LambdaResponse = sig
+    type t
 
     val to_yojson : t -> Yojson.Safe.json
   end
@@ -109,7 +113,9 @@ module Runtime_intf : sig
   end
 end
 
-module Make (Event : Runtime_intf.LambdaIO) (Response : Runtime_intf.LambdaIO) :
+module Make
+    (Event : Runtime_intf.LambdaEvent)
+    (Response : Runtime_intf.LambdaResponse) :
   Runtime_intf.LambdaRuntime
   with type event = Event.t
    and type response = Response.t

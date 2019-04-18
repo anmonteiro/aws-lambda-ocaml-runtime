@@ -32,14 +32,7 @@
 
 open Lwt.Infix
 
-module type LambdaIO = sig
-  type t
-
-  val of_yojson: Yojson.Safe.json -> (t, string) result
-  val to_yojson: t -> Yojson.Safe.json
-end
-
-module Make (Event : LambdaIO) (Response : LambdaIO) = struct
+module Make (Event : Runtime_intf.LambdaEvent) (Response : Runtime_intf.LambdaResponse) = struct
   type event = Event.t
   type response = Response.t
 

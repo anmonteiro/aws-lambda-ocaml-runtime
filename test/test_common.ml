@@ -129,28 +129,21 @@ let rec order_keys = function
     x
 
 let test_fixture
-    (module Request : Lambda_runtime__Runtime_intf.LambdaIO)
-    ?(transform_fixture = id)
-    fixture
-    ()
+    (module Request : Lambda_runtime__Runtime_intf.LambdaEvent) fixture ()
   =
   let fixture =
     read_all (Printf.sprintf "fixtures/%s.json" fixture)
     |> Yojson.Safe.from_string
   in
   match Request.of_yojson fixture with
-  | Ok req ->
-    Alcotest.check
-      yojson
-      "roundtripping"
-      (fixture |> transform_fixture |> order_keys)
-      (Request.to_yojson req |> order_keys)
+  | Ok _req ->
+    Alcotest.(check pass) "Parses correctly" true true
   | Error err ->
     Alcotest.fail err
 
 let make_test_request
     (type a)
-    (module Request : Lambda_runtime__Runtime_intf.LambdaIO with type t = a)
+    (module Request : Lambda_runtime__Runtime_intf.LambdaEvent with type t = a)
     fixture
   =
   let fixture =

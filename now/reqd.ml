@@ -93,6 +93,3 @@ let of_yojson json =
     Ok { request; request_body; response_state = Waiting }
   | Error _ as error ->
     error
-
-let to_yojson { request; request_body; _ } =
-  Request.to_yojson (request, request_body)

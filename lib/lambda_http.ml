@@ -97,11 +97,11 @@ type api_gateway_proxy_response =
 [@@deriving yojson]
 
 module API_gateway_request = struct
-  type t = api_gateway_proxy_request [@@deriving yojson]
+  type t = api_gateway_proxy_request [@@deriving of_yojson]
 end
 
 module API_gateway_response = struct
-  type t = api_gateway_proxy_response [@@deriving yojson]
+  type t = api_gateway_proxy_response [@@deriving to_yojson]
 end
 
 include Runtime.Make (API_gateway_request) (API_gateway_response)
