@@ -43,7 +43,7 @@ type lambda_error =
   { error_message : string [@key "errorMessage"]
   ; error_type : string [@key "errorType"]
   }
-[@@deriving yojson]
+[@@deriving to_yojson]
 
 type _ t =
   | RuntimeError : error_record -> [ `unhandled ] t

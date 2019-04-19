@@ -1,8 +1,8 @@
 open Test_common
 module Runtime =
   Lambda_runtime__.Runtime.Make
-    (Lambda_runtime__.Lambda_json.Id)
-    (Lambda_runtime__.Lambda_json.Id)
+    (Lambda_runtime__.Json.Id)
+    (Lambda_runtime__.Json.Id)
 
 let request = `String "test"
 

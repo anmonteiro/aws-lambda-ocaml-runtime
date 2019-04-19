@@ -33,7 +33,7 @@
 open Util
 
 (* APIGatewayRequestIdentity contains identity information for the request
-   caller. *)
+ * caller. *)
 type api_gateway_request_identity =
   { cognito_identity_pool_id : string option [@key "cognitoIdentityPoolId"]
   ; account_id : string option [@key "accountId"]
@@ -50,11 +50,11 @@ type api_gateway_request_identity =
   ; user_agent : string option [@key "userAgent"]
   ; user : string option
   }
-[@@deriving yojson]
+[@@deriving of_yojson]
 
 (* APIGatewayProxyRequestContext contains the information to identify the AWS
-   account and resources invoking the Lambda function. It also includes Cognito
-   identity information for the caller. *)
+ * account and resources invoking the Lambda function. It also includes Cognito
+ * identity information for the caller. *)
 type api_gateway_proxy_request_context =
   { account_id : string [@key "accountId"]
   ; resource_id : string [@key "resourceId"]
@@ -69,7 +69,7 @@ type api_gateway_proxy_request_context =
   ; path : string option [@default None]
   ; api_id : string [@key "apiId"] (* The API Gateway REST API ID *)
   }
-[@@deriving yojson { strict = false }]
+[@@deriving of_yojson { strict = false }]
 
 type api_gateway_proxy_request =
   { resource : string
@@ -86,7 +86,7 @@ type api_gateway_proxy_request =
   ; body : string option
   ; is_base64_encoded : bool [@key "isBase64Encoded"]
   }
-[@@deriving yojson { strict = false }]
+[@@deriving of_yojson { strict = false }]
 
 type api_gateway_proxy_response =
   { status_code : int [@key "statusCode"]
@@ -94,7 +94,7 @@ type api_gateway_proxy_response =
   ; body : string
   ; is_base64_encoded : bool [@key "isBase64Encoded"]
   }
-[@@deriving yojson]
+[@@deriving to_yojson]
 
 module API_gateway_request = struct
   type t = api_gateway_proxy_request [@@deriving of_yojson]
