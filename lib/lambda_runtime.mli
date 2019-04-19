@@ -32,57 +32,56 @@
 
 module Context : sig
   type t =
-    { (* the amount of memory allocated to the lambda function in mb. this
-         value is extracted from the `aws_lambda_function_memory_size`
-         environment variable set by the lambda service. *)
-      memory_limit_in_mb : int
-    ; (* the name of the lambda function as registered with the lambda service.
-         the value is extracted from the `aws_lambda_function_name` environment
-         variable set by the lambda service. *)
-      function_name : string
-    ; (* the version of the function being invoked. this value is extracted
-         from the `aws_lambda_function_version` environment variable set by the
-         lambda service. *)
-      function_version : string
-    ; (* the fully qualified arn (amazon resource name) for the function
-         invocation event. this value is returned by the lambda runtime apis as
-         a header. *)
-      invoked_function_arn : string
-    ; (* the aws request id for the current invocation event. this value is
-         returned by the lambda runtime apis as a header. *)
-      aws_request_id : string
-    ; (* the x-ray trace id for the current invocation. this value is returned
-         by the lambda runtime apis as a header. developers can use this value
-         with the aws sdk to create new, custom sub-segments to the current
-         invocation. *)
-      xray_trace_id : string option
-    ; (* the name of the cloudwatch log stream for the current execution
-         environment. this value is extracted from the
-         `aws_lambda_log_stream_name` environment variable set by the lambda
-         service. *)
-      log_stream_name : string
-    ; (* the name of the cloudwatch log group for the current execution
-         environment. this value is extracted from the
-         `aws_lambda_log_group_name` environment variable set by the lambda
-         service. *)
-      log_group_name : string
-    ; (* the client context sent by the aws mobile sdk with the invocation
-         request. this value is returned by the lambda runtime apis as a
-         header. this value is populated only if the invocation request
-         originated from an aws mobile sdk or an sdk that attached the client
-         context information to the request. *)
-      client_context : Client.client_context option
-    ; (* the information of the cognito identity that sent the invocation
-         request to the lambda service. this value is returned by the lambda
-         runtime apis in a header and it's only populated if the invocation
-         request was performed with aws credentials federated through the
-         cognito identity service. *)
-      identity : Client.cognito_identity option
-    ; (* the deadline for the current handler execution in nanoseconds based on
-         a unix `monotonic` clock. *)
-      deadline : int64
+    { memory_limit_in_mb : int
+          (** The amount of memory allocated to the lambda function in MB. This
+              value is extracted from the `AWS_LAMBDA_FUNCTION_MEMORY_SIZE`
+              environment variable set by the lambda service. *)
+    ; function_name : string
+          (** The name of the lambda function as registered with the lambda
+              service. The value is extracted from the
+              `AWS_LAMBDA_FUNCTION_NAME` environment variable set by the lambda
+              service. *)
+    ; function_version : string
+          (** The version of the function being invoked. This value is
+              extracted from the `AWS_LAMBDA_FUNCTION_VERSION` environment
+              variable set by the lambda service. *)
+    ; invoked_function_arn : string
+          (** The fully qualified ARN (Amazon Resource Name) for the function
+              invocation event. This value is returned by the lambda runtime
+              APIs as a header. *)
+    ; aws_request_id : string
+          (** The AWS Request ID for the current invocation event. This value
+              is returned by the lambda runtime APIs as a header. *)
+    ; xray_trace_id : string option
+          (** The x-ray trace id for the current invocation. this value is
+              returned by the lambda runtime apis as a header. developers can
+              use this value with the aws sdk to create new, custom
+              sub-segments to the current invocation. *)
+    ; log_stream_name : string
+          (** The name of the cloudwatch log stream for the current execution
+              environment. this value is extracted from the
+              `aws_lambda_log_stream_name` environment variable set by the
+              lambda service. *)
+    ; log_group_name : string
+          (** The name of the CloudWatch log group for the current execution
+              environment. This value is extracted from the
+              `AWS_LAMBDA_LOG_GROUP_NAME` environment variable set by the
+              lambda service. *)
+    ; client_context : Client.client_context option
+          (** The client context sent by the AWS Mobile SDK with the invocation
+              request. This value is returned by the lambda runtime APIs as a
+              header. This value is populated only if the invocation request
+              originated from an AWS Mobile SDK or an SDK that attached the
+              client context information to the request. *)
+    ; identity : Client.cognito_identity option
+          (** The information of the Cognito Identity that sent the invocation
+              request to the lambda service. This value is returned by the
+              lambda runtime APIs in a header and it's only populated if the
+              invocation request was performed with AWS credentials federated
+              through the Cognito Identity service. *)
+    ; deadline : int64
+          (** The deadline for the current handler execution in nanoseconds. *)
     }
-  [@@deriving yojson]
 end
 
 module StringMap : module type of Util.StringMap
@@ -107,7 +106,7 @@ module Http : sig
   open Util
 
   (* APIGatewayRequestIdentity contains identity information for the request
-     caller. *)
+   * caller. *)
   type api_gateway_request_identity =
     { cognito_identity_pool_id : string option
     ; account_id : string option
@@ -124,8 +123,8 @@ module Http : sig
     }
 
   (* APIGatewayProxyRequestContext contains the information to identify the AWS
-     account and resources invoking the Lambda function. It also includes
-     Cognito identity information for the caller. *)
+   * account and resources invoking the Lambda function. It also includes
+   * Cognito identity information for the caller. *)
   type api_gateway_proxy_request_context =
     { account_id : string
     ; resource_id : string
@@ -137,7 +136,7 @@ module Http : sig
     ; http_method : string
     ; protocol : string option
     ; path : string option
-    ; api_id : string (* The API Gateway REST API ID *)
+    ; api_id : string  (** The API Gateway REST API ID *)
     }
 
   type api_gateway_proxy_request =

@@ -1,6 +1,6 @@
 open Lambda_runtime
 open Test_common
-module Http = Lambda_runtime__.Lambda_http
+module Http = Lambda_runtime__.Http
 
 let apigw_response =
   (module struct
