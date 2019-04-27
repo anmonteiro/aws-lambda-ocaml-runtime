@@ -24,7 +24,7 @@
     "@opam/ocamlformat": "*"
   },
   "resolutions": {
-    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#a1bc4b9",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#6d2c80e"
+    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#fa9dc4e",
+    "@opam/httpaf-lwt-unix": "inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e"
   }
 }
