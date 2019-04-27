@@ -12,7 +12,7 @@
     "@opam/ppx_deriving_yojson": "*",
     "@opam/logs": "*",
     "@opam/result": "*",
-    "@opam/httpaf-lwt": "*",
+    "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": "*",
     "@opam/uri": "*",
     "@opam/base64": "*",
@@ -24,7 +24,7 @@
     "@opam/ocamlformat": "*"
   },
   "resolutions": {
-    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#50e690f",
-    "@opam/httpaf-lwt": "inhabitedtype/httpaf:httpaf-lwt.opam#50e690f"
+    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#a1bc4b9",
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#6d2c80e"
   }
 }
