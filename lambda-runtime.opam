@@ -15,7 +15,7 @@ depends: [
   "yojson"
   "ppx_deriving_yojson"
   "httpaf"
-  "httpaf-lwt"
+  "httpaf-lwt-unix"
   "uri"
   "logs"
   "lwt"
