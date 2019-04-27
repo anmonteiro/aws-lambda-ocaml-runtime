@@ -116,7 +116,7 @@ let make endpoint = endpoint
 
 let send_request ?(meth = `GET) ?(additional_headers = []) ?body uri =
   let open Httpaf in
-  let open Httpaf_lwt in
+  let open Httpaf_lwt_unix in
   let response_handler notify_response_received response response_body =
     Lwt.wakeup_later notify_response_received (Ok (response, response_body))
   in

@@ -2,7 +2,7 @@ open Lwt.Infix;
 
 let send_request = (~meth=`GET, ~additional_headers=[], ~body=?, uri) => {
   open Httpaf;
-  open Httpaf_lwt;
+  open Httpaf_lwt_unix;
   let response_handler = (notify_response_received, response, response_body) =>
     Lwt.wakeup_later(
       notify_response_received,
