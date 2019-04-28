@@ -26,6 +26,7 @@ let send_request = (~meth=`GET, ~additional_headers=[], ~body=?, uri) => {
       Lwt_unix.connect(socket, List.hd(addresses).Unix.ai_addr)
       >>= (
         () => {
+          let connection = Client.create_connection(socket);
           let content_length =
             switch (body) {
             | None => "0"
@@ -49,7 +50,7 @@ let send_request = (~meth=`GET, ~additional_headers=[], ~body=?, uri) => {
 
           let request_body =
             Client.request(
-              socket,
+              connection,
               request_headers,
               ~error_handler,
               ~response_handler,
