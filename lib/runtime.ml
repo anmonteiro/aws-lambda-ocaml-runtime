@@ -146,19 +146,22 @@ struct
         else
           start runtime )
 
-  let start_with_runtime_client ~lift handler function_config client =
+  let start_with_runtime_endpoint ~lift handler function_config endpoint =
+    Client.make endpoint >>= fun client ->
     let runtime =
-      make ~max_retries:3 ~settings:function_config client ~lift ~handler
+      make ~max_retries:3 ~settings:function_config ~lift ~handler client
     in
-    Lwt_main.run (start runtime)
+    start runtime
 
   let start_lambda ~lift handler =
     match Config.get_runtime_api_endpoint () with
     | Ok endpoint ->
       (match Config.get_function_settings () with
       | Ok function_config ->
-        let client = Client.make endpoint in
-        start_with_runtime_client ~lift handler function_config client
+        let p =
+          start_with_runtime_endpoint ~lift handler function_config endpoint
+        in
+        Lwt_main.run p
       | Error msg ->
         failwith msg)
     | Error msg ->

@@ -31,6 +31,18 @@ ENV PATH=/esy/bin:$PATH
 RUN mkdir /app
 WORKDIR /app
 
+RUN echo ' \
+{\
+  "name": "package-base", \
+  "dependencies": { \
+    "ocaml": "~4.7.1000", \
+    "@opam/dune": "*" \
+  } \
+} \
+' > esy.json
+
+RUN esy
+
 COPY esy.json esy.json
 COPY esy.lock esy.lock
 

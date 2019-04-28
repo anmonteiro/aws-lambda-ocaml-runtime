@@ -25,8 +25,8 @@
   },
   "resolutions": {
     "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb66",
-    "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#fa9dc4e",
-    "@opam/httpaf-lwt-unix": "inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#08ecb42",
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#08ecb42",
     "@opam/reason": "facebook/reason:reason.opam#f584e86",
     "@opam/ppx_tools": "ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4",
     "@opam/ppx_deriving": "ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384",

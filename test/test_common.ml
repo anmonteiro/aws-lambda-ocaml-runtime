@@ -35,7 +35,7 @@ module MockConfigProvider = struct
     if !error then
       Error (Errors.make_runtime_error ~recoverable:false "Mock error")
     else
-      Ok "http://localhost:8080"
+      Ok "localhost:8080"
 
   let get_deadline secs =
     let now_ms = Unix.gettimeofday () *. 1000. in
@@ -100,7 +100,13 @@ let test_runtime_generic
   | Error _ ->
     Alcotest.fail "Could not get runtime endpoint"
   | Ok runtime_api_endpoint ->
-    let client = Client.make runtime_api_endpoint in
+    (* Avoid creating a TCP connection for every test *)
+    let client =
+      { Client.endpoint = runtime_api_endpoint
+      ; host = "localhost"
+      ; connection = Obj.magic (Httpaf.Client_connection.create ?config:None)
+      }
+    in
     (match MockConfigProvider.get_function_settings () with
     | Error _ ->
       Alcotest.fail "Could not load environment config"
@@ -119,13 +125,6 @@ let read_all path =
   | exn ->
     close_in file;
     raise exn
-
-let rec order_keys = function
-  | `Assoc kvs ->
-    let bindings = List.map (fun (k, v) -> k, order_keys v) kvs in
-    `Assoc (List.sort (fun (k1, _) (k2, _) -> compare k1 k2) bindings)
-  | x ->
-    x
 
 let test_fixture
     (module Request : Lambda_runtime__Runtime_intf.LambdaEvent) fixture ()
