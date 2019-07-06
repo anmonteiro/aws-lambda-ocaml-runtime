@@ -98,8 +98,8 @@ module Make
 module Json : sig
   include
     Runtime_intf.LambdaRuntime
-      with type event = (Yojson.Safe.json[@ocaml.warning "-3"])
-       and type response = (Yojson.Safe.json[@ocaml.warning "-3"])
+      with type event = Yojson.Safe.t
+       and type response = Yojson.Safe.t
 end
 
 module Http : sig

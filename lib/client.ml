@@ -76,9 +76,9 @@ type client_context =
   { (* Information about the mobile application invoking the function. *)
     client : client_application
   ; (* Custom properties attached to the mobile event context. *)
-    custom : Yojson.Safe.json [@ocaml.warning "-3"]
+    custom : Yojson.Safe.t
   ; (* Environment settings from the mobile client. *)
-    env : Yojson.Safe.json [@ocaml.warning "-3"]
+    env : Yojson.Safe.t
   }
 [@@deriving of_yojson]
 

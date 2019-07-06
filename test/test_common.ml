@@ -7,14 +7,14 @@ let id : 'a. 'a -> 'a = fun x -> x
 
 let yojson =
   (module struct
-    type t = Yojson.Safe.json [@@ocaml.warning "-3"]
+    type t = Yojson.Safe.t
 
     let pp formatter t =
       Format.pp_print_text formatter (Yojson.Safe.pretty_to_string t)
 
     let equal = ( = )
   end : Alcotest.TESTABLE
-    with type t = (Yojson.Safe.json[@ocaml.warning "-3"]))
+    with type t = Yojson.Safe.t)
 
 let error = ref false
 
