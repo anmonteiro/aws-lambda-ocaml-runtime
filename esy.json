@@ -6,17 +6,17 @@
   "license": "MIT",
   "repository": "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime",
   "dependencies": {
-    "ocaml": " >= 4.4.0",
+    "ocaml": "4.8.0",
     "@opam/dune": "*",
-    "@opam/yojson": "*",
+    "@opam/yojson": ">= 1.6.0 < 2.0.0",
     "@opam/ppx_deriving_yojson": "*",
     "@opam/logs": "*",
-    "@opam/result": "*",
     "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": "*",
     "@opam/uri": "*",
     "@opam/base64": "*",
-    "@opam/alcotest": "*"
+    "@opam/alcotest": "*",
+    "@opam/conf-libev": "*"
   },
   "devDependencies": {
     "@opam/reason": "*",
@@ -24,7 +24,12 @@
     "@opam/ocamlformat": "*"
   },
   "resolutions": {
+    "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb66",
     "@opam/httpaf": "inhabitedtype/httpaf:httpaf.opam#fa9dc4e",
-    "@opam/httpaf-lwt-unix": "inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e"
+    "@opam/httpaf-lwt-unix": "inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e",
+    "@opam/reason": "facebook/reason:reason.opam#f584e86",
+    "@opam/ppx_tools": "ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4",
+    "@opam/ppx_deriving": "ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c",
+    "@opam/ppx_deriving_yojson": "anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7"
   }
 }

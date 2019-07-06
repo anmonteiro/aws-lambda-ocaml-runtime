@@ -31,7 +31,7 @@
  *---------------------------------------------------------------------------*)
 
 module Id = struct
-  type t = Yojson.Safe.json [@@deriving yojson]
+  type t = (Yojson.Safe.json[@ocaml.warning "-3"]) [@@deriving yojson]
 end
 
 include Runtime.Make (Id) (Id)

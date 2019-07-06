@@ -13,8 +13,7 @@ let now_lambda_response =
         (t |> Response.to_yojson |> Yojson.Safe.pretty_to_string)
 
     let equal = ( = )
-  end
-  : Alcotest.TESTABLE
+  end : Alcotest.TESTABLE
     with type t = Now.Response.t)
 
 module Runtime = Lambda_runtime__.Runtime.Make (Now.Reqd) (Now.Response)

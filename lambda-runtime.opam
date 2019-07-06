@@ -12,7 +12,7 @@ depends: [
   "ocaml" {>= "4.04"}
   "dune" {build}
   "result"
-  "yojson"
+  "yojson" {>= "1.6.0" & < "2.0.0"}
   "ppx_deriving_yojson"
   "httpaf"
   "httpaf-lwt-unix"

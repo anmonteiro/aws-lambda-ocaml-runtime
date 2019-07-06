@@ -76,9 +76,9 @@ type client_context =
   { (* Information about the mobile application invoking the function. *)
     client : client_application
   ; (* Custom properties attached to the mobile event context. *)
-    custom : Yojson.Safe.json
+    custom : Yojson.Safe.json [@ocaml.warning "-3"]
   ; (* Environment settings from the mobile client. *)
-    env : Yojson.Safe.json
+    env : Yojson.Safe.json [@ocaml.warning "-3"]
   }
 [@@deriving of_yojson]
 
@@ -388,9 +388,11 @@ let next_event client =
       | Error err ->
         Logs_lwt.err (fun m ->
             m "Failed to get event context: %s\n" (Errors.message err))
-        >>= fun () -> Lwt_result.fail err
+        >>= fun () ->
+        Lwt_result.fail err
       | Ok ctx ->
-        read_response body >>= fun body_str -> Lwt_result.return (body_str, ctx))
+        read_response body >>= fun body_str ->
+        Lwt_result.return (body_str, ctx))
   | Error _ ->
     let err =
       Errors.make_api_error

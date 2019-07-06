@@ -76,5 +76,5 @@ end
 
 include
   Runtime_intf.LambdaRuntime
-  with type event = Reqd.t
-   and type response = Reqd.response
+    with type event = Reqd.t
+     and type response = Reqd.response

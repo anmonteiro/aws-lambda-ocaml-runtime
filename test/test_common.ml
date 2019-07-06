@@ -13,8 +13,7 @@ let yojson =
       Format.pp_print_text formatter (Yojson.Safe.pretty_to_string t)
 
     let equal = ( = )
-  end
-  : Alcotest.TESTABLE
+  end : Alcotest.TESTABLE
     with type t = Yojson.Safe.json)
 
 let error = ref false
