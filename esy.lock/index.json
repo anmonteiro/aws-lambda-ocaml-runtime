@@ -1,5 +1,5 @@
 {
-  "checksum": "cc3ea2e9d7de4379efdc2250b0936f83",
+  "checksum": "e222521fbeb4b6734a47daeb4babc36e",
   "root": "aws-lambda-ocaml-runtime@link-dev:./esy.json",
   "node": {
     "ocaml@4.8.0@d41d8cd9": {
@@ -25,7 +25,7 @@
       "dependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/yojson@opam:1.7.0@2d92307e",
         "@opam/uri@opam:2.2.1@6bd26f86",
-        "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7@d41d8cd9",
+        "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2@d41d8cd9",
         "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/logs@opam:0.6.3@80c08d15",
         "@opam/httpaf-lwt-unix@github:inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e@d41d8cd9",
         "@opam/dune@opam:1.10.0@b15ce221",
@@ -562,16 +562,16 @@
         "@opam/base@opam:v0.12.2@e209c8f2"
       ]
     },
-    "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7@d41d8cd9": {
+    "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2@d41d8cd9": {
       "id":
-        "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7@d41d8cd9",
+        "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2@d41d8cd9",
       "name": "@opam/ppx_deriving_yojson",
       "version":
-        "github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7",
+        "github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2",
       "source": {
         "type": "install",
         "source": [
-          "github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7"
+          "github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2"
         ]
       },
       "overrides": [],
@@ -579,25 +579,25 @@
         "ocaml@4.8.0@d41d8cd9", "@opam/yojson@opam:1.7.0@2d92307e",
         "@opam/result@opam:1.4@7add0d71", "@opam/ppxfind@opam:1.3@a7b3cc46",
         "@opam/ppx_tools@github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4@d41d8cd9",
-        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c@d41d8cd9",
+        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9",
         "@opam/dune@opam:1.10.0@b15ce221", "@opam/cppo@opam:1.6.6@25eb99ce",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/yojson@opam:1.7.0@2d92307e",
         "@opam/result@opam:1.4@7add0d71",
-        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c@d41d8cd9"
+        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9"
       ]
     },
-    "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c@d41d8cd9": {
+    "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9": {
       "id":
-        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c@d41d8cd9",
+        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9",
       "name": "@opam/ppx_deriving",
-      "version": "github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c",
+      "version": "github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384",
       "source": {
         "type": "install",
         "source": [
-          "github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c"
+          "github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384"
         ]
       },
       "overrides": [],

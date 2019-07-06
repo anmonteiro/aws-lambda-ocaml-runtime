@@ -29,7 +29,7 @@
     "@opam/httpaf-lwt-unix": "inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e",
     "@opam/reason": "facebook/reason:reason.opam#f584e86",
     "@opam/ppx_tools": "ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4",
-    "@opam/ppx_deriving": "ocaml-ppx/ppx_deriving:ppx_deriving.opam#e12921c",
-    "@opam/ppx_deriving_yojson": "anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#a3ef4c7"
+    "@opam/ppx_deriving": "ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384",
+    "@opam/ppx_deriving_yojson": "anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2"
   }
 }
