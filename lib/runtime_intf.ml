@@ -33,13 +33,13 @@
 module type LambdaEvent = sig
   type t
 
-  val of_yojson : Yojson.Safe.json -> (t, string) result
+  val of_yojson : Yojson.Safe.t -> (t, string) result
 end
 
 module type LambdaResponse = sig
   type t
 
-  val to_yojson : t -> Yojson.Safe.json
+  val to_yojson : t -> Yojson.Safe.t
 end
 
 module type LambdaRuntime = sig

@@ -14,8 +14,7 @@ let apigw_response =
         |> Yojson.Safe.pretty_to_string)
 
     let equal = ( = )
-  end
-  : Alcotest.TESTABLE
+  end : Alcotest.TESTABLE
     with type t = Http.api_gateway_proxy_response)
 
 let request =

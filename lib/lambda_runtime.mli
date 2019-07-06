@@ -92,14 +92,14 @@ module Make
     (Event : Runtime_intf.LambdaEvent)
     (Response : Runtime_intf.LambdaResponse) :
   Runtime_intf.LambdaRuntime
-  with type event = Event.t
-   and type response = Response.t
+    with type event = Event.t
+     and type response = Response.t
 
 module Json : sig
   include
     Runtime_intf.LambdaRuntime
-    with type event = Yojson.Safe.json
-     and type response = Yojson.Safe.json
+      with type event = Yojson.Safe.t
+       and type response = Yojson.Safe.t
 end
 
 module Http : sig
@@ -161,6 +161,6 @@ module Http : sig
 
   include
     Runtime_intf.LambdaRuntime
-    with type event = api_gateway_proxy_request
-     and type response = api_gateway_proxy_response
+      with type event = api_gateway_proxy_request
+       and type response = api_gateway_proxy_response
 end

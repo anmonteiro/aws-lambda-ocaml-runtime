@@ -85,7 +85,7 @@ let request_id = function
   | RuntimeError { request_id; _ } ->
     request_id
 
-let to_lambda_error : type a. ?handled:bool -> a t -> Yojson.Safe.json =
+let to_lambda_error : type a. ?handled:bool -> a t -> Yojson.Safe.t =
  fun ?(handled = true) error ->
   let make_lambda_error e =
     { error_message = e.msg

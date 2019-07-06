@@ -64,8 +64,7 @@ opam-steps: &opam-steps
             echo "unsupported OCaml version for ocamlformat"
           ;;
           *)
-            # https://github.com/ocaml-ppx/ocamlformat/issues/754
-            dune build @fmt --auto-promote || true
+            dune build @fmt --auto-promote
             git diff --exit-code
           esac
     - run:
@@ -143,8 +142,7 @@ jobs:
       - run:
           name: 'Check code is formatted with ocamlformat'
           command: |
-            # https://github.com/ocaml-ppx/ocamlformat/issues/754
-            ~/.npm-global/bin/esy dune build @fmt --auto-promote || true
+            ~/.npm-global/bin/esy dune build @fmt --auto-promote
             git diff --exit-code
       # Use both pre and post build caches so that we're more likely
       # to have dependencies cached. `esy build` is more likely to fail,
