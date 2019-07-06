@@ -30,6 +30,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+type json = Yojson.Safe.json [@@ocaml.warning "-3"]
+
 type error_record =
   { msg : string
   ; (* stack_trace: string option; (* Option<backtrace::Backtrace>, *) *)
@@ -85,9 +87,7 @@ let request_id = function
   | RuntimeError { request_id; _ } ->
     request_id
 
-let to_lambda_error
-    : type a. ?handled:bool -> a t -> (Yojson.Safe.json[@ocaml.warning "-3"])
-  =
+let to_lambda_error : type a. ?handled:bool -> a t -> json =
  fun ?(handled = true) error ->
   let make_lambda_error e =
     { error_message = e.msg
