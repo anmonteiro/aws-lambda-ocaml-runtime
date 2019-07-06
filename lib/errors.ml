@@ -30,7 +30,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-type json = Yojson.Safe.json [@@ocaml.warning "-3"]
+type json = (Yojson.Safe.json[@ocaml.warning "-3"])
 
 type error_record =
   { msg : string
