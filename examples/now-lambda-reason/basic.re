@@ -26,41 +26,47 @@ let send_request = (~meth=`GET, ~additional_headers=[], ~body=?, uri) => {
       Lwt_unix.connect(socket, List.hd(addresses).Unix.ai_addr)
       >>= (
         () => {
-          let content_length =
-            switch (body) {
-            | None => "0"
-            | Some(body) => string_of_int(String.length(body))
-            };
+          Client.create_connection(socket)
+          >>= (
+            connection => {
+              let content_length =
+                switch (body) {
+                | None => "0"
+                | Some(body) => string_of_int(String.length(body))
+                };
 
-          let request_headers =
-            Request.create(
-              meth,
-              Uri.path_and_query(uri),
-              ~headers=
-                Headers.of_list(
-                  [("Host", host), ("Content-Length", content_length)]
-                  @ additional_headers,
-                ),
-            );
+              let request_headers =
+                Request.create(
+                  meth,
+                  Uri.path_and_query(uri),
+                  ~headers=
+                    Headers.of_list(
+                      [("Host", host), ("Content-Length", content_length)]
+                      @ additional_headers,
+                    ),
+                );
 
-          let (response_received, notify_response_received) = Lwt.wait();
-          let response_handler = response_handler(notify_response_received);
-          let error_handler = error_handler(notify_response_received);
+              let (response_received, notify_response_received) = Lwt.wait();
+              let response_handler =
+                response_handler(notify_response_received);
+              let error_handler = error_handler(notify_response_received);
 
-          let request_body =
-            Client.request(
-              socket,
-              request_headers,
-              ~error_handler,
-              ~response_handler,
-            );
+              let request_body =
+                Client.request(
+                  connection,
+                  request_headers,
+                  ~error_handler,
+                  ~response_handler,
+                );
 
-          switch (body) {
-          | Some(body) => Body.write_string(request_body, body)
-          | None => ()
-          };
-          Body.flush(request_body, () => Body.close_writer(request_body));
-          response_received;
+              switch (body) {
+              | Some(body) => Body.write_string(request_body, body)
+              | None => ()
+              };
+              Body.flush(request_body, () => Body.close_writer(request_body));
+              response_received;
+            }
+          );
         }
       );
     }

@@ -110,19 +110,14 @@ type event_context =
     identity : cognito_identity option
   }
 
-type t = string
+type t =
+  { endpoint : string
+  ; host : string
+  ; connection : Httpaf_lwt_unix.Client.t
+  }
 
-let make endpoint = endpoint
-
-let send_request ?(meth = `GET) ?(additional_headers = []) ?body uri =
-  let open Httpaf in
-  let open Httpaf_lwt_unix in
-  let response_handler notify_response_received response response_body =
-    Lwt.wakeup_later notify_response_received (Ok (response, response_body))
-  in
-  let error_handler notify_response_received error =
-    Lwt.wakeup_later notify_response_received (Error error)
-  in
+let make endpoint =
+  let uri = Uri.of_string (Format.asprintf "http://%s" endpoint) in
   let host = Uri.host_with_default uri in
   let port =
     match Uri.port uri with None -> "80" | Some p -> string_of_int p
@@ -131,6 +126,24 @@ let send_request ?(meth = `GET) ?(additional_headers = []) ?body uri =
   >>= fun addresses ->
   let socket = Lwt_unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
   Lwt_unix.connect socket (List.hd addresses).Unix.ai_addr >>= fun () ->
+  Httpaf_lwt_unix.Client.create_connection socket >|= fun connection ->
+  { endpoint; connection; host }
+
+let send_request
+    { host; connection; _ }
+    ?(meth = `GET)
+    ?(additional_headers = [])
+    ?body
+    path
+  =
+  let open Httpaf in
+  let open Httpaf_lwt_unix in
+  let response_handler notify_response_received response response_body =
+    Lwt.wakeup_later notify_response_received (Ok (response, response_body))
+  in
+  let error_handler notify_response_received error =
+    Lwt.wakeup_later notify_response_received (Error error)
+  in
   let content_length =
     match body with
     | None ->
@@ -141,7 +154,7 @@ let send_request ?(meth = `GET) ?(additional_headers = []) ?body uri =
   let request_headers =
     Request.create
       meth
-      (Uri.path_and_query uri)
+      path
       ~headers:
         (Headers.of_list
            (("Host", host)
@@ -152,7 +165,7 @@ let send_request ?(meth = `GET) ?(additional_headers = []) ?body uri =
   let response_handler = response_handler notify_response_received in
   let error_handler = error_handler notify_response_received in
   let request_body =
-    Client.request socket request_headers ~error_handler ~response_handler
+    Client.request connection request_headers ~error_handler ~response_handler
   in
   (match body with
   | Some body ->
@@ -184,25 +197,24 @@ let read_response response_body =
   read_fn ();
   body_read
 
-let make_runtime_post_request uri output =
+let make_runtime_post_request client path output =
   let body = Yojson.Safe.to_string output in
   send_request
+    client
     ~meth:`POST
     ~additional_headers:[ "Content-Type", Constants.api_content_type ]
     ~body
-    uri
+    path
 
 let event_response client request_id output =
   let open Httpaf in
-  let uri =
-    Uri.of_string
-      (Printf.sprintf
-         "http://%s/%s/runtime/invocation/%s/response"
-         client
-         Constants.runtime_api_version
-         request_id)
+  let path =
+    Format.asprintf
+      "/%s/runtime/invocation/%s/response"
+      Constants.runtime_api_version
+      request_id
   in
-  make_runtime_post_request uri output >>= function
+  make_runtime_post_request client path output >>= function
   | Ok ({ Response.status; _ }, _) ->
     if not (Status.is_successful status) then
       let error =
@@ -225,28 +237,27 @@ let event_response client request_id output =
     in
     Lwt_result.fail err
 
-let make_runtime_error_request uri error =
+let make_runtime_error_request connection path error =
   let body = Errors.to_lambda_error error |> Yojson.Safe.to_string in
   send_request
+    connection
     ~meth:`POST
     ~additional_headers:
       [ "Content-Type", Constants.api_error_content_type
       ; Constants.runtime_error_header, "RuntimeError"
       ]
     ~body
-    uri
+    path
 
 let event_error client request_id err =
   let open Httpaf in
-  let uri =
-    Uri.of_string
-      (Printf.sprintf
-         "http://%s/%s/runtime/invocation/%s/error"
-         client
-         Constants.runtime_api_version
-         request_id)
+  let path =
+    Format.asprintf
+      "/%s/runtime/invocation/%s/error"
+      Constants.runtime_api_version
+      request_id
   in
-  make_runtime_error_request uri err >>= function
+  make_runtime_error_request client path err >>= function
   | Ok ({ Response.status; _ }, _) ->
     if not (Status.is_successful status) then
       let error =
@@ -270,14 +281,10 @@ let event_error client request_id err =
     Lwt_result.fail err
 
 let fail_init client err =
-  let uri =
-    Uri.of_string
-      (Printf.sprintf
-         "http://%s/%s/runtime/init/error"
-         client
-         Constants.runtime_api_version)
+  let path =
+    Format.asprintf "/%s/runtime/init/error" Constants.runtime_api_version
   in
-  make_runtime_error_request uri err >>= function
+  make_runtime_error_request client path err >>= function
   | Ok _ ->
     Lwt_result.return ()
   (* TODO: do we wanna "failwith" or just raise and then have a generic
@@ -346,17 +353,12 @@ let get_event_context headers =
 
 let next_event client =
   let open Httpaf in
-  let uri =
-    Uri.of_string
-      (Printf.sprintf
-         "http://%s/%s/runtime/invocation/next"
-         client
-         Constants.runtime_api_version)
+  let path =
+    Format.asprintf "/%s/runtime/invocation/next" Constants.runtime_api_version
   in
-  Logs_lwt.info (fun m ->
-      m "Polling for next event. Uri: %s\n" (Uri.to_string uri))
+  Logs_lwt.info (fun m -> m "Polling for next event. Path: %s\n" path)
   >>= fun () ->
-  send_request uri >>= function
+  send_request client path >>= function
   | Ok ({ Response.status; headers; _ }, body) ->
     let code = Status.to_code status in
     if Status.is_client_error status then

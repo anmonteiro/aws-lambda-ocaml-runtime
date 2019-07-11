@@ -1,5 +1,5 @@
 {
-  "checksum": "e222521fbeb4b6734a47daeb4babc36e",
+  "checksum": "016eb5a727641d7f55b59be6ad6fca0d",
   "root": "aws-lambda-ocaml-runtime@link-dev:./esy.json",
   "node": {
     "ocaml@4.8.0@d41d8cd9": {
@@ -25,9 +25,9 @@
       "dependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/yojson@opam:1.7.0@2d92307e",
         "@opam/uri@opam:2.2.1@6bd26f86",
-        "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2@d41d8cd9",
+        "@opam/ppx_deriving_yojson@github:ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#a39728f@d41d8cd9",
         "@opam/lwt@opam:4.2.1@c1888ec9", "@opam/logs@opam:0.6.3@80c08d15",
-        "@opam/httpaf-lwt-unix@github:inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e@d41d8cd9",
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#7c5d991@d41d8cd9",
         "@opam/dune@opam:1.10.0@b15ce221",
         "@opam/conf-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b@6c404c36",
         "@opam/base64@opam:3.2.0@e1bac209",
@@ -514,23 +514,28 @@
         "@opam/ocaml-migrate-parsetree@opam:1.4.0@107a1ff4"
       ]
     },
-    "@opam/ppx_tools@github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4@d41d8cd9": {
-      "id":
-        "@opam/ppx_tools@github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4@d41d8cd9",
+    "@opam/ppx_tools@opam:5.2+4.08.0@964f70cb": {
+      "id": "@opam/ppx_tools@opam:5.2+4.08.0@964f70cb",
       "name": "@opam/ppx_tools",
-      "version": "github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4",
+      "version": "opam:5.2+4.08.0",
       "source": {
         "type": "install",
-        "source": [ "github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4" ]
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/3f/3f911ebddad5eb4dd279b303a34d9493#md5:3f911ebddad5eb4dd279b303a34d9493",
+          "archive:https://github.com/ocaml-ppx/ppx_tools/archive/5.2+4.08.0.tar.gz#md5:3f911ebddad5eb4dd279b303a34d9493"
+        ],
+        "opam": {
+          "name": "ppx_tools",
+          "version": "5.2+4.08.0",
+          "path": "esy.lock/opam/ppx_tools.5.2+4.08.0"
+        }
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.0@f744a0c5",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
-      "devDependencies": [
-        "ocaml@4.8.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.0@f744a0c5"
-      ]
+      "devDependencies": [ "ocaml@4.8.0@d41d8cd9" ]
     },
     "@opam/ppx_sexp_conv@opam:v0.12.0@6aa153b5": {
       "id": "@opam/ppx_sexp_conv@opam:v0.12.0@6aa153b5",
@@ -562,49 +567,54 @@
         "@opam/base@opam:v0.12.2@e209c8f2"
       ]
     },
-    "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2@d41d8cd9": {
+    "@opam/ppx_deriving_yojson@github:ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#a39728f@d41d8cd9": {
       "id":
-        "@opam/ppx_deriving_yojson@github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2@d41d8cd9",
+        "@opam/ppx_deriving_yojson@github:ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#a39728f@d41d8cd9",
       "name": "@opam/ppx_deriving_yojson",
       "version":
-        "github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2",
+        "github:ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#a39728f",
       "source": {
         "type": "install",
         "source": [
-          "github:anmonteiro/ppx_deriving_yojson:ppx_deriving_yojson.opam#3e16cd2"
+          "github:ocaml-ppx/ppx_deriving_yojson:ppx_deriving_yojson.opam#a39728f"
         ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/yojson@opam:1.7.0@2d92307e",
         "@opam/result@opam:1.4@7add0d71", "@opam/ppxfind@opam:1.3@a7b3cc46",
-        "@opam/ppx_tools@github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4@d41d8cd9",
-        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9",
+        "@opam/ppx_tools@opam:5.2+4.08.0@964f70cb",
+        "@opam/ppx_deriving@opam:4.4@35f44479",
         "@opam/dune@opam:1.10.0@b15ce221", "@opam/cppo@opam:1.6.6@25eb99ce",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/yojson@opam:1.7.0@2d92307e",
         "@opam/result@opam:1.4@7add0d71",
-        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9"
+        "@opam/ppx_deriving@opam:4.4@35f44479"
       ]
     },
-    "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9": {
-      "id":
-        "@opam/ppx_deriving@github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384@d41d8cd9",
+    "@opam/ppx_deriving@opam:4.4@35f44479": {
+      "id": "@opam/ppx_deriving@opam:4.4@35f44479",
       "name": "@opam/ppx_deriving",
-      "version": "github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384",
+      "version": "opam:4.4",
       "source": {
         "type": "install",
         "source": [
-          "github:ocaml-ppx/ppx_deriving:ppx_deriving.opam#403d384"
-        ]
+          "archive:https://opam.ocaml.org/cache/sha256/c2/c2d85af4cb65a1f163f624590fb0395a164bbfd0d05082092526b669e66bcc34#sha256:c2d85af4cb65a1f163f624590fb0395a164bbfd0d05082092526b669e66bcc34",
+          "archive:https://github.com/ocaml-ppx/ppx_deriving/archive/v4.4.tar.gz#sha256:c2d85af4cb65a1f163f624590fb0395a164bbfd0d05082092526b669e66bcc34"
+        ],
+        "opam": {
+          "name": "ppx_deriving",
+          "version": "4.4",
+          "path": "esy.lock/opam/ppx_deriving.4.4"
+        }
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/result@opam:1.4@7add0d71",
         "@opam/ppxfind@opam:1.3@a7b3cc46",
-        "@opam/ppx_tools@github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4@d41d8cd9",
+        "@opam/ppx_tools@opam:5.2+4.08.0@964f70cb",
         "@opam/ppx_derivers@opam:1.2.1@0b458500",
         "@opam/ocaml-migrate-parsetree@opam:1.4.0@107a1ff4",
         "@opam/dune@opam:1.10.0@b15ce221", "@opam/cppo@opam:1.6.6@25eb99ce",
@@ -612,7 +622,7 @@
       ],
       "devDependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/result@opam:1.4@7add0d71",
-        "@opam/ppx_tools@github:ocaml-ppx/ppx_tools:ppx_tools.opam#331fbc4@d41d8cd9",
+        "@opam/ppx_tools@opam:5.2+4.08.0@964f70cb",
         "@opam/ppx_derivers@opam:1.2.1@0b458500",
         "@opam/ocaml-migrate-parsetree@opam:1.4.0@107a1ff4",
         "@opam/dune@opam:1.10.0@b15ce221"
@@ -729,7 +739,7 @@
         }
       ],
       "dependencies": [
-        "ocaml@4.8.0@d41d8cd9", "@opam/conf-m4@opam:1@dd7dde42",
+        "ocaml@4.8.0@d41d8cd9", "@opam/conf-m4@opam:1@da6f4f44",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.8.0@d41d8cd9" ]
@@ -988,38 +998,59 @@
         "ocaml@4.8.0@d41d8cd9", "@opam/dune@opam:1.10.0@b15ce221"
       ]
     },
-    "@opam/httpaf-lwt-unix@github:inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e@d41d8cd9": {
+    "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#7c5d991@d41d8cd9": {
       "id":
-        "@opam/httpaf-lwt-unix@github:inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e@d41d8cd9",
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#7c5d991@d41d8cd9",
       "name": "@opam/httpaf-lwt-unix",
-      "version": "github:inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e",
+      "version": "github:anmonteiro/httpaf:httpaf-lwt-unix.opam#7c5d991",
       "source": {
         "type": "install",
-        "source": [
-          "github:inhabitedtype/httpaf:httpaf-lwt-unix.opam#fa9dc4e"
-        ]
+        "source": [ "github:anmonteiro/httpaf:httpaf-lwt-unix.opam#7c5d991" ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.0@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
-        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#fa9dc4e@d41d8cd9",
+        "ocaml@4.8.0@d41d8cd9", "@opam/ocamlfind@opam:1.8.0@f744a0c5",
+        "@opam/lwt@opam:4.2.1@c1888ec9",
+        "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#7c5d991@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#7c5d991@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@b0dea04f",
         "@opam/dune@opam:1.10.0@b15ce221", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
-        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#fa9dc4e@d41d8cd9",
+        "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#7c5d991@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#7c5d991@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@b0dea04f"
       ]
     },
-    "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#fa9dc4e@d41d8cd9": {
+    "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#7c5d991@d41d8cd9": {
       "id":
-        "@opam/httpaf@github:inhabitedtype/httpaf:httpaf.opam#fa9dc4e@d41d8cd9",
-      "name": "@opam/httpaf",
-      "version": "github:inhabitedtype/httpaf:httpaf.opam#fa9dc4e",
+        "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#7c5d991@d41d8cd9",
+      "name": "@opam/httpaf-lwt",
+      "version": "github:anmonteiro/httpaf:httpaf-lwt.opam#7c5d991",
       "source": {
         "type": "install",
-        "source": [ "github:inhabitedtype/httpaf:httpaf.opam#fa9dc4e" ]
+        "source": [ "github:anmonteiro/httpaf:httpaf-lwt.opam#7c5d991" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.0@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#7c5d991@d41d8cd9",
+        "@opam/dune@opam:1.10.0@b15ce221", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.0@d41d8cd9", "@opam/lwt@opam:4.2.1@c1888ec9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#7c5d991@d41d8cd9"
+      ]
+    },
+    "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#7c5d991@d41d8cd9": {
+      "id":
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#7c5d991@d41d8cd9",
+      "name": "@opam/httpaf",
+      "version": "github:anmonteiro/httpaf:httpaf.opam#7c5d991",
+      "source": {
+        "type": "install",
+        "source": [ "github:anmonteiro/httpaf:httpaf.opam#7c5d991" ]
       },
       "overrides": [],
       "dependencies": [
@@ -1264,8 +1295,8 @@
         "ocaml@4.8.0@d41d8cd9", "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-which@opam:1@56319cdb": {
-      "id": "@opam/conf-which@opam:1@56319cdb",
+    "@opam/conf-which@opam:1@576f0c6d": {
+      "id": "@opam/conf-which@opam:1@576f0c6d",
       "name": "@opam/conf-which",
       "version": "opam:1",
       "source": {
@@ -1281,8 +1312,8 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
-    "@opam/conf-m4@opam:1@dd7dde42": {
-      "id": "@opam/conf-m4@opam:1@dd7dde42",
+    "@opam/conf-m4@opam:1@da6f4f44": {
+      "id": "@opam/conf-m4@opam:1@da6f4f44",
       "name": "@opam/conf-m4",
       "version": "opam:1",
       "source": {
@@ -1358,7 +1389,7 @@
       "dependencies": [
         "ocaml@4.8.0@d41d8cd9", "@opam/jbuilder@opam:transition@58bdfe0a",
         "@opam/easy-format@opam:1.3.1@9abfd4ed",
-        "@opam/conf-which@opam:1@56319cdb",
+        "@opam/conf-which@opam:1@576f0c6d",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [

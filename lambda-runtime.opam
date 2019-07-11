@@ -21,5 +21,10 @@ depends: [
   "lwt"
   "alcotest" {with-test}
 ]
+pin-depends: [
+  [ "httpaf.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+  [ "httpaf-lwt.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+  [ "httpaf-lwt-unix.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+]
 synopsis:
   "An OCaml custom runtime for AWS Lambda"
