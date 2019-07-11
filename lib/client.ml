@@ -125,8 +125,8 @@ let make endpoint =
   Lwt_unix.getaddrinfo host port [ Unix.(AI_FAMILY PF_INET) ]
   >>= fun addresses ->
   let socket = Lwt_unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
-  Lwt_unix.connect socket (List.hd addresses).Unix.ai_addr >|= fun () ->
-  let connection = Httpaf_lwt_unix.Client.create_connection socket in
+  Lwt_unix.connect socket (List.hd addresses).Unix.ai_addr >>= fun () ->
+  Httpaf_lwt_unix.Client.create_connection socket >|= fun connection ->
   { endpoint; connection; host }
 
 let send_request
