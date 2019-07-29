@@ -1,8 +1,14 @@
 open Test_common
-module Runtime =
-  Lambda_runtime__.Runtime.Make
-    (Lambda_runtime__.Json.Id)
-    (Lambda_runtime__.Json.Id)
+
+module Runtime = struct
+  include Lambda_runtime__.Runtime.Make
+            (Lambda_runtime__.Json.Id)
+            (Lambda_runtime__.Json.Id)
+
+  type event = Lambda_runtime__.Json.Id.t
+
+  type response = Lambda_runtime__.Json.Id.t
+end
 
 let request = `String "test"
 

@@ -16,7 +16,13 @@ let now_lambda_response =
   end : Alcotest.TESTABLE
     with type t = Now.Response.t)
 
-module Runtime = Lambda_runtime__.Runtime.Make (Now.Reqd) (Now.Response)
+module Runtime = struct
+  include Lambda_runtime__.Runtime.Make (Now.Reqd) (Now.Response)
+
+  type event = Now.Reqd.t
+
+  type response = Now.Response.t
+end
 
 let request = Test_common.make_test_request (module Now.Reqd) "now_with_body"
 

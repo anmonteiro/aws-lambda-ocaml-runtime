@@ -17,14 +17,24 @@ let apigw_response =
   end : Alcotest.TESTABLE
     with type t = Http.api_gateway_proxy_response)
 
+module Http_runtime = struct
+  include Http
+
+  type event = Http.API_gateway_request.t
+
+  type response = Http.API_gateway_response.t
+end
+
 let request =
   Test_common.make_test_request (module Http.API_gateway_request) "apigw_real"
 
 let test_fixture = Test_common.test_fixture (module Http.API_gateway_request)
 
-let test_runtime = test_runtime_generic (module Http) ~lift:Lwt.return request
+let test_runtime =
+  test_runtime_generic (module Http_runtime) ~lift:Lwt.return request
 
-let test_async_runtime = test_runtime_generic (module Http) ~lift:id request
+let test_async_runtime =
+  test_runtime_generic (module Http_runtime) ~lift:id request
 
 let response =
   Http.

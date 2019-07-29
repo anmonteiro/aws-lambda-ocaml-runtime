@@ -36,10 +36,6 @@ module Make
     (Event : Runtime_intf.LambdaEvent)
     (Response : Runtime_intf.LambdaResponse) =
 struct
-  type event = Event.t
-
-  type response = Response.t
-
   type 'a runtime =
     { client : Client.t
     ; settings : Config.function_settings
