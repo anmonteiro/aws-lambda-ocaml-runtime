@@ -30,6 +30,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+open Runtime_intf
+
 module Context : sig
   type t =
     { memory_limit_in_mb : int
@@ -86,20 +88,20 @@ end
 
 module StringMap : module type of Util.StringMap
 
-module Runtime_intf : module type of Runtime_intf
+module type LambdaEvent = LambdaEvent
 
-module Make
-    (Event : Runtime_intf.LambdaEvent)
-    (Response : Runtime_intf.LambdaResponse) :
-  Runtime_intf.LambdaRuntime
-    with type event = Event.t
-     and type response = Response.t
+module type LambdaResponse = LambdaResponse
+
+module type LambdaRuntime = LambdaRuntime
+
+module Make (Event : LambdaEvent) (Response : LambdaResponse) :
+  LambdaRuntime with type event := Event.t and type response := Response.t
 
 module Json : sig
   include
-    Runtime_intf.LambdaRuntime
-      with type event = Yojson.Safe.t
-       and type response = Yojson.Safe.t
+    LambdaRuntime
+      with type event := Yojson.Safe.t
+       and type response := Yojson.Safe.t
 end
 
 module Http : sig
@@ -160,7 +162,7 @@ module Http : sig
     }
 
   include
-    Runtime_intf.LambdaRuntime
-      with type event = api_gateway_proxy_request
-       and type response = api_gateway_proxy_response
+    LambdaRuntime
+      with type event := api_gateway_proxy_request
+       and type response := api_gateway_proxy_response
 end

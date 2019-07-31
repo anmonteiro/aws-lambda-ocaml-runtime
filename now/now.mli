@@ -47,6 +47,8 @@ module Response : module type of struct
 end
 
 module Reqd : sig
+  (* TODO(anmonteiro): this module can also provide a `respond_with_streaming`
+   * function that will only return `response` after closing the writer. *)
   type t
 
   type response
@@ -75,6 +77,4 @@ module Reqd : sig
 end
 
 include
-  Runtime_intf.LambdaRuntime
-    with type event = Reqd.t
-     and type response = Reqd.response
+  LambdaRuntime with type event := Reqd.t and type response := Reqd.response
