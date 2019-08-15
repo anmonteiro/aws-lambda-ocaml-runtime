@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime",
   "dependencies": {
-    "ocaml": "4.8.0",
+    "ocaml": "~4.8.1000",
     "@opam/dune": "*",
     "@opam/yojson": ">= 1.6.0 < 2.0.0",
     "@opam/ppx_deriving_yojson": "*",

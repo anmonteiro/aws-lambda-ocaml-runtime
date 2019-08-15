@@ -11,7 +11,7 @@ build: [
   ["dune" "runtest" "-p" name] {with-test}
 ]
 depends: [
-  "dune"
+  "dune" {>= "1.0"}
   "alcotest" {with-test}
   "base-bigarray"
   "ocaml" {>= "4.03.0"}
@@ -37,6 +37,6 @@ Bigstrings and other string-like types.
 So here they are. Go crazy.
 """
 url {
-  src: "https://github.com/inhabitedtype/bigstringaf/archive/0.5.2.tar.gz"
-  checksum: "md5=c71ad263558e0d8d3f2052de29e43074"
+  src: "https://github.com/inhabitedtype/bigstringaf/archive/0.5.3.tar.gz"
+  checksum: "md5=a8ee1ea3cff80d1e2b840a2781965fa8"
 }
