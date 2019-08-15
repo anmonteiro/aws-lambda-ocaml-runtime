@@ -390,11 +390,9 @@ let next_event client =
       | Error err ->
         Logs_lwt.err (fun m ->
             m "Failed to get event context: %s\n" (Errors.message err))
-        >>= fun () ->
-        Lwt_result.fail err
+        >>= fun () -> Lwt_result.fail err
       | Ok ctx ->
-        read_response body >>= fun body_str ->
-        Lwt_result.return (body_str, ctx))
+        read_response body >>= fun body_str -> Lwt_result.return (body_str, ctx))
   | Error _ ->
     let err =
       Errors.make_api_error

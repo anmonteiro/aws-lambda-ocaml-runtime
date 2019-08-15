@@ -123,8 +123,7 @@ struct
           Client.fail_init runtime.client e >>= fun _ ->
           Logs_lwt.err (fun m ->
               m "Could not send error response %s" (Errors.message e))
-          >>= fun () ->
-          failwith "Could not send error response"
+          >>= fun () -> failwith "Could not send error response"
         else
           start runtime )
     | Error msg ->

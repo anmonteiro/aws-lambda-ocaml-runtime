@@ -98,6 +98,13 @@ jobs:
       - TERM: dumb
       - OCAML_VERSION: "4.07.1"
     <<: *opam-steps
+  4.08.1:
+    docker:
+      - image: ocaml/opam2:debian-9-ocaml-4.08
+    environment:
+      - TERM: dumb
+      - OCAML_VERSION: "4.08.1"
+    <<: *opam-steps
   esy:
     docker:
       - image: circleci/node:7.10
@@ -160,4 +167,5 @@ workflows:
       - 4.05.0
       - 4.06.1
       - 4.07.1
+      - 4.08.1
       - esy
