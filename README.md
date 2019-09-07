@@ -53,4 +53,4 @@ $ cat output.json  # Prints: {"message":"Hello, world!"}
 
 Copyright © 2018 António Nuno Monteiro
 
-Distributed under the MIT License (see [LICENSE](./LICENSE)).
+Distributed under the 3-clause BSD License (see [LICENSE](./LICENSE)).
