@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@opam/reason": "*",
+    "@opam/merlin": "*",
     "@opam/ocamlformat": "*"
   },
   "resolutions": {
@@ -27,6 +28,14 @@
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#7c5d991",
     "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#7c5d991",
     "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#7c5d991",
-    "@opam/reason": "anmonteiro/reason:reason.opam#a73e6d9"
+    "@opam/reason": "anmonteiro/reason:reason.opam#a73e6d9",
+    "@opam/merlin": {
+      "source": "ocaml/merlin:merlin.opam#cfc28bd",
+      "override": {
+        "dependencies": {
+          "ocaml": "~4.9.0"
+        }
+      }
+    }
   }
 }

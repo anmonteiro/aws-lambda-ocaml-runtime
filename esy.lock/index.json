@@ -1,5 +1,5 @@
 {
-  "checksum": "daf54b81de538b18aa87beec911ad3ac",
+  "checksum": "0dcb92167094a3c6045fb638a3356011",
   "root": "aws-lambda-ocaml-runtime@link-dev:./esy.json",
   "node": {
     "ocaml@4.9.0@d41d8cd9": {
@@ -35,7 +35,8 @@
       ],
       "devDependencies": [
         "@opam/reason@github:anmonteiro/reason:reason.opam#a73e6d9@d41d8cd9",
-        "@opam/ocamlformat@opam:0.11.0@ec74e6e8"
+        "@opam/ocamlformat@opam:0.11.0@ec74e6e8",
+        "@opam/merlin@github:ocaml/merlin:merlin.opam#cfc28bd@8917bb23"
       ]
     },
     "@opam/yojson@opam:1.7.0@7056d985": {
@@ -894,6 +895,26 @@
       ],
       "devDependencies": [
         "ocaml@4.9.0@d41d8cd9", "@opam/dune@opam:1.11.3@9894df55"
+      ]
+    },
+    "@opam/merlin@github:ocaml/merlin:merlin.opam#cfc28bd@8917bb23": {
+      "id": "@opam/merlin@github:ocaml/merlin:merlin.opam#cfc28bd@8917bb23",
+      "name": "@opam/merlin",
+      "version": "github:ocaml/merlin:merlin.opam#cfc28bd",
+      "source": {
+        "type": "install",
+        "source": [ "github:ocaml/merlin:merlin.opam#cfc28bd" ]
+      },
+      "overrides": [ { "dependencies": { "ocaml": "~4.9.0" } } ],
+      "dependencies": [
+        "ocaml@4.9.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/dune@opam:1.11.3@9894df55", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.9.0@d41d8cd9", "@opam/yojson@opam:1.7.0@7056d985",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/dune@opam:1.11.3@9894df55"
       ]
     },
     "@opam/menhir@opam:20190626@bbeb8953": {
