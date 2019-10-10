@@ -35,7 +35,7 @@ RUN echo ' \
 {\
   "name": "package-base", \
   "dependencies": { \
-    "ocaml": "*", \
+    "ocaml": "4.9.0", \
     "@opam/dune": "*" \
   } \
 } \
