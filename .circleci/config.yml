@@ -58,33 +58,13 @@ opam-steps: &opam-steps
         name: 'Check code is formatted with ocamlformat'
         command: |
           eval `opam config env`
-          case $OCAML_VERSION in
-          4.04.*|4.05.*)
-            echo "unsupported OCaml version for ocamlformat"
-          ;;
-          *)
-            dune build @fmt --auto-promote
-            git diff --exit-code
-          esac
+          dune build @fmt --auto-promote
+          git diff --exit-code
     - run:
         name: 'Check git is clean'
         command: git diff --exit-code
 
 jobs:
-  4.04.2:
-    docker:
-      - image: ocaml/opam2:debian-9-ocaml-4.04
-    environment:
-      - TERM: dumb
-      - OCAML_VERSION: "4.04.2"
-    <<: *opam-steps
-  4.05.0:
-    docker:
-      - image: ocaml/opam2:debian-9-ocaml-4.05
-    environment:
-      - TERM: dumb
-      - OCAML_VERSION: "4.05.0"
-    <<: *opam-steps
   4.06.1:
     docker:
       - image: ocaml/opam2:debian-9-ocaml-4.06
