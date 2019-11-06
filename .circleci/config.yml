@@ -38,8 +38,7 @@ opam-steps: &opam-steps
     - run:
         name: 'opam pin'
         command: |
-          opam pin add reason --dev-repo
-          opam install alcotest
+          opam install reason alcotest
           opam install -t --deps-only .
     - save_cache:
         <<: *common_cache_key
