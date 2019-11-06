@@ -44,21 +44,21 @@ module Context : sig
               `AWS_LAMBDA_FUNCTION_NAME` environment variable set by the lambda
               service. *)
     ; function_version : string
-          (** The version of the function being invoked. This value is
-              extracted from the `AWS_LAMBDA_FUNCTION_VERSION` environment
-              variable set by the lambda service. *)
+          (** The version of the function being invoked. This value is extracted
+              from the `AWS_LAMBDA_FUNCTION_VERSION` environment variable set by
+              the lambda service. *)
     ; invoked_function_arn : string
           (** The fully qualified ARN (Amazon Resource Name) for the function
               invocation event. This value is returned by the lambda runtime
               APIs as a header. *)
     ; aws_request_id : string
-          (** The AWS Request ID for the current invocation event. This value
-              is returned by the lambda runtime APIs as a header. *)
+          (** The AWS Request ID for the current invocation event. This value is
+              returned by the lambda runtime APIs as a header. *)
     ; xray_trace_id : string option
           (** The x-ray trace id for the current invocation. this value is
               returned by the lambda runtime apis as a header. developers can
-              use this value with the aws sdk to create new, custom
-              sub-segments to the current invocation. *)
+              use this value with the aws sdk to create new, custom sub-segments
+              to the current invocation. *)
     ; log_stream_name : string
           (** The name of the cloudwatch log stream for the current execution
               environment. this value is extracted from the
@@ -67,8 +67,8 @@ module Context : sig
     ; log_group_name : string
           (** The name of the CloudWatch log group for the current execution
               environment. This value is extracted from the
-              `AWS_LAMBDA_LOG_GROUP_NAME` environment variable set by the
-              lambda service. *)
+              `AWS_LAMBDA_LOG_GROUP_NAME` environment variable set by the lambda
+              service. *)
     ; client_context : Client.client_context option
           (** The client context sent by the AWS Mobile SDK with the invocation
               request. This value is returned by the lambda runtime APIs as a
