@@ -56,7 +56,6 @@ struct
       | None ->
         Client.fail_init runtime.client err)
       |> ignore;
-
       (* These errors are not recoverable. Either we can't communicate with the
        * runtime APIs or we cannot parse the event. panic to restart the
        * environment. *)

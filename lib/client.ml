@@ -59,8 +59,7 @@ end
 type client_application =
   { (* The mobile app installation id *)
     installation_id : string
-  ; (* The app title for the mobile app as registered with AWS' mobile
-       services. *)
+  ; (* The app title for the mobile app as registered with AWS' mobile services. *)
     app_title : string option [@default None]
   ; (* The version name of the application as registered with AWS' mobile
        services. *)
@@ -84,8 +83,7 @@ type client_context =
 
 (* Cognito identity information sent with the event *)
 type cognito_identity =
-  { (* The unique identity id for the Cognito credentials invoking the
-       function. *)
+  { (* The unique identity id for the Cognito credentials invoking the function. *)
     identity_id : string
   ; (* The identity pool id the caller is "registered" with. *)
     identity_pool_id : string
@@ -101,8 +99,8 @@ type event_context =
     xray_trace_id : string option [@default None]
   ; (* The execution deadline for the current invocation in milliseconds. *)
     deadline : int64
-  ; (* The client context object sent by the AWS mobile SDK. This field is
-       empty unless the function is invoked using an AWS mobile SDK. *)
+  ; (* The client context object sent by the AWS mobile SDK. This field is empty
+       unless the function is invoked using an AWS mobile SDK. *)
     client_context : client_context option
   ; (* The Cognito identity that invoked the function. This field is empty
        unless the invocation request to the Lambda APIs was made using AWS
@@ -130,11 +128,7 @@ let make endpoint =
   { endpoint; connection; host }
 
 let send_request
-    { host; connection; _ }
-    ?(meth = `GET)
-    ?(additional_headers = [])
-    ?body
-    path
+    { host; connection; _ } ?(meth = `GET) ?(additional_headers = []) ?body path
   =
   let open Httpaf in
   let open Httpaf_lwt_unix in

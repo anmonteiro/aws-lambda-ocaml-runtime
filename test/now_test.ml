@@ -64,9 +64,7 @@ let suite =
           match output with
           | Ok response ->
             let result_str =
-              response
-              |> Now.Response.to_yojson
-              |> Yojson.Safe.pretty_to_string
+              response |> Now.Response.to_yojson |> Yojson.Safe.pretty_to_string
             in
             Alcotest.fail
               (Printf.sprintf

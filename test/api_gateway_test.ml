@@ -45,9 +45,7 @@ let response =
     }
 
 let suite =
-  [ ( "deserialize (mock) API Gateway Proxy Request"
-    , `Quick
-    , test_fixture "apigw" )
+  [ "deserialize (mock) API Gateway Proxy Request", `Quick, test_fixture "apigw"
   ; ( "deserialize (real world) API Gateway Proxy Request"
     , `Quick
     , test_fixture "apigw_real_trimmed" )
