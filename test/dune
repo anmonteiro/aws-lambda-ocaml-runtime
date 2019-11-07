@@ -1,6 +1,7 @@
 (executable
  (name test)
- (libraries alcotest lambda-runtime now base64))
+ (libraries alcotest lambda-runtime now base64 yojson fmt lwt lwt.unix httpaf
+   result ppx_deriving_yojson.runtime))
 
 (alias
  (name runtest)

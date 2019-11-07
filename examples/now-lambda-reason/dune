@@ -1,6 +1,7 @@
 (executable
  (name basic)
- (libraries now logs.fmt fmt.tty httpaf))
+ (libraries now logs.fmt fmt.tty httpaf httpaf-lwt-unix lwt lwt.unix uri
+   bigstringaf bigarray-compat yojson))
 
 (env
  (static
