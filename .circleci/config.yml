@@ -29,8 +29,7 @@ opam-steps: &opam-steps
         name: "Install deps"
         command: |
           opam update
-          opam install -y dune
-          opam install -y ocamlformat.0.12
+          opam install -y dune ocamlformat
     - run:
         name: 'Clean'
         command: rm -rf ./_build
