@@ -108,100 +108,26 @@ type event_context =
     identity : cognito_identity option
   }
 
-type t =
-  { endpoint : string
-  ; host : string
-  ; connection : Httpaf_lwt_unix.Client.t
-  }
+type t = Piaf.Client.t
 
 let make endpoint =
   let uri = Uri.of_string (Format.asprintf "http://%s" endpoint) in
-  let host = Uri.host_with_default uri in
-  let port =
-    match Uri.port uri with None -> "80" | Some p -> string_of_int p
-  in
-  Lwt_unix.getaddrinfo host port [ Unix.(AI_FAMILY PF_INET) ]
-  >>= fun addresses ->
-  let socket = Lwt_unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
-  Lwt_unix.connect socket (List.hd addresses).Unix.ai_addr >>= fun () ->
-  Httpaf_lwt_unix.Client.create_connection socket >|= fun connection ->
-  { endpoint; connection; host }
-
-let send_request
-    { host; connection; _ } ?(meth = `GET) ?(additional_headers = []) ?body path
-  =
-  let open Httpaf in
-  let open Httpaf_lwt_unix in
-  let response_handler notify_response_received response response_body =
-    Lwt.wakeup_later notify_response_received (Ok (response, response_body))
-  in
-  let error_handler notify_response_received error =
-    Lwt.wakeup_later notify_response_received (Error error)
-  in
-  let content_length =
-    match body with
-    | None ->
-      "0"
-    | Some body ->
-      string_of_int (String.length body)
-  in
-  let request_headers =
-    Request.create
-      meth
-      path
-      ~headers:
-        (Headers.of_list
-           (("Host", host)
-           :: ("Content-Length", content_length)
-           :: additional_headers))
-  in
-  let response_received, notify_response_received = Lwt.wait () in
-  let response_handler = response_handler notify_response_received in
-  let error_handler = error_handler notify_response_received in
-  let request_body =
-    Client.request connection request_headers ~error_handler ~response_handler
-  in
-  (match body with
-  | Some body ->
-    Body.write_string request_body body
-  | None ->
-    ());
-  Body.flush request_body (fun () -> Body.close_writer request_body);
-  response_received
-
-let read_response response_body =
-  let buf = Buffer.create 1024 in
-  let body_read, notify_body_read = Lwt.wait () in
-  let rec read_fn () =
-    Httpaf.Body.schedule_read
-      response_body
-      ~on_eof:(fun () ->
-        Lwt.wakeup_later notify_body_read (Buffer.contents buf))
-      ~on_read:(fun response_fragment ~off ~len ->
-        let response_fragment_bytes = Bytes.create len in
-        Lwt_bytes.blit_to_bytes
-          response_fragment
-          off
-          response_fragment_bytes
-          0
-          len;
-        Buffer.add_bytes buf response_fragment_bytes;
-        read_fn ())
-  in
-  read_fn ();
-  body_read
+  Piaf.Client.create uri >|= function
+  | Ok connection ->
+    Ok connection
+  | Error msg ->
+    Error msg
 
 let make_runtime_post_request client path output =
   let body = Yojson.Safe.to_string output in
-  send_request
+  Piaf.Client.post
     client
-    ~meth:`POST
-    ~additional_headers:[ "Content-Type", Constants.api_content_type ]
-    ~body
+    ~headers:[ "Content-Type", Constants.api_content_type ]
+    ~body:(Piaf.Body.of_string body)
     path
 
 let event_response client request_id output =
-  let open Httpaf in
+  let open Piaf in
   let path =
     Format.asprintf
       "/%s/runtime/invocation/%s/response"
@@ -232,19 +158,19 @@ let event_response client request_id output =
     Lwt_result.fail err
 
 let make_runtime_error_request connection path error =
+  let open Piaf in
   let body = Errors.to_lambda_error error |> Yojson.Safe.to_string in
-  send_request
+  Client.post
     connection
-    ~meth:`POST
-    ~additional_headers:
+    ~headers:
       [ "Content-Type", Constants.api_error_content_type
       ; Constants.runtime_error_header, "RuntimeError"
       ]
-    ~body
+    ~body:(Body.of_string body)
     path
 
 let event_error client request_id err =
-  let open Httpaf in
+  let open Piaf in
   let path =
     Format.asprintf
       "/%s/runtime/invocation/%s/error"
@@ -287,7 +213,7 @@ let fail_init client err =
     failwith "Error while sending init failed message"
 
 let get_event_context headers =
-  let open Httpaf in
+  let open Piaf in
   let report_error header =
     let err =
       Errors.make_api_error
@@ -346,13 +272,13 @@ let get_event_context headers =
         Ok ctx))
 
 let next_event client =
-  let open Httpaf in
+  let open Piaf in
   let path =
     Format.asprintf "/%s/runtime/invocation/next" Constants.runtime_api_version
   in
   Logs_lwt.info (fun m -> m "Polling for next event. Path: %s\n" path)
   >>= fun () ->
-  send_request client path >>= function
+  Client.get client path >>= function
   | Ok ({ Response.status; headers; _ }, body) ->
     let code = Status.to_code status in
     if Status.is_client_error status then
@@ -386,7 +312,7 @@ let next_event client =
             m "Failed to get event context: %s\n" (Errors.message err))
         >>= fun () -> Lwt_result.fail err
       | Ok ctx ->
-        read_response body >>= fun body_str -> Lwt_result.return (body_str, ctx))
+        Body.to_string body >>= fun body_str -> Lwt_result.return (body_str, ctx))
   | Error _ ->
     let err =
       Errors.make_api_error
