@@ -28,6 +28,7 @@ pin-depends: [
   [ "h2-lwt.dev" "git+https://github.com/anmonteiro/ocaml-h2.git" ]
   [ "h2-lwt-unix.dev" "git+https://github.com/anmonteiro/ocaml-h2.git" ]
   [ "piaf.dev" "git+https://github.com/anmonteiro/piaf.git" ]
+  [ "ssl.dev" "git+https://github.com/savonet/ocaml-ssl.git" ]
 ]
 synopsis:
   "An OCaml custom runtime for AWS Lambda"

@@ -128,7 +128,7 @@ jobs:
           command: ~/.npm-global/bin/esy dune build @all
       - run:
           name: 'esy test'
-          command: ~/.npm-global/bin/esy dune runtest --no-buffer
+          command: ~/.npm-global/bin/esy b dune runtest --no-buffer
       - run:
           name: 'Check code is formatted with ocamlformat'
           command: |
