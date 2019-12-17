@@ -94,8 +94,7 @@ jobs:
     <<: *opam-steps
   esy:
     docker:
-      - image: circleci/node:7.10
-      # - image: ocaml/opam2:debian-9-ocaml-4.06
+      - image: circleci/node:13.3
     environment:
       - TERM: dumb
       - NPM_CONFIG_PREFIX: "~/.npm-global"
@@ -110,7 +109,7 @@ jobs:
           <<: *esy_post_build_cache_key
       - run:
           name: "Install esy"
-          command: npm install -g esy@0.5.6
+          command: npm install -g esy@latest
       # - run:
       #     name: 'Clean'
       #     command: make clean-for-ci
@@ -130,7 +129,7 @@ jobs:
           command: ~/.npm-global/bin/esy dune build @all
       - run:
           name: 'esy test'
-          command: ~/.npm-global/bin/esy b dune runtest --no-buffer
+          command: ~/.npm-global/bin/esy dune runtest --no-buffer
       - run:
           name: 'Check code is formatted with ocamlformat'
           command: |
