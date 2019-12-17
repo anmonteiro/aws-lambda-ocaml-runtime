@@ -21,14 +21,13 @@ opam-steps: &opam-steps
         name: "Initialize opam"
         command: |
           sudo apt-get update
-          sudo apt-get install -y m4
+          sudo apt-get install -y m4 libssl-dev pkg-config libncurses5-dev
           opam init --auto-setup --dot-profile=~/.bash_profile
           opam remote add ocamlorg https://opam.ocaml.org || true
           opam remote remove default || true
     - run:
         name: "Install deps"
         command: |
-          sudo apt-get install -y pkg-config libncurses5-dev
           opam update
           opam install -y dune
           opam install -y ocamlformat.0.12

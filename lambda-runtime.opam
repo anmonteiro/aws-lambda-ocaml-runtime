@@ -14,8 +14,7 @@ depends: [
   "result"
   "yojson" {>= "1.6.0" & < "2.0.0"}
   "ppx_deriving_yojson"
-  "httpaf"
-  "httpaf-lwt-unix"
+  "piaf"
   "uri"
   "logs"
   "lwt"
@@ -25,6 +24,10 @@ pin-depends: [
   [ "httpaf.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
   [ "httpaf-lwt.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
   [ "httpaf-lwt-unix.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+  [ "h2.dev" "git+https://github.com/anmonteiro/ocaml-h2.git" ]
+  [ "h2-lwt.dev" "git+https://github.com/anmonteiro/ocaml-h2.git" ]
+  [ "h2-lwt-unix.dev" "git+https://github.com/anmonteiro/ocaml-h2.git" ]
+  [ "piaf.dev" "git+https://github.com/anmonteiro/piaf.git" ]
 ]
 synopsis:
   "An OCaml custom runtime for AWS Lambda"
