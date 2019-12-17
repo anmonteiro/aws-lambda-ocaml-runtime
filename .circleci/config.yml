@@ -107,10 +107,10 @@ jobs:
           <<: *esy_post_build_cache_key
       - run:
           name: "Install esy"
-          command: npm install -g esy@latest
-      # - run:
-      #     name: 'Clean'
-      #     command: make clean-for-ci
+          command: |
+           # wtf
+           sudo apt-get install libssl-dev
+           npm install -g esy@latest
       - run:
           name: 'esy install'
           command: ~/.npm-global/bin/esy install
