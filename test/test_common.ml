@@ -99,14 +99,9 @@ let test_runtime_generic
   match MockConfigProvider.get_runtime_api_endpoint () with
   | Error _ ->
     Alcotest.fail "Could not get runtime endpoint"
-  | Ok runtime_api_endpoint ->
+  | Ok _runtime_api_endpoint ->
     (* Avoid creating a TCP connection for every test *)
-    let client =
-      { Client.endpoint = runtime_api_endpoint
-      ; host = "localhost"
-      ; connection = Obj.magic (Httpaf.Client_connection.create ?config:None)
-      }
-    in
+    let client = Obj.magic () in
     (match MockConfigProvider.get_function_settings () with
     | Error _ ->
       Alcotest.fail "Could not load environment config"

@@ -4,4 +4,4 @@
  (preprocess
   (pps ppx_deriving_yojson))
  (libraries yojson ppx_deriving_yojson.runtime bigstringaf bigarray-compat
-   httpaf httpaf-lwt-unix uri logs.lwt lwt lwt.unix result))
+   uri logs.lwt lwt lwt.unix piaf result))

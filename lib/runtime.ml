@@ -141,11 +141,14 @@ struct
           start runtime )
 
   let start_with_runtime_endpoint ~lift handler function_config endpoint =
-    Client.make endpoint >>= fun client ->
-    let runtime =
-      make ~max_retries:3 ~settings:function_config ~lift ~handler client
-    in
-    start runtime
+    Client.make endpoint >>= function
+    | Ok client ->
+      let runtime =
+        make ~max_retries:3 ~settings:function_config ~lift ~handler client
+      in
+      start runtime
+    | Error msg ->
+      failwith (Format.asprintf "Could not start HTTP client: %s" msg)
 
   let start_lambda ~lift handler =
     match Config.get_runtime_api_endpoint () with
