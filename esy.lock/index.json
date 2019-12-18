@@ -1,5 +1,5 @@
 {
-  "checksum": "e199d4deab9bf5436564ed60553c04b9",
+  "checksum": "88492e761d4fcc42ced57ce249da0399",
   "root": "aws-lambda-ocaml-runtime@link-dev:./esy.json",
   "node": {
     "ocaml@4.9.0@d41d8cd9": {
@@ -393,13 +393,13 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.9.0@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@6b24addd",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@d9d2fc98",
         "@opam/base-unix@opam:base@87d0b2eb",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.9.0@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@6b24addd",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@d9d2fc98",
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
@@ -720,7 +720,7 @@
         "@opam/h2-lwt-unix@github:anmonteiro/ocaml-h2:h2-lwt-unix.opam#bf0e0e0@d41d8cd9",
         "@opam/h2@github:anmonteiro/ocaml-h2:h2.opam#bf0e0e0@d41d8cd9",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@6b24addd",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@d9d2fc98",
         "@opam/bigstringaf@opam:0.6.0@971764fa",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -734,7 +734,7 @@
         "@opam/h2-lwt-unix@github:anmonteiro/ocaml-h2:h2-lwt-unix.opam#bf0e0e0@d41d8cd9",
         "@opam/h2@github:anmonteiro/ocaml-h2:h2.opam#bf0e0e0@d41d8cd9",
         "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@6b24addd",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@d9d2fc98",
         "@opam/bigstringaf@opam:0.6.0@971764fa"
       ]
     },
@@ -1606,9 +1606,9 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
-    "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@6b24addd": {
+    "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@d9d2fc98": {
       "id":
-        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@6b24addd",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@d9d2fc98",
       "name": "@opam/conf-libssl",
       "version":
         "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a",
@@ -1618,7 +1618,7 @@
           "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a"
         ]
       },
-      "overrides": [ "esy.lock/overrides/6b24addd1d62efb807fb584a8bbecf34" ],
+      "overrides": [ "esy.lock/overrides/d9d2fc980623a9a83856a590292f0b41" ],
       "dependencies": [
         "@opam/conf-pkg-config@archive:https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz#sha1:76e501663b29cb7580245720edfb6106164fad2b@0ec19d9a",
         "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9"
