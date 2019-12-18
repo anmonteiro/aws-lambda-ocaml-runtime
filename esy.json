@@ -22,7 +22,7 @@
   "devDependencies": {
     "@opam/reason": "*",
     "@opam/merlin": "*",
-    "@opam/ocamlformat": "*"
+    "@opam/ocamlformat": "0.12"
   },
   "resolutions": {
     "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb66",
