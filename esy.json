@@ -34,6 +34,7 @@
     "@opam/h2-lwt-unix": "anmonteiro/ocaml-h2:h2-lwt-unix.opam#bf0e0e0",
     "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f",
     "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b",
+    "@opam/conf-pkg-config": "esy-packages/pkg-config#71c143c",
     "@opam/piaf": {
       "source": "anmonteiro/piaf:piaf.opam#d378272",
       "override": {

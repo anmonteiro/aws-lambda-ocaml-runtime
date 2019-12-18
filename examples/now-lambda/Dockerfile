@@ -41,7 +41,8 @@ RUN echo ' \
     "@opam/conf-libssl": "*" \
   }, \
   "resolutions": { \
-    "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f" \
+    "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f", \
+    "@opam/conf-pkg-config": "esy-packages/pkg-config#71c143c" \
   } \
 } \
 ' > esy.json
