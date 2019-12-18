@@ -32,7 +32,7 @@
     "@opam/h2": "anmonteiro/ocaml-h2:h2.opam#bf0e0e0",
     "@opam/h2-lwt": "anmonteiro/ocaml-h2:h2-lwt.opam#bf0e0e0",
     "@opam/h2-lwt-unix": "anmonteiro/ocaml-h2:h2-lwt-unix.opam#bf0e0e0",
-    "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f",
+    "@opam/conf-libssl": "esy-packages/esy-openssl#6c7b1ef90",
     "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b",
     "@opam/conf-pkg-config": "esy-packages/pkg-config#71c143c",
     "@opam/piaf": {
