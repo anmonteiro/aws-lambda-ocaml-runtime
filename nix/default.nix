@@ -23,15 +23,15 @@ in
     now = build-lambda-runtime {
       pname = "now";
       buildInputs = [ alcotest ];
-    # tests lambda-runtime too
-    doCheck = true;
-    propagatedBuildInputs = [
-      lambda-runtime
-      httpaf
-      yojson
-      ppx_deriving_yojson
-      lwt4
-      base64
-    ];
-  };
+      # tests lambda-runtime too
+      doCheck = true;
+      propagatedBuildInputs = [
+        lambda-runtime
+        httpaf
+        yojson
+        ppx_deriving_yojson
+        lwt4
+        base64
+      ];
+    };
 }
