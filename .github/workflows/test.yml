@@ -2,18 +2,24 @@ name: "Build"
 on:
   pull_request:
   push:
+    branches:
+      - master
 jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ocamlVersion: [406, 407, 408, 409]
+        ocamlVersion: [4_06, 4_07, 4_08, 4_09]
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v6
     - uses: cachix/cachix-action@v3
       with:
         name: anmonteiro
-        file: nix/ci/${{ matrix.ocamlVersion }}.nix
+        skipNixBuild: true
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+    - name: Build / Test
+      shell: bash
+      run: nix-build ./nix/ci/test.nix --argstr ocamlVersion ${{ matrix.ocamlVersion }}
+
 

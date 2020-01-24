@@ -1,10 +1,8 @@
-{ pkgs ? import <nixpkgs> {}, ocamlVersion }:
+{ ocamlVersion }:
 
 let
-  inherit (pkgs) lib stdenv fetchTarball;
-  overlays = builtins.fetchTarball https://github.com/anmonteiro/nix-overlays/archive/master.tar.gz;
-  ocamlPackages = pkgs.ocaml-ng."ocamlPackages_${ocamlVersion}".overrideScope'
-    (pkgs.callPackage "${overlays}/ocaml" { });
+  pkgs = import ../sources.nix { inherit ocamlVersion; };
+  inherit (pkgs) lib stdenv fetchTarball ocamlPackages;
 
   lambda-pkgs = import ./.. { inherit pkgs ocamlVersion; };
   lambda-drvs = lib.filterAttrs (_: value: lib.isDerivation value) lambda-pkgs;
