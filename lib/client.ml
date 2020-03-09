@@ -135,7 +135,8 @@ let event_response client request_id output =
       request_id
   in
   make_runtime_post_request client path output >>= function
-  | Ok ({ Response.status; _ }, _) ->
+  | Ok response ->
+    let status = Response.status response in
     if not (Status.is_successful status) then
       let error =
         Errors.make_api_error
@@ -178,7 +179,8 @@ let event_error client request_id err =
       request_id
   in
   make_runtime_error_request client path err >>= function
-  | Ok ({ Response.status; _ }, _) ->
+  | Ok response ->
+    let status = Response.status response in
     if not (Status.is_successful status) then
       let error =
         Errors.make_api_error
@@ -279,7 +281,9 @@ let next_event client =
   Logs_lwt.info (fun m -> m "Polling for next event. Path: %s\n" path)
   >>= fun () ->
   Client.get client path >>= function
-  | Ok ({ Response.status; headers; _ }, body) ->
+  | Ok response ->
+    let headers = Response.headers response in
+    let status = Response.status response in
     let code = Status.to_code status in
     if Status.is_client_error status then
       Logs_lwt.err (fun m ->
@@ -312,7 +316,8 @@ let next_event client =
             m "Failed to get event context: %s\n" (Errors.message err))
         >>= fun () -> Lwt_result.fail err
       | Ok ctx ->
-        Body.to_string body >>= fun body_str -> Lwt_result.return (body_str, ctx))
+        Body.to_string (Response.body response) >>= fun body_str ->
+        Lwt_result.return (body_str, ctx))
   | Error _ ->
     let err =
       Errors.make_api_error
