@@ -12,8 +12,8 @@ jobs:
         ocamlVersion: [4_06, 4_07, 4_08, 4_09, 4_10]
     steps:
     - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v6
-    - uses: cachix/cachix-action@v3
+    - uses: cachix/install-nix-action@v7
+    - uses: cachix/cachix-action@v5
       with:
         name: anmonteiro
         file: ./nix/ci/test.nix
