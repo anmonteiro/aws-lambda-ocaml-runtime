@@ -147,8 +147,9 @@ struct
         make ~max_retries:3 ~settings:function_config ~lift ~handler client
       in
       start runtime
-    | Error msg ->
-      failwith (Format.asprintf "Could not start HTTP client: %s" msg)
+    | Error e ->
+      failwith
+        (Format.asprintf "Could not start HTTP client: %a" Piaf.Error.pp_hum e)
 
   let start_lambda ~lift handler =
     match Config.get_runtime_api_endpoint () with
