@@ -1,10 +1,9 @@
 { ocamlVersion ? "4_10" }:
 
 let
-  overlays = builtins.fetchTarball {
-    url = https://github.com/anmonteiro/nix-overlays/archive/9ebb27af.tar.gz;
-    sha256 = "0qlq4g96scz1lqsiyprkggjnzhxga07csqjc75ax1j1kk1ich34i";
-  };
+  overlays =
+    builtins.fetchTarball
+      https://github.com/anmonteiro/nix-overlays/archive/3fb1555.tar.gz;
 
 in
 

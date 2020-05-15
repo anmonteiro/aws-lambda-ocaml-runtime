@@ -8,6 +8,7 @@ in
   with ocamlPackages;
   let
     build-lambda-runtime = args: buildDunePackage ({
+      useDune2=true;
       version = "0.1.0-dev";
       src = lib.gitignoreSource ./..;
     } // args);
