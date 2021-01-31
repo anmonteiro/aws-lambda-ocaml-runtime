@@ -24,7 +24,7 @@ synopsis:
   "An OCaml custom runtime for Vercel.com (Now v2)."
 description:
   """
-  lambda-runtime is an OCaml custom runtime for AWS Lambda. The `now` package
-  provides an adapter and API for lambda-runtime that works with Vercel's (Now
-  v2) service.
+  lambda-runtime is an OCaml custom runtime for AWS Lambda. The `vercel`
+  package provides an adapter and API for lambda-runtime that works with
+  Vercel's (Now v2) service.
   """

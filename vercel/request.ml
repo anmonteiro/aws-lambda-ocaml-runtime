@@ -31,28 +31,71 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Response = Piaf.Response
+module Request = Piaf.Request
+module Body = Piaf.Body
+module Headers = Piaf.Headers
 
-type now_proxy_response =
-  { status_code : int [@key "statusCode"]
+type vercel_proxy_request =
+  { path : string
+  ; http_method : string [@key "method"]
+  ; host : string
   ; headers : string StringMap.t
-  ; body : string
-  ; encoding : string option
+  ; body : string option [@default None]
+  ; encoding : string option [@default None]
   }
-[@@deriving to_yojson]
+[@@deriving of_yojson]
 
-type t = Response.t
+type vercel_event =
+  { action : string [@key "Action"]
+  ; body : string
+  }
+[@@deriving of_yojson]
 
-let to_yojson { Response.status; headers; body; _ } =
-  Lwt.map
-    (fun body ->
-      let body = Result.get_ok body in
-      let now_proxy_response =
-        { status_code = Piaf.Status.to_code status
-        ; headers = Message.headers_to_string_map headers
-        ; body
-        ; encoding = None
-        }
+type t = Request.t
+
+let of_yojson json =
+  match vercel_event_of_yojson json with
+  | Ok { body = event_body; _ } ->
+    (match
+       Yojson.Safe.from_string event_body |> vercel_proxy_request_of_yojson
+     with
+    | Ok { body; encoding; path; http_method; host; headers } ->
+      let meth = Piaf.Method.of_string http_method in
+      let headers =
+        Message.string_map_to_headers
+          ~init:
+            (match
+               StringMap.(find_opt "host" headers, find_opt "Host" headers)
+             with
+            | Some _, _ | _, Some _ ->
+              Headers.empty
+            | None, None ->
+              Headers.of_list [ "Host", host ])
+          headers
       in
-      now_proxy_response_to_yojson now_proxy_response)
-    (Piaf.Body.to_string body)
+      let body =
+        match Message.decode_body ~encoding body with
+        | None ->
+          Body.empty
+        | Some s ->
+          Body.of_string s
+      in
+      let request =
+        Request.create
+          ~scheme:HTTP
+          ~version:Piaf.Versions.HTTP.v1_1
+          ~headers
+          ~meth
+          ~body
+          path
+      in
+      Ok request
+    | Error _ ->
+      Error "Failed to parse event to Vercel request type"
+    | exception Yojson.Json_error error ->
+      Error
+        (Printf.sprintf
+           "Failed to parse event to Vercel request type: %s"
+           error))
+  | Error _ ->
+    Error "Failed to parse event to Vercel request type"

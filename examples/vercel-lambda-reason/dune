@@ -1,6 +1,6 @@
 (executable
  (name basic)
- (libraries now logs.fmt fmt.tty piaf lwt lwt.unix uri bigstringaf
+ (libraries vercel logs.fmt fmt.tty piaf lwt lwt.unix uri bigstringaf
    bigarray-compat result yojson))
 
 (env

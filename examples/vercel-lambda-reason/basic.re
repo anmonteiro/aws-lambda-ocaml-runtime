@@ -49,5 +49,5 @@ let setup_log = (~style_renderer=?, level) => {
 
 let () = {
   setup_log(Some(Logs.Debug));
-  Now.io_lambda(my_handler);
+  Vercel.io_lambda(my_handler);
 };
