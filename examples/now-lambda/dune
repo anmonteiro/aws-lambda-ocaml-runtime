@@ -1,6 +1,6 @@
 (executable
  (name basic)
- (libraries now logs.fmt fmt.tty httpaf))
+ (libraries now logs.fmt fmt.tty piaf lwt result))
 
 (env
  (static
