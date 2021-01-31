@@ -2,6 +2,6 @@
  (name now)
  (public_name now)
  (libraries bigstringaf lwt lambda-runtime yojson ppx_deriving_yojson.runtime
-   result base64 httpaf)
+   result base64 piaf)
  (preprocess
   (pps ppx_deriving_yojson)))

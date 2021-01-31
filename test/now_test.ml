@@ -10,30 +10,30 @@ let now_lambda_response =
     let pp formatter t =
       Format.pp_print_text
         formatter
-        (t |> Response.to_yojson |> Yojson.Safe.pretty_to_string)
+        (t |> Response.to_yojson |> Lwt_main.run |> Yojson.Safe.pretty_to_string)
 
     let equal = ( = )
   end : Alcotest.TESTABLE
     with type t = Now.Response.t)
 
 module Runtime = struct
-  include Lambda_runtime__.Runtime.Make (Now.Reqd) (Now.Response)
+  include Lambda_runtime__.Runtime.Make (Now.Request) (Now.Response)
 
-  type event = Now.Reqd.t
+  type event = Now.Request.t
 
   type response = Now.Response.t
 end
 
-let request = Test_common.make_test_request (module Now.Reqd) "now_with_body"
+let request = Test_common.make_test_request (module Now.Request) "now_with_body"
 
-let test_fixture = Test_common.test_fixture (module Now.Reqd)
+let test_fixture = Test_common.test_fixture (module Now.Request)
 
 let test_runtime =
   test_runtime_generic (module Runtime) ~lift:Lwt.return request
 
 let test_async_runtime = test_runtime_generic (module Runtime) ~lift:id request
 
-let response = Httpaf.Response.create `OK, ""
+let response = Piaf.Response.of_string `OK ~body:""
 
 let suite =
   [ ( "deserialize Now Proxy Request without HTTP Body"
@@ -64,7 +64,10 @@ let suite =
           match output with
           | Ok response ->
             let result_str =
-              response |> Now.Response.to_yojson |> Yojson.Safe.pretty_to_string
+              response
+              |> Now.Response.to_yojson
+              |> Lwt_main.run
+              |> Yojson.Safe.pretty_to_string
             in
             Alcotest.fail
               (Printf.sprintf

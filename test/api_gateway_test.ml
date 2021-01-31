@@ -11,6 +11,7 @@ let apigw_response =
         formatter
         (t
         |> Http.API_gateway_response.to_yojson
+        |> Lwt_main.run
         |> Yojson.Safe.pretty_to_string)
 
     let equal = ( = )
@@ -73,6 +74,7 @@ let suite =
             let result_str =
               response
               |> Http.API_gateway_response.to_yojson
+              |> Lwt_main.run
               |> Yojson.Safe.pretty_to_string
             in
             Alcotest.fail

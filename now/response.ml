@@ -31,7 +31,7 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Response = Httpaf.Response
+module Response = Piaf.Response
 
 type now_proxy_response =
   { status_code : int [@key "statusCode"]
@@ -41,14 +41,18 @@ type now_proxy_response =
   }
 [@@deriving to_yojson]
 
-type t = Response.t * string
+type t = Response.t
 
-let to_yojson ({ Response.status; headers; _ }, body) =
-  let now_proxy_response =
-    { status_code = Httpaf.Status.to_code status
-    ; headers = Message.headers_to_string_map headers
-    ; body
-    ; encoding = None
-    }
-  in
-  now_proxy_response_to_yojson now_proxy_response
+let to_yojson { Response.status; headers; body; _ } =
+  Lwt.map
+    (fun body ->
+      let body = Result.get_ok body in
+      let now_proxy_response =
+        { status_code = Piaf.Status.to_code status
+        ; headers = Message.headers_to_string_map headers
+        ; body
+        ; encoding = None
+        }
+      in
+      now_proxy_response_to_yojson now_proxy_response)
+    (Piaf.Body.to_string body)

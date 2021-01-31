@@ -30,12 +30,9 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-include Lambda_runtime.Make (Reqd) (Response)
+include Lambda_runtime.Make (Request) (Response)
 
-(* Proxy to http/af for Headers, Request and Response for convenience *)
-module Headers = Httpaf.Headers
-module Request = Httpaf.Request
-module Response = Httpaf.Response
-
-(* Request descriptor for Now.sh requests *)
-module Reqd = Reqd
+(* Proxy to Piaf for Headers, Request and Response for convenience *)
+module Headers = Piaf.Headers
+module Request = Piaf.Request
+module Response = Piaf.Response

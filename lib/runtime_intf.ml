@@ -39,7 +39,7 @@ end
 module type LambdaResponse = sig
   type t
 
-  val to_yojson : t -> Yojson.Safe.t
+  val to_yojson : t -> Yojson.Safe.t Lwt.t
 end
 
 module type LambdaRuntime = sig
