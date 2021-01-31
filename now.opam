@@ -15,20 +15,16 @@ depends: [
   "yojson"
   "lwt"
   "base64"
+  "piaf"
   "ppx_deriving_yojson"
   "lambda-runtime"
   "alcotest" {with-test}
 ]
-pin-depends: [
-  [ "httpaf.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
-  [ "httpaf-lwt.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
-  [ "httpaf-lwt-unix.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
-]
 synopsis:
-  "An OCaml custom runtime for Zeit.sh Now v2."
+  "An OCaml custom runtime for Vercel.com (Now v2)."
 description:
   """
   lambda-runtime is an OCaml custom runtime for AWS Lambda. The `now` package
-  provides an adapter and API for lambda-runtime that works with ZEIT's now.sh
-  v2 service.
+  provides an adapter and API for lambda-runtime that works with Vercel's (Now
+  v2) service.
   """
