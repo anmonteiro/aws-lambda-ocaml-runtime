@@ -30,11 +30,11 @@ in
       propagatedBuildInputs = [ yojson ppx_deriving_yojson piaf uri logs lwt ];
     };
 
-    now = build-lambda-runtime {
-      pname = "now";
+    vercel = build-lambda-runtime {
+      pname = "vercel";
       src = genSrc {
-        dirs = [ "now" "test" ];
-        files = [ "now.opam" ];
+        dirs = [ "vercel" "test" ];
+        files = [ "vercel.opam" ];
       };
       buildInputs = [ alcotest ];
       # tests lambda-runtime too

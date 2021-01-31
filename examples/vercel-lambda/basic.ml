@@ -1,5 +1,5 @@
 open Lwt.Syntax
-open Now
+open Vercel
 
 let my_handler request _context =
   let { Request.headers; body; _ } = request in
@@ -28,4 +28,4 @@ let setup_log ?style_renderer level =
 
 let () =
   setup_log (Some Logs.Debug);
-  Now.io_lambda my_handler
+  Vercel.io_lambda my_handler
