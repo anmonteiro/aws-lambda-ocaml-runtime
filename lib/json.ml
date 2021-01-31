@@ -32,6 +32,8 @@
 
 module Id = struct
   type t = Yojson.Safe.t [@@deriving yojson]
+
+  let to_yojson t = Lwt.return (to_yojson t)
 end
 
 include Runtime.Make (Id) (Id)

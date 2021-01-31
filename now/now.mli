@@ -35,46 +35,16 @@ open Lambda_runtime
 (* To keep module equality. See e.g.:
  * https://stackoverflow.com/a/37307124/3417023 *)
 module Headers : module type of struct
-  include Httpaf.Headers
+  include Piaf.Headers
 end
 
 module Request : module type of struct
-  include Httpaf.Request
+  include Piaf.Request
 end
 
 module Response : module type of struct
-  include Httpaf.Response
-end
-
-module Reqd : sig
-  (* TODO(anmonteiro): this module can also provide a `respond_with_streaming`
-   * function that will only return `response` after closing the writer. *)
-  type t
-
-  type response
-
-  val request : t -> Httpaf.Request.t
-
-  val request_body : t -> string option
-
-  val response : t -> Httpaf.Response.t option
-
-  val response_exn : t -> Httpaf.Response.t
-
-  val respond_with_string
-    :  t
-    -> Httpaf.Response.t
-    -> string
-    -> (response, string) result
-
-  val respond_with_bigstring
-    :  t
-    -> Httpaf.Response.t
-    -> ?off:int
-    -> ?len:int
-    -> Bigstringaf.t
-    -> (response, string) result
+  include Piaf.Response
 end
 
 include
-  LambdaRuntime with type event := Reqd.t and type response := Reqd.response
+  LambdaRuntime with type event := Request.t and type response := Response.t

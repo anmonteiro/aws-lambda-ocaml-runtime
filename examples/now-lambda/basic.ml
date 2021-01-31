@@ -1,22 +1,24 @@
+open Lwt.Syntax
 open Now
 
-let my_handler reqd _context =
-  let { Request.headers; _ } = Reqd.request reqd in
-  let body = Reqd.request_body reqd in
+let my_handler request _context =
+  let { Request.headers; body; _ } = request in
   let host = Headers.get_exn headers "host" in
+  let+ body = Piaf.Body.to_string body in
+  let body = Result.get_ok body in
   let body =
-    match body with
-    | Some body ->
+    if String.length body > 0 then
       body
-    | None ->
-      Printf.sprintf "Didn't get an HTTP body from %s" host
+    else
+      Format.asprintf "Didn't get an HTTP body from %s" host
   in
   let response =
-    Response.create
+    Response.of_string
+      ~body
       ~headers:(Headers.of_list [ "Content-Type", "application/json" ])
       `OK
   in
-  Reqd.respond_with_string reqd response body
+  Ok response
 
 let setup_log ?style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();
@@ -26,4 +28,4 @@ let setup_log ?style_renderer level =
 
 let () =
   setup_log (Some Logs.Debug);
-  Now.lambda my_handler
+  Now.io_lambda my_handler

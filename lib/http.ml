@@ -102,6 +102,8 @@ end
 
 module API_gateway_response = struct
   type t = api_gateway_proxy_response [@@deriving to_yojson]
+
+  let to_yojson t = Lwt.return (to_yojson t)
 end
 
 include Runtime.Make (API_gateway_request) (API_gateway_response)

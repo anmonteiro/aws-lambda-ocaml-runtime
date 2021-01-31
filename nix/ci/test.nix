@@ -19,5 +19,6 @@ in
     checkPhase = ''
       # Check code is formatted with OCamlformat
       dune build @fmt
+      dune build @examples/all
     '';
   }

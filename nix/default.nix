@@ -1,5 +1,6 @@
-{ pkgs ? import ./sources.nix { inherit ocamlVersion; }
-, ocamlVersion ? "4_10" }:
+{ ocamlVersion ? "4_11"
+, pkgs ? import ./sources.nix { inherit ocamlVersion; }
+}:
 
 let
   inherit (pkgs) lib stdenv ocamlPackages;
@@ -40,7 +41,7 @@ in
       doCheck = true;
       propagatedBuildInputs = [
         lambda-runtime
-        httpaf
+        piaf
         yojson
         ppx_deriving_yojson
         lwt

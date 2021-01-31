@@ -112,7 +112,7 @@ struct
     let request_id = ctx.aws_request_id in
     invoke runtime event ctx >>= function
     | Ok response ->
-      let response_json = Response.to_yojson response in
+      Response.to_yojson response >>= fun response_json ->
       Client.event_response runtime.client request_id response_json
       >>= ( function
       | Ok _ ->

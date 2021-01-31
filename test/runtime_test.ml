@@ -1,9 +1,10 @@
 open Test_common
 
 module Runtime = struct
-  include Lambda_runtime__.Runtime.Make
-            (Lambda_runtime__.Json.Id)
-            (Lambda_runtime__.Json.Id)
+  include
+    Lambda_runtime__.Runtime.Make
+      (Lambda_runtime__.Json.Id)
+      (Lambda_runtime__.Json.Id)
 
   type event = Lambda_runtime__.Json.Id.t
 
