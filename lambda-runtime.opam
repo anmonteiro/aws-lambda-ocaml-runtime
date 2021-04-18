@@ -22,3 +22,7 @@ depends: [
 ]
 synopsis:
   "A custom runtime for AWS Lambda written in OCaml"
+description: """
+lambda-runtime is a runtime for AWS Lambda that makes it easy to run AWS Lambda
+Functions written in OCaml.
+"""

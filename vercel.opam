@@ -21,7 +21,7 @@ depends: [
   "alcotest" {with-test}
 ]
 synopsis:
-  "A custom runtime for Vercel.com (Now v2) written in OCaml."
+  "A custom runtime for Vercel.com (Now v2) written in OCaml"
 description:
   """
   lambda-runtime is an OCaml custom runtime for AWS Lambda. The vercel
