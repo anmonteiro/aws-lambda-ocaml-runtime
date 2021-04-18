@@ -9,8 +9,8 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
-  "ocaml" {>= "4.06"}
-  "dune" {build}
+  "ocaml" {>= "4.08"}
+  "dune" {>= "1.7"}
   "result"
   "yojson" {>= "1.6.0" & < "2.0.0"}
   "ppx_deriving_yojson"
@@ -20,8 +20,5 @@ depends: [
   "lwt"
   "alcotest" {with-test}
 ]
-pin-depends: [
-  [ "ssl.dev" "git+https://github.com/savonet/ocaml-ssl.git" ]
-]
 synopsis:
-  "An OCaml custom runtime for AWS Lambda"
+  "A custom runtime for AWS Lambda written in OCaml"
