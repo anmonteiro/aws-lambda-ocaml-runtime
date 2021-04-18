@@ -9,8 +9,8 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
-  "ocaml" {>= "4.06"}
-  "dune" {build}
+  "ocaml" {>= "4.08"}
+  "dune" {>= "1.7"}
   "result"
   "yojson"
   "lwt"
@@ -21,10 +21,10 @@ depends: [
   "alcotest" {with-test}
 ]
 synopsis:
-  "An OCaml custom runtime for Vercel.com (Now v2)."
+  "A custom runtime for Vercel.com (Now v2) written in OCaml."
 description:
   """
-  lambda-runtime is an OCaml custom runtime for AWS Lambda. The `vercel`
+  lambda-runtime is an OCaml custom runtime for AWS Lambda. The vercel
   package provides an adapter and API for lambda-runtime that works with
   Vercel's (Now v2) service.
   """
