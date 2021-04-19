@@ -4,6 +4,28 @@ This package provides a [custom
 runtime](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html) for
 AWS Lambda.
 
+## Installation
+
+This repository provides two libraries:
+
+- `lambda-runtime` provides a runtime and API for
+  [AWS Lambda](https://aws.amazon.com/lambda/) and
+  [API Gateway](https://aws.amazon.com/api-gateway/).
+- the `vercel` library depends on `lambda-runtime` and provides an interface to
+  the [Vercel](https://vercel.com/) service that resembles a request / response
+  exchange.
+
+
+The libraries in this repo are released to the OPAM package registry.
+
+You can depend on them via:
+
+1. [__esy__](esy): `esy add @opam/lambda-runtime` and / or `esy add @opam/vercel`
+2. [__OPAM__](opam): `opam install lambda-runtime vercel`.
+
+[esy]: https://esy.sh
+[opam]: https://opam.ocaml.org
+
 ## Example function
 
 See the [`examples`](./examples) folder.
