@@ -1,0 +1,28 @@
+opam-version: "2.0"
+maintainer: "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
+authors: [ "Antonio Nuno Monteiro <anmonteiro@gmail.com>" ]
+license: "BSD-3-clause"
+homepage: "https://github.com/anmonteiro/aws-lambda-ocaml-runtime"
+bug-reports: "https://github.com/anmonteiro/aws-lambda-ocaml-runtime/issues"
+dev-repo: "git+https://github.com/anmonteiro/aws-lambda-ocaml-runtime.git"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "4.08"}
+  "dune" {>= "1.7"}
+  "result"
+  "yojson" {>= "1.6.0" & < "2.0.0"}
+  "ppx_deriving_yojson"
+  "piaf"
+  "uri"
+  "logs"
+  "lwt"
+  "alcotest" {with-test}
+]
+synopsis:
+  "A development environment for lambda-runtime"
+description: """
+lambda-runtime-dev is a development environment for running lambdas
+locally with AWS lambda-runtime.
+"""

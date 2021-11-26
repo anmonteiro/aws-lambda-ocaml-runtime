@@ -1,0 +1,3 @@
+(executable
+  (name basic)
+  (libraries lambda-runtime lambda-runtime-dev))
