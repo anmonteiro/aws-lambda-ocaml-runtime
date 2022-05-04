@@ -59,7 +59,8 @@ end
 type client_application =
   { (* The mobile app installation id *)
     installation_id : string
-  ; (* The app title for the mobile app as registered with AWS' mobile services. *)
+  ; (* The app title for the mobile app as registered with AWS' mobile
+       services. *)
     app_title : string option [@default None]
   ; (* The version name of the application as registered with AWS' mobile
        services. *)
@@ -83,7 +84,8 @@ type client_context =
 
 (* Cognito identity information sent with the event *)
 type cognito_identity =
-  { (* The unique identity id for the Cognito credentials invoking the function. *)
+  { (* The unique identity id for the Cognito credentials invoking the
+       function. *)
     identity_id : string
   ; (* The identity pool id the caller is "registered" with. *)
     identity_pool_id : string
