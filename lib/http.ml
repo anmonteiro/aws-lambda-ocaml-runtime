@@ -50,7 +50,7 @@ type api_gateway_request_identity =
   ; user_agent : string option [@key "userAgent"]
   ; user : string option
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 (* APIGatewayProxyRequestContext contains the information to identify the AWS
  * account and resources invoking the Lambda function. It also includes Cognito
@@ -97,7 +97,7 @@ type api_gateway_proxy_response =
 [@@deriving to_yojson]
 
 module API_gateway_request = struct
-  type t = api_gateway_proxy_request [@@deriving of_yojson]
+  type t = api_gateway_proxy_request [@@deriving of_yojson { strict = false }]
 end
 
 module API_gateway_response = struct
