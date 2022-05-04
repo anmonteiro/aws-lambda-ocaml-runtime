@@ -70,7 +70,7 @@ type client_application =
   ; (* The package name for the mobile application invoking the function *)
     app_package_name : string
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 type client_context =
   { (* Information about the mobile application invoking the function. *)
@@ -80,7 +80,7 @@ type client_context =
   ; (* Environment settings from the mobile client. *)
     env : Yojson.Safe.t
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 (* Cognito identity information sent with the event *)
 type cognito_identity =
@@ -90,7 +90,7 @@ type cognito_identity =
   ; (* The identity pool id the caller is "registered" with. *)
     identity_pool_id : string
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 type event_context =
   { (* The ARN of the Lambda function being invoked. *)

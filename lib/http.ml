@@ -97,7 +97,7 @@ type api_gateway_proxy_response =
 [@@deriving to_yojson]
 
 module API_gateway_request = struct
-  type t = api_gateway_proxy_request [@@deriving of_yojson]
+  type t = api_gateway_proxy_request [@@deriving of_yojson { strict = false }]
 end
 
 module API_gateway_response = struct
