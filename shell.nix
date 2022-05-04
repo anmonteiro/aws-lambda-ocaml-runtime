@@ -1,10 +1,8 @@
-{ release-mode ? false }:
+{ packages, pkgs, release-mode ? false }:
 
 let
-  pkgs = import ./nix/sources.nix { };
   inherit (pkgs) stdenv lib;
-  lambdaPkgs = pkgs.recurseIntoAttrs (import ./nix { inherit pkgs; });
-  lambdaDrvs = lib.filterAttrs (_: value: lib.isDerivation value) lambdaPkgs;
+  lambdaDrvs = lib.filterAttrs (_: value: lib.isDerivation value) packages;
 
 in
 (pkgs.mkShell {

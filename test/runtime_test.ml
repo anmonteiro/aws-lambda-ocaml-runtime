@@ -76,10 +76,13 @@ let suite =
                  "Expected to get an error but the call succeeded with: %s"
                  result_str)
           | Error e ->
+            let expected =
+              "Handler raised: Runtime_test.User_code_exception\n"
+            in
             Alcotest.(
               check
                 string
                 "Runtime invoke error"
-                "Handler raised: Runtime_test.User_code_exception\n"
-                e)) )
+                expected
+                (String.sub e 0 (String.length expected)))) )
   ]
