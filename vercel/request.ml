@@ -31,9 +31,9 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Request = Piaf.Request
-module Body = Piaf.Body
-module Headers = Piaf.Headers
+module Request = Piaf_lwt.Request
+module Body = Piaf_lwt.Body
+module Headers = Piaf_lwt.Headers
 
 type vercel_proxy_request =
   { path : string
@@ -60,7 +60,7 @@ let of_yojson json =
        Yojson.Safe.from_string event_body |> vercel_proxy_request_of_yojson
      with
     | Ok { body; encoding; path; http_method; host; headers } ->
-      let meth = Piaf.Method.of_string http_method in
+      let meth = Piaf_lwt.Method.of_string http_method in
       let headers =
         Message.string_map_to_headers
           ~init:
@@ -83,7 +83,7 @@ let of_yojson json =
       let request =
         Request.create
           ~scheme:HTTP
-          ~version:Piaf.Versions.HTTP.v1_1
+          ~version:Piaf_lwt.Versions.HTTP.v1_1
           ~headers
           ~meth
           ~body

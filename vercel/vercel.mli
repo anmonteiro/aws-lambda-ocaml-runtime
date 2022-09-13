@@ -35,15 +35,15 @@ open Lambda_runtime
 (* To keep module equality. See e.g.:
  * https://stackoverflow.com/a/37307124/3417023 *)
 module Headers : module type of struct
-  include Piaf.Headers
+  include Piaf_lwt.Headers
 end
 
 module Request : module type of struct
-  include Piaf.Request
+  include Piaf_lwt.Request
 end
 
 module Response : module type of struct
-  include Piaf.Response
+  include Piaf_lwt.Response
 end
 
 include

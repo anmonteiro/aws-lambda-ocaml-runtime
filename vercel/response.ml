@@ -31,7 +31,7 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Response = Piaf.Response
+module Response = Piaf_lwt.Response
 
 type vercel_proxy_response =
   { status_code : int [@key "statusCode"]
@@ -48,11 +48,11 @@ let to_yojson { Response.status; headers; body; _ } =
     (fun body ->
       let body = Result.get_ok body in
       let vercel_proxy_response =
-        { status_code = Piaf.Status.to_code status
+        { status_code = Piaf_lwt.Status.to_code status
         ; headers = Message.headers_to_string_map headers
         ; body
         ; encoding = None
         }
       in
       vercel_proxy_response_to_yojson vercel_proxy_response)
-    (Piaf.Body.to_string body)
+    (Piaf_lwt.Body.to_string body)

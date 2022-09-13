@@ -31,7 +31,7 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Headers = Piaf.Headers
+module Headers = Piaf_lwt.Headers
 
 let decode_body ~encoding body =
   match body, encoding with

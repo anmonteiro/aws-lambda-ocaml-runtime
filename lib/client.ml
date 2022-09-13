@@ -31,6 +31,7 @@
  *---------------------------------------------------------------------------*)
 
 open Lwt.Infix
+module Piaf = Piaf_lwt
 
 module Constants = struct
   let runtime_api_version = "2018-06-01"

@@ -31,6 +31,7 @@
  *---------------------------------------------------------------------------*)
 
 open Lwt.Infix
+module Piaf = Piaf_lwt
 
 module Make
     (Event : Runtime_intf.LambdaEvent)

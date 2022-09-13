@@ -33,6 +33,6 @@
 include Lambda_runtime.Make (Request) (Response)
 
 (* Proxy to Piaf for Headers, Request and Response for convenience *)
-module Headers = Piaf.Headers
-module Request = Piaf.Request
-module Response = Piaf.Response
+module Headers = Piaf_lwt.Headers
+module Request = Piaf_lwt.Request
+module Response = Piaf_lwt.Response
