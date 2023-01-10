@@ -11,7 +11,6 @@ let apigw_response =
         formatter
         (t
         |> Http.API_gateway_response.to_yojson
-        |> Lwt_main.run
         |> Yojson.Safe.pretty_to_string)
 
     let equal = ( = )
@@ -22,7 +21,6 @@ module Http_runtime = struct
   include Http
 
   type event = Http.API_gateway_request.t
-
   type response = Http.API_gateway_response.t
 end
 
@@ -30,12 +28,7 @@ let request =
   Test_common.make_test_request (module Http.API_gateway_request) "apigw_real"
 
 let test_fixture = Test_common.test_fixture (module Http.API_gateway_request)
-
-let test_runtime =
-  test_runtime_generic (module Http_runtime) ~lift:Lwt.return request
-
-let test_async_runtime =
-  test_runtime_generic (module Http_runtime) ~lift:id request
+let test_runtime = test_runtime_generic (module Http_runtime) request
 
 let response =
   Http.
@@ -62,8 +55,7 @@ let suite =
               "runtime invoke output"
               response
               result
-          | Error e ->
-            Alcotest.fail e) )
+          | Error e -> Alcotest.fail e) )
   ; ( "failed handler invocation"
     , `Quick
     , test_runtime
@@ -74,7 +66,6 @@ let suite =
             let result_str =
               response
               |> Http.API_gateway_response.to_yojson
-              |> Lwt_main.run
               |> Yojson.Safe.pretty_to_string
             in
             Alcotest.fail
@@ -85,8 +76,8 @@ let suite =
             Alcotest.(check string "Runtime invoke error" "I failed" e)) )
   ; ( "simple asynchronous handler invocation"
     , `Quick
-    , test_async_runtime
-        (fun _event _ctx -> Lwt_result.return response)
+    , test_runtime
+        (fun _event _ctx -> Ok response)
         (fun output ->
           match output with
           | Ok result ->
@@ -95,6 +86,5 @@ let suite =
               "runtime invoke output"
               response
               result
-          | Error e ->
-            Alcotest.fail e) )
+          | Error e -> Alcotest.fail e) )
   ]

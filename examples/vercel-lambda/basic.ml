@@ -7,10 +7,9 @@ let my_handler request _context =
   let+ body = Piaf.Body.to_string body in
   let body = Result.get_ok body in
   let body =
-    if String.length body > 0 then
-      body
-    else
-      Format.asprintf "Didn't get an HTTP body from %s" host
+    if String.length body > 0
+    then body
+    else Format.asprintf "Didn't get an HTTP body from %s" host
   in
   let response =
     Response.of_string

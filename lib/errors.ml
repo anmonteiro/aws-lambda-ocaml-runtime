@@ -52,7 +52,6 @@ type _ t =
 
 module Constants = struct
   let error_type_handled = "Handled"
-
   let error_type_unhandled = "Unhandled"
 end
 
@@ -68,41 +67,31 @@ let make_handler_error msg =
     { error_message = msg; error_type = Constants.error_type_handled }
 
 let is_recoverable = function
-  | ApiError { recoverable; _ } | RuntimeError { recoverable; _ } ->
-    recoverable
+  | ApiError { recoverable; _ } | RuntimeError { recoverable; _ } -> recoverable
 
 let message : type a. a t -> string = function
-  | HandlerError { error_message; _ } ->
-    error_message
-  | ApiError { msg; _ } ->
-    msg
-  | RuntimeError { msg; _ } ->
-    msg
+  | HandlerError { error_message; _ } -> error_message
+  | ApiError { msg; _ } -> msg
+  | RuntimeError { msg; _ } -> msg
 
 let request_id = function
-  | ApiError { request_id; _ } ->
-    request_id
-  | RuntimeError { request_id; _ } ->
-    request_id
+  | ApiError { request_id; _ } -> request_id
+  | RuntimeError { request_id; _ } -> request_id
 
 let to_lambda_error : type a. ?handled:bool -> a t -> Yojson.Safe.t =
  fun ?(handled = true) error ->
   let make_lambda_error e =
     { error_message = e.msg
     ; error_type =
-        (if handled then
-           Constants.error_type_handled
-        else
-          Constants.error_type_unhandled)
+        (if handled
+        then Constants.error_type_handled
+        else Constants.error_type_unhandled)
     }
   in
   let lambda_error =
     match error with
-    | HandlerError e ->
-      e
-    | ApiError e ->
-      make_lambda_error e
-    | RuntimeError e ->
-      make_lambda_error e
+    | HandlerError e -> e
+    | ApiError e -> make_lambda_error e
+    | RuntimeError e -> make_lambda_error e
   in
   lambda_error_to_yojson lambda_error

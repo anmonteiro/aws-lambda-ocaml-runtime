@@ -30,29 +30,18 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-open Lwt.Infix
-module Piaf = Piaf_lwt
-
 module Constants = struct
   let runtime_api_version = "2018-06-01"
-
   let api_content_type = "application/json"
-
   let api_error_content_type = "application/vnd.aws.lambda.error+json"
-
   let runtime_error_header = "Lambda-Runtime-Function-Error-Type"
 
   module RequestHeaders = struct
     let request_id = "Lambda-Runtime-Aws-Request-Id"
-
     let function_arn = "Lambda-Runtime-Invoked-Function-Arn"
-
     let trace_id = "Lambda-Runtime-Trace-Id"
-
     let deadline = "Lambda-Runtime-Deadline-Ms"
-
     let client_context = "Lambda-Runtime-Client-Context"
-
     let cognito_identity = "Lambda-Runtime-Cognito-Identity"
   end
 end
@@ -113,13 +102,9 @@ type event_context =
 
 type t = Piaf.Client.t
 
-let make endpoint =
+let make ~sw env endpoint =
   let uri = Uri.of_string (Format.asprintf "http://%s" endpoint) in
-  Piaf.Client.create uri >|= function
-  | Ok connection ->
-    Ok connection
-  | Error msg ->
-    Error msg
+  Piaf.Client.create ~sw env uri
 
 let make_runtime_post_request client path output =
   let body = Yojson.Safe.to_string output in
@@ -137,9 +122,10 @@ let event_response client request_id output =
       Constants.runtime_api_version
       request_id
   in
-  make_runtime_post_request client path output >>= function
+  match make_runtime_post_request client path output with
   | Ok { Response.status; _ } ->
-    if not (Status.is_successful status) then
+    if not (Status.is_successful status)
+    then
       let error =
         Errors.make_api_error
           ~recoverable:false
@@ -147,9 +133,8 @@ let event_response client request_id output =
              "Error %d while sending response"
              (Status.to_code status))
       in
-      Lwt_result.fail error
-    else
-      Lwt_result.return ()
+      Error error
+    else Ok ()
   | Error _ ->
     let err =
       Errors.make_api_error
@@ -158,7 +143,7 @@ let event_response client request_id output =
            "Error when calling runtime API for request %s"
            request_id)
     in
-    Lwt_result.fail err
+    Error err
 
 let make_runtime_error_request connection path error =
   let open Piaf in
@@ -180,9 +165,10 @@ let event_error client request_id err =
       Constants.runtime_api_version
       request_id
   in
-  make_runtime_error_request client path err >>= function
+  match make_runtime_error_request client path err with
   | Ok { Response.status; _ } ->
-    if not (Status.is_successful status) then
+    if not (Status.is_successful status)
+    then
       let error =
         Errors.make_api_error
           ~recoverable:true
@@ -190,9 +176,8 @@ let event_error client request_id err =
              "Error %d while sending response"
              (Status.to_code status))
       in
-      Lwt_result.fail error
-    else
-      Lwt_result.return ()
+      Error error
+    else Ok ()
   | Error _ ->
     let err =
       Errors.make_api_error
@@ -201,19 +186,17 @@ let event_error client request_id err =
            "Error when calling runtime API for request %s"
            request_id)
     in
-    Lwt_result.fail err
+    Error err
 
 let fail_init client err =
   let path =
     Format.asprintf "/%s/runtime/init/error" Constants.runtime_api_version
   in
-  make_runtime_error_request client path err >>= function
-  | Ok _ ->
-    Lwt_result.return ()
+  match make_runtime_error_request client path err with
+  | Ok _ -> Ok ()
   (* TODO: do we wanna "failwith" or just raise and then have a generic
      `Lwt.catch` that will `failwith`? *)
-  | Error _ ->
-    failwith "Error while sending init failed message"
+  | Error _ -> failwith "Error while sending init failed message"
 
 let get_event_context headers =
   let open Piaf in
@@ -227,41 +210,32 @@ let get_event_context headers =
   in
   let open Constants in
   match Headers.get headers RequestHeaders.request_id with
-  | None ->
-    report_error RequestHeaders.request_id
+  | None -> report_error RequestHeaders.request_id
   | Some aws_request_id ->
     (match Headers.get headers RequestHeaders.function_arn with
-    | None ->
-      report_error RequestHeaders.function_arn
+    | None -> report_error RequestHeaders.function_arn
     | Some invoked_function_arn ->
       (match Headers.get headers RequestHeaders.deadline with
-      | None ->
-        report_error RequestHeaders.deadline
+      | None -> report_error RequestHeaders.deadline
       | Some deadline_str ->
         let deadline = Int64.of_string deadline_str in
         let client_context =
           match Headers.get headers RequestHeaders.client_context with
-          | None ->
-            None
+          | None -> None
           | Some ctx_json_str ->
             let ctx_json = Yojson.Safe.from_string ctx_json_str in
             (match client_context_of_yojson ctx_json with
-            | Error _ ->
-              None
-            | Ok client_ctx ->
-              Some client_ctx)
+            | Error _ -> None
+            | Ok client_ctx -> Some client_ctx)
         in
         let identity =
           match Headers.get headers RequestHeaders.cognito_identity with
-          | None ->
-            None
+          | None -> None
           | Some cognito_json_str ->
             let cognito_json = Yojson.Safe.from_string cognito_json_str in
             (match cognito_identity_of_yojson cognito_json with
-            | Error _ ->
-              None
-            | Ok cognito_identity ->
-              Some cognito_identity)
+            | Error _ -> None
+            | Ok cognito_identity -> Some cognito_identity)
         in
         let ctx =
           { aws_request_id
@@ -279,45 +253,43 @@ let next_event client =
   let path =
     Format.asprintf "/%s/runtime/invocation/next" Constants.runtime_api_version
   in
-  Logs_lwt.info (fun m -> m "Polling for next event. Path: %s\n" path)
-  >>= fun () ->
-  Client.get client path >>= function
+  Logs.info (fun m -> m "Polling for next event. Path: %s\n" path);
+  match Client.get client path with
   | Ok { Response.status; headers; body; _ } ->
     let code = Status.to_code status in
-    if Status.is_client_error status then
-      Logs_lwt.err (fun m ->
+    if Status.is_client_error status
+    then (
+      Logs.err (fun m ->
           m
             "Runtime API returned client error when polling for new events %d\n"
-            code)
-      >>= fun () ->
+            code);
       let err =
         Errors.make_api_error
           ~recoverable:true
           (Printf.sprintf "Error %d when polling for events" code)
       in
-      Lwt_result.fail err
-    else if Status.is_server_error status then
-      Logs_lwt.err (fun m ->
+      Error err)
+    else if Status.is_server_error status
+    then (
+      Logs.err (fun m ->
           m
             "Runtime API returned server error when polling for new events %d\n"
-            code)
-      >>= fun () ->
+            code);
       let err =
         Errors.make_api_error
           ~recoverable:false
           "Server error when polling for new events"
       in
-      Lwt_result.fail err
+      Error err)
     else (
       match get_event_context headers with
       | Error err ->
-        Logs_lwt.err (fun m ->
-            m "Failed to get event context: %s\n" (Errors.message err))
-        >>= fun () -> Lwt_result.fail err
+        Logs.err (fun m ->
+            m "Failed to get event context: %s\n" (Errors.message err));
+        Error err
       | Ok ctx ->
-        Body.to_string body >>= ( function
-        | Ok body_str ->
-          Lwt_result.return (body_str, ctx)
+        (match Body.to_string body with
+        | Ok body_str -> Ok (body_str, ctx)
         | Error e ->
           let err =
             Errors.make_api_error
@@ -327,11 +299,11 @@ let next_event client =
                  Piaf.Error.pp_hum
                  e)
           in
-          Lwt_result.fail err ))
+          Error err))
   | Error _ ->
     let err =
       Errors.make_api_error
         ~recoverable:false
         "Server error when polling for new events"
     in
-    Lwt_result.fail err
+    Error err

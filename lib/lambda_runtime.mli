@@ -89,9 +89,7 @@ end
 module StringMap : module type of Util.StringMap
 
 module type LambdaEvent = LambdaEvent
-
 module type LambdaResponse = LambdaResponse
-
 module type LambdaRuntime = LambdaRuntime
 
 module Make (Event : LambdaEvent) (Response : LambdaResponse) :

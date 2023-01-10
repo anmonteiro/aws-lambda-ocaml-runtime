@@ -7,8 +7,7 @@ let my_handler evt _context =
         ; "body", `String (Yojson.Safe.prettify body)
         ; "headers", `Assoc []
         ])
-  | _ ->
-    Error "Body wasn't string"
+  | _ -> Error "Body wasn't string"
 
 let setup_log ?style_renderer level =
   Fmt_tty.setup_std_outputs ?style_renderer ();

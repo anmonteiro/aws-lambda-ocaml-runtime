@@ -39,17 +39,12 @@ end
 module type LambdaResponse = sig
   type t
 
-  val to_yojson : t -> Yojson.Safe.t Lwt.t
+  val to_yojson : t -> Yojson.Safe.t
 end
 
 module type LambdaRuntime = sig
   type event
-
   type response
 
   val lambda : (event -> Context.t -> (response, string) result) -> unit
-
-  val io_lambda
-    :  (event -> Context.t -> (response, string) result Lwt.t)
-    -> unit
 end

@@ -20,8 +20,8 @@ let error = ref false
 
 module MockConfigProvider = struct
   let get_function_settings () =
-    if !error then
-      Error (Errors.make_runtime_error ~recoverable:false "Mock error")
+    if !error
+    then Error (Errors.make_runtime_error ~recoverable:false "Mock error")
     else
       Ok
         { Config.function_name = "MockFunction"
@@ -32,10 +32,9 @@ module MockConfigProvider = struct
         }
 
   let get_runtime_api_endpoint () =
-    if !error then
-      Error (Errors.make_runtime_error ~recoverable:false "Mock error")
-    else
-      Ok "localhost:8080"
+    if !error
+    then Error (Errors.make_runtime_error ~recoverable:false "Mock error")
+    else Ok "localhost:8080"
 
   let get_deadline secs =
     let now_ms = Unix.gettimeofday () *. 1000. in
@@ -59,30 +58,23 @@ end
 
 module type Runtime = sig
   type event
-
   type response
 
   type 'a runtime =
     { client : Client.t
     ; settings : Config.function_settings
-    ; handler : event -> Context.t -> 'a
+    ; handler : event -> Context.t -> ('a, string) result
     ; max_retries : int
-    ; lift : 'a -> (response, string) result Lwt.t
     }
 
   val make
-    :  handler:(event -> Context.t -> 'a)
+    :  handler:(event -> Context.t -> ('a, string) result)
     -> max_retries:int
     -> settings:Config.function_settings
-    -> lift:('a -> (response, string) result Lwt.t)
     -> Client.t
     -> 'a runtime
 
-  val invoke
-    :  'a runtime
-    -> event
-    -> Context.t
-    -> (response, string) result Lwt.t
+  val invoke : 'a runtime -> event -> Context.t -> ('a, string) result
 end
 
 let test_runtime_generic
@@ -90,29 +82,24 @@ let test_runtime_generic
     (module Runtime : Runtime
       with type event = event
        and type response = response)
-    ~lift
     event
     handler
     test_fn
     ()
   =
   match MockConfigProvider.get_runtime_api_endpoint () with
-  | Error _ ->
-    Alcotest.fail "Could not get runtime endpoint"
+  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
   | Ok _runtime_api_endpoint ->
     (* Avoid creating a TCP connection for every test *)
     let client = Obj.magic () in
     (match MockConfigProvider.get_function_settings () with
-    | Error _ ->
-      Alcotest.fail "Could not load environment config"
+    | Error _ -> Alcotest.fail "Could not load environment config"
     | Ok settings ->
-      let runtime =
-        Runtime.make ~handler ~lift ~max_retries:3 ~settings client
-      in
+      let runtime = Runtime.make ~handler ~max_retries:3 ~settings client in
       let output =
         Runtime.invoke runtime event (MockConfigProvider.test_context 10)
       in
-      test_fn (Lwt_main.run output))
+      test_fn output)
 
 let read_all path =
   let file = open_in path in
@@ -122,17 +109,17 @@ let read_all path =
     raise exn
 
 let test_fixture
-    (module Request : Lambda_runtime__Runtime_intf.LambdaEvent) fixture ()
+    (module Request : Lambda_runtime__Runtime_intf.LambdaEvent)
+    fixture
+    ()
   =
   let fixture =
     read_all (Printf.sprintf "fixtures/%s.json" fixture)
     |> Yojson.Safe.from_string
   in
   match Request.of_yojson fixture with
-  | Ok _req ->
-    Alcotest.(check pass) "Parses correctly" true true
-  | Error err ->
-    Alcotest.fail err
+  | Ok _req -> Alcotest.(check pass) "Parses correctly" true true
+  | Error err -> Alcotest.fail err
 
 let make_test_request
     (type a)
@@ -144,8 +131,7 @@ let make_test_request
     |> Yojson.Safe.from_string
   in
   match Request.of_yojson fixture with
-  | Ok req ->
-    req
+  | Ok req -> req
   | Error err ->
     failwith
       (Printf.sprintf

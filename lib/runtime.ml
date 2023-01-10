@@ -30,9 +30,6 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-open Lwt.Infix
-module Piaf = Piaf_lwt
-
 module Make
     (Event : Runtime_intf.LambdaEvent)
     (Response : Runtime_intf.LambdaResponse) =
@@ -40,29 +37,26 @@ struct
   type 'a runtime =
     { client : Client.t
     ; settings : Config.function_settings
-    ; handler : Event.t -> Context.t -> 'a
+    ; handler : Event.t -> Context.t -> ('a, string) result
     ; max_retries : int
-    ; lift : 'a -> (Response.t, string) result Lwt.t
     }
 
-  let make ~handler ~max_retries ~settings ~lift client =
-    { client; settings; max_retries; handler; lift }
+  let make ~handler ~max_retries ~settings client =
+    { client; settings; max_retries; handler }
 
   let rec get_next_event ?error runtime retries =
     match error with
     | Some err when retries > runtime.max_retries ->
       (match Errors.request_id err with
-      | Some req_id ->
-        Client.event_error runtime.client req_id err
-      | None ->
-        Client.fail_init runtime.client err)
+      | Some req_id -> Client.event_error runtime.client req_id err
+      | None -> Client.fail_init runtime.client err)
       |> ignore;
       (* These errors are not recoverable. Either we can't communicate with the
        * runtime APIs or we cannot parse the event. panic to restart the
        * environment. *)
       failwith "Could not retrieve next event"
     | _ ->
-      Client.next_event runtime.client >>= ( function
+      (match Client.next_event runtime.client with
       | Ok (ev_data, invocation_ctx) ->
         (match ev_data |> Yojson.Safe.from_string |> Event.of_yojson with
         | Ok ev ->
@@ -76,10 +70,9 @@ struct
               ~deadline:invocation_ctx.deadline
               runtime.settings
           in
-          Lwt.return (ev, handler_ctx)
+          ev, handler_ctx
         | Error err ->
-          Logs_lwt.err (fun m -> m "Could not parse event to type: %s" err)
-          >>= fun () ->
+          Logs.err (fun m -> m "Could not parse event to type: %s" err);
           let error =
             Errors.make_runtime_error
               ~recoverable:true
@@ -95,78 +88,68 @@ struct
               (Printf.sprintf "Could not parse event to type: %s" ev_data)
           in
           get_next_event ~error runtime (retries + 1))
-      | Error e ->
-        get_next_event ~error:e runtime (retries + 1) )
+      | Error e -> get_next_event ~error:e runtime (retries + 1))
 
-  let invoke { lift; handler; _ } event ctx =
-    Lwt.catch
-      (fun () -> lift (handler event ctx))
-      (fun exn ->
-        let backtrace = Printexc.get_backtrace () in
-        let exn_str = Printexc.to_string exn in
-        Lwt.return
-          (Error (Printf.sprintf "Handler raised: %s\n%s" exn_str backtrace)))
+  let invoke { handler; _ } event ctx =
+    try handler event ctx with
+    | exn ->
+      let backtrace = Printexc.get_backtrace () in
+      let exn_str = Printexc.to_string exn in
+      Error (Printf.sprintf "Handler raised: %s\n%s" exn_str backtrace)
 
   let rec start runtime =
-    let open Lwt.Infix in
-    get_next_event runtime 0 >>= fun (event, ctx) ->
+    let event, ctx = get_next_event runtime 0 in
     let request_id = ctx.aws_request_id in
-    invoke runtime event ctx >>= function
+    match invoke runtime event ctx with
     | Ok response ->
-      Response.to_yojson response >>= fun response_json ->
-      Client.event_response runtime.client request_id response_json
-      >>= ( function
-      | Ok _ ->
-        start runtime
+      let response_json = Response.to_yojson response in
+      (match Client.event_response runtime.client request_id response_json with
+      | Ok _ -> start runtime
       | Error e ->
-        if not (Errors.is_recoverable e) then
-          Client.fail_init runtime.client e >>= fun _ ->
-          Logs_lwt.err (fun m ->
-              m "Could not send error response %s" (Errors.message e))
-          >>= fun () -> failwith "Could not send error response"
-        else
-          start runtime )
+        if not (Errors.is_recoverable e)
+        then (
+          let (_ : _ result) = Client.fail_init runtime.client e in
+          Logs.err (fun m ->
+              m "Could not send error response %s" (Errors.message e));
+          failwith "Could not send error response")
+        else start runtime)
     | Error msg ->
       let handler_error = Errors.make_handler_error msg in
-      Client.event_error runtime.client request_id handler_error >>= ( function
-      | Ok _ ->
-        start runtime
+      (match Client.event_error runtime.client request_id handler_error with
+      | Ok _ -> start runtime
       | Error e ->
-        if not (Errors.is_recoverable e) then
-          Logs_lwt.err (fun m ->
-              m "Could not send error response %s" (Errors.message e))
-          >>= fun () ->
-          Client.fail_init runtime.client e >>= fun _ ->
-          failwith "Could not send error response"
-        else
-          start runtime )
+        if not (Errors.is_recoverable e)
+        then (
+          Logs.err (fun m ->
+              m "Could not send error response %s" (Errors.message e));
+          let (_ : _ result) = Client.fail_init runtime.client e in
+          failwith "Could not send error response")
+        else start runtime)
 
-  let start_with_runtime_endpoint ~lift handler function_config endpoint =
-    Client.make endpoint >>= function
+  let start_with_runtime_endpoint ~sw env handler function_config endpoint =
+    match Client.make ~sw env endpoint with
     | Ok client ->
       let runtime =
-        make ~max_retries:3 ~settings:function_config ~lift ~handler client
+        make ~max_retries:3 ~settings:function_config ~handler client
       in
       start runtime
     | Error e ->
       failwith
         (Format.asprintf "Could not start HTTP client: %a" Piaf.Error.pp_hum e)
 
-  let start_lambda ~lift handler =
+  let lambda handler =
     match Config.get_runtime_api_endpoint () with
     | Ok endpoint ->
       (match Config.get_function_settings () with
       | Ok function_config ->
-        let p =
-          start_with_runtime_endpoint ~lift handler function_config endpoint
-        in
-        Lwt_main.run p
-      | Error msg ->
-        failwith msg)
-    | Error msg ->
-      failwith msg
-
-  let lambda handler = start_lambda ~lift:Lwt.return handler
-
-  let io_lambda handler = start_lambda ~lift:Util.id handler
+        Eio_main.run (fun env ->
+            Eio.Switch.run (fun sw ->
+                start_with_runtime_endpoint
+                  ~sw
+                  env
+                  handler
+                  function_config
+                  endpoint))
+      | Error msg -> failwith msg)
+    | Error msg -> failwith msg
 end
