@@ -1,16 +1,6 @@
 (executable
  (name test)
- (libraries
-  alcotest
-  lambda-runtime
-  vercel
-  base64
-  yojson
-  fmt
-  piaf
-  result
-  uri
-  ppx_deriving_yojson.runtime))
+ (libraries alcotest lambda-runtime vercel fmt piaf uri))
 
 (alias
  (name runtest)

@@ -87,19 +87,29 @@ let test_runtime_generic
     test_fn
     ()
   =
-  match MockConfigProvider.get_runtime_api_endpoint () with
-  | Error _ -> Alcotest.fail "Could not get runtime endpoint"
-  | Ok _runtime_api_endpoint ->
-    (* Avoid creating a TCP connection for every test *)
-    let client = Obj.magic () in
-    (match MockConfigProvider.get_function_settings () with
-    | Error _ -> Alcotest.fail "Could not load environment config"
-    | Ok settings ->
-      let runtime = Runtime.make ~handler ~max_retries:3 ~settings client in
-      let output =
-        Runtime.invoke runtime event (MockConfigProvider.test_context 10)
-      in
-      test_fn output)
+  Eio_main.run (fun env ->
+      Eio.Switch.run (fun sw ->
+          match MockConfigProvider.get_runtime_api_endpoint () with
+          | Error _ -> Alcotest.fail "Could not get runtime endpoint"
+          | Ok _runtime_api_endpoint ->
+            (* Avoid creating a TCP connection for every test *)
+            let client = Obj.magic () in
+            (match MockConfigProvider.get_function_settings () with
+            | Error _ -> Alcotest.fail "Could not load environment config"
+            | Ok settings ->
+              let runtime =
+                Runtime.make ~handler ~max_retries:3 ~settings client
+              in
+              let output =
+                Runtime.invoke
+                  runtime
+                  event
+                  { invocation_context = MockConfigProvider.test_context 10
+                  ; sw
+                  ; env
+                  }
+              in
+              test_fn output)))
 
 let read_all path =
   let file = open_in path in
@@ -108,11 +118,7 @@ let read_all path =
     close_in file;
     raise exn
 
-let test_fixture
-    (module Request : Lambda_runtime__Runtime_intf.LambdaEvent)
-    fixture
-    ()
-  =
+let test_fixture (module Request : Lambda_runtime.LambdaEvent) fixture () =
   let fixture =
     read_all (Printf.sprintf "fixtures/%s.json" fixture)
     |> Yojson.Safe.from_string
@@ -123,7 +129,7 @@ let test_fixture
 
 let make_test_request
     (type a)
-    (module Request : Lambda_runtime__Runtime_intf.LambdaEvent with type t = a)
+    (module Request : Lambda_runtime.LambdaEvent with type t = a)
     fixture
   =
   let fixture =

@@ -1,6 +1,6 @@
 (executable
  (name basic)
- (libraries lambda-runtime logs.lwt logs.fmt fmt.tty lwt lwt.unix result))
+ (libraries lambda-runtime logs.fmt fmt.tty result))
 
 (env
  (static

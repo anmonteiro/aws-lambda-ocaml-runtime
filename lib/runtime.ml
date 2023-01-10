@@ -30,10 +30,26 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module Make
-    (Event : Runtime_intf.LambdaEvent)
-    (Response : Runtime_intf.LambdaResponse) =
-struct
+module type LambdaEvent = sig
+  type t
+
+  val of_yojson : Yojson.Safe.t -> (t, string) result
+end
+
+module type LambdaResponse = sig
+  type t
+
+  val to_yojson : t -> Yojson.Safe.t
+end
+
+module type LambdaRuntime = sig
+  type event
+  type response
+
+  val lambda : (event -> Context.t -> (response, string) result) -> unit
+end
+
+module Make (Event : LambdaEvent) (Response : LambdaResponse) = struct
   type 'a runtime =
     { client : Client.t
     ; settings : Config.function_settings
@@ -97,14 +113,14 @@ struct
       let exn_str = Printexc.to_string exn in
       Error (Printf.sprintf "Handler raised: %s\n%s" exn_str backtrace)
 
-  let rec start runtime =
+  let rec start ~sw env runtime =
     let event, ctx = get_next_event runtime 0 in
     let request_id = ctx.aws_request_id in
-    match invoke runtime event ctx with
+    match invoke runtime event { invocation_context = ctx; sw; env } with
     | Ok response ->
       let response_json = Response.to_yojson response in
       (match Client.event_response runtime.client request_id response_json with
-      | Ok _ -> start runtime
+      | Ok _ -> start ~sw env runtime
       | Error e ->
         if not (Errors.is_recoverable e)
         then (
@@ -112,11 +128,11 @@ struct
           Logs.err (fun m ->
               m "Could not send error response %s" (Errors.message e));
           failwith "Could not send error response")
-        else start runtime)
+        else start ~sw env runtime)
     | Error msg ->
       let handler_error = Errors.make_handler_error msg in
       (match Client.event_error runtime.client request_id handler_error with
-      | Ok _ -> start runtime
+      | Ok _ -> start ~sw env runtime
       | Error e ->
         if not (Errors.is_recoverable e)
         then (
@@ -124,7 +140,7 @@ struct
               m "Could not send error response %s" (Errors.message e));
           let (_ : _ result) = Client.fail_init runtime.client e in
           failwith "Could not send error response")
-        else start runtime)
+        else start ~sw env runtime)
 
   let start_with_runtime_endpoint ~sw env handler function_config endpoint =
     match Client.make ~sw env endpoint with
@@ -132,7 +148,7 @@ struct
       let runtime =
         make ~max_retries:3 ~settings:function_config ~handler client
       in
-      start runtime
+      start ~sw env runtime
     | Error e ->
       failwith
         (Format.asprintf "Could not start HTTP client: %a" Piaf.Error.pp_hum e)

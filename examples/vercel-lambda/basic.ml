@@ -1,11 +1,9 @@
-open Lwt.Syntax
 open Vercel
 
 let my_handler request _context =
   let { Request.headers; body; _ } = request in
   let host = Headers.get_exn headers "host" in
-  let+ body = Piaf.Body.to_string body in
-  let body = Result.get_ok body in
+  let body = Result.get_ok (Piaf.Body.to_string body) in
   let body =
     if String.length body > 0
     then body
@@ -27,4 +25,4 @@ let setup_log ?style_renderer level =
 
 let () =
   setup_log (Some Logs.Debug);
-  Vercel.io_lambda my_handler
+  Vercel.lambda my_handler
