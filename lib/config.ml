@@ -42,15 +42,10 @@ type function_settings =
 
 module Env_vars = struct
   let runtime_endpoint_var = "AWS_LAMBDA_RUNTIME_API"
-
   let lambda_function_name = "AWS_LAMBDA_FUNCTION_NAME"
-
   let lambda_function_version = "AWS_LAMBDA_FUNCTION_VERSION"
-
   let lambda_function_memory_size = "AWS_LAMBDA_FUNCTION_MEMORY_SIZE"
-
   let lambda_log_stream_name = "AWS_LAMBDA_LOG_STREAM_NAME"
-
   let lambda_log_group_name = "AWS_LAMBDA_LOG_GROUP_NAME"
 end
 
@@ -59,20 +54,16 @@ let env =
   List.fold_left
     (fun m var ->
       match String.split_on_char '=' var with
-      | k :: v :: _ ->
-        StringMap.add k v m
-      | _ ->
-        m)
+      | k :: v :: _ -> StringMap.add k v m
+      | _ -> m)
     StringMap.empty
     env_lst
 
 let get_runtime_api_endpoint () =
   let var = Env_vars.runtime_endpoint_var in
   match StringMap.find_opt var env with
-  | Some v ->
-    Ok v
-  | None ->
-    Error (Printf.sprintf "Could not find runtime API env var: %s" var)
+  | Some v -> Ok v
+  | None -> Error (Printf.sprintf "Could not find runtime API env var: %s" var)
 
 let get_function_settings ?(env = env) () =
   let get_env_vars () =

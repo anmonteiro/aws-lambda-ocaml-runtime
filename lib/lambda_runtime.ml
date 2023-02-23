@@ -36,4 +36,7 @@ module StringMap = Util.StringMap
 module Make = Runtime.Make
 module Json = Json
 module Http = Http
-include Runtime_intf
+
+module type LambdaEvent = Runtime.LambdaEvent
+module type LambdaResponse = Runtime.LambdaResponse
+module type LambdaRuntime = Runtime.LambdaRuntime

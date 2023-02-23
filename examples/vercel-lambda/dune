@@ -1,6 +1,6 @@
 (executable
  (name basic)
- (libraries vercel logs.fmt fmt.tty piaf lwt result))
+ (libraries vercel logs.fmt fmt.tty piaf result))
 
 (env
  (static

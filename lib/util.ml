@@ -43,20 +43,15 @@ module StringMap = struct
   let of_yojson a_of_yojson = function
     | `Assoc items ->
       let rec f map = function
-        | [] ->
-          Ok map
+        | [] -> Ok map
         | (name, json) :: xs ->
           (match a_of_yojson json with
-          | Ok value ->
-            f (add name value map) xs
-          | Error _ as err ->
-            err)
+          | Ok value -> f (add name value map) xs
+          | Error _ as err -> err)
       in
       f empty items
-    | `Null ->
-      Ok empty
-    | _ ->
-      Error "expected an object"
+    | `Null -> Ok empty
+    | _ -> Error "expected an object"
 end
 
 let id : 'a. 'a -> 'a = fun x -> x

@@ -30,7 +30,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-type t =
+type invocation_context =
   { memory_limit_in_mb : int
   ; function_name : string
   ; function_version : string
@@ -42,6 +42,12 @@ type t =
   ; client_context : Client.client_context option
   ; identity : Client.cognito_identity option
   ; deadline : int64
+  }
+
+type t =
+  { invocation_context : invocation_context
+  ; sw : Eio.Switch.t
+  ; env : Eio.Stdenv.t
   }
 
 let make

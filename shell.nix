@@ -14,7 +14,7 @@ in
       ocamlPackages.dune-release
       git
       opam
-    ]) else [ ]) ++ (with pkgs.ocamlPackages; [ merlin pkgs.ocamlformat ]);
+    ]) else [ ]) ++ (with pkgs.ocamlPackages; [ merlin ocamlformat ]);
 }).overrideAttrs (o: {
   propagatedBuildInputs = lib.filter
     (drv:

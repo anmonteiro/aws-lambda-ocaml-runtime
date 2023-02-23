@@ -31,12 +31,11 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Headers = Piaf_lwt.Headers
+module Headers = Piaf.Headers
 
 let decode_body ~encoding body =
   match body, encoding with
-  | None, _ ->
-    None
+  | None, _ -> None
   | Some body, Some "base64" ->
     (match Base64.decode body with Ok body -> Some body | Error _ -> None)
   | Some body, _ ->

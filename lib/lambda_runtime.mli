@@ -30,10 +30,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-open Runtime_intf
-
 module Context : sig
-  type t =
+  type invocation_context =
     { memory_limit_in_mb : int
           (** The amount of memory allocated to the lambda function in MB. This
               value is extracted from the `AWS_LAMBDA_FUNCTION_MEMORY_SIZE`
@@ -84,15 +82,34 @@ module Context : sig
     ; deadline : int64
           (** The deadline for the current handler execution in nanoseconds. *)
     }
+
+  type t =
+    { invocation_context : invocation_context
+    ; sw : Eio.Switch.t
+    ; env : Eio.Stdenv.t
+    }
 end
 
 module StringMap : module type of Util.StringMap
 
-module type LambdaEvent = LambdaEvent
+module type LambdaEvent = sig
+  type t
 
-module type LambdaResponse = LambdaResponse
+  val of_yojson : Yojson.Safe.t -> (t, string) result
+end
 
-module type LambdaRuntime = LambdaRuntime
+module type LambdaResponse = sig
+  type t
+
+  val to_yojson : t -> Yojson.Safe.t
+end
+
+module type LambdaRuntime = sig
+  type event
+  type response
+
+  val lambda : (event -> Context.t -> (response, string) result) -> unit
+end
 
 module Make (Event : LambdaEvent) (Response : LambdaResponse) :
   LambdaRuntime with type event := Event.t and type response := Response.t

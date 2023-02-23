@@ -31,9 +31,9 @@
  *---------------------------------------------------------------------------*)
 
 module StringMap = Lambda_runtime.StringMap
-module Request = Piaf_lwt.Request
-module Body = Piaf_lwt.Body
-module Headers = Piaf_lwt.Headers
+module Request = Piaf.Request
+module Body = Piaf.Body
+module Headers = Piaf.Headers
 
 type vercel_proxy_request =
   { path : string
@@ -60,42 +60,36 @@ let of_yojson json =
        Yojson.Safe.from_string event_body |> vercel_proxy_request_of_yojson
      with
     | Ok { body; encoding; path; http_method; host; headers } ->
-      let meth = Piaf_lwt.Method.of_string http_method in
+      let meth = Piaf.Method.of_string http_method in
       let headers =
         Message.string_map_to_headers
           ~init:
             (match
                StringMap.(find_opt "host" headers, find_opt "Host" headers)
              with
-            | Some _, _ | _, Some _ ->
-              Headers.empty
-            | None, None ->
-              Headers.of_list [ "Host", host ])
+            | Some _, _ | _, Some _ -> Headers.empty
+            | None, None -> Headers.of_list [ "Host", host ])
           headers
       in
       let body =
         match Message.decode_body ~encoding body with
-        | None ->
-          Body.empty
-        | Some s ->
-          Body.of_string s
+        | None -> Body.empty
+        | Some s -> Body.of_string s
       in
       let request =
         Request.create
-          ~scheme:HTTP
-          ~version:Piaf_lwt.Versions.HTTP.v1_1
+          ~scheme:`HTTP
+          ~version:Piaf.Versions.HTTP.HTTP_1_1
           ~headers
           ~meth
           ~body
           path
       in
       Ok request
-    | Error _ ->
-      Error "Failed to parse event to Vercel request type"
+    | Error _ -> Error "Failed to parse event to Vercel request type"
     | exception Yojson.Json_error error ->
       Error
         (Printf.sprintf
            "Failed to parse event to Vercel request type: %s"
            error))
-  | Error _ ->
-    Error "Failed to parse event to Vercel request type"
+  | Error _ -> Error "Failed to parse event to Vercel request type"

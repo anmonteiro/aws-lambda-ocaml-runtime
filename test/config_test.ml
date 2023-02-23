@@ -30,10 +30,8 @@ let get_env () =
   List.fold_left
     (fun m var ->
       match String.split_on_char '=' var with
-      | k :: v :: _ ->
-        StringMap.add k v m
-      | _ ->
-        m)
+      | k :: v :: _ -> StringMap.add k v m
+      | _ -> m)
     StringMap.empty
     env_lst
 
@@ -55,24 +53,19 @@ let suite =
             "memory size read from env"
             128
             env_settings.Config.memory_size)
-      | Error e ->
-        Alcotest.fail e )
+      | Error e -> Alcotest.fail e )
   ; ( "errors when vars are not set up"
     , `Quick
     , fun () ->
         unset_env_vars ();
         match Config.get_function_settings () with
-        | Ok _env_settings ->
-          Alcotest.fail "Expected env to not be setup"
-        | Error _e ->
-          Alcotest.(check pass "" 1 1) )
+        | Ok _env_settings -> Alcotest.fail "Expected env to not be setup"
+        | Error _e -> Alcotest.(check pass "" 1 1) )
   ; ( "errors when runtime API endpoint is not set up"
     , `Quick
     , fun () ->
         unset_env_vars ();
         match Config.get_runtime_api_endpoint () with
-        | Ok _endpoint ->
-          Alcotest.fail "Expected env to not be setup"
-        | Error _e ->
-          Alcotest.(check pass "" 1 1) )
+        | Ok _endpoint -> Alcotest.fail "Expected env to not be setup"
+        | Error _e -> Alcotest.(check pass "" 1 1) )
   ]

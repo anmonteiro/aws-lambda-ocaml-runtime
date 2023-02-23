@@ -10,7 +10,7 @@ let vercel_lambda_response =
     let pp formatter t =
       Format.pp_print_text
         formatter
-        (t |> Response.to_yojson |> Lwt_main.run |> Yojson.Safe.pretty_to_string)
+        (t |> Response.to_yojson |> Yojson.Safe.pretty_to_string)
 
     let equal = ( = )
   end : Alcotest.TESTABLE
@@ -20,7 +20,6 @@ module Runtime = struct
   include Lambda_runtime__.Runtime.Make (Vercel.Request) (Vercel.Response)
 
   type event = Vercel.Request.t
-
   type response = Vercel.Response.t
 end
 
@@ -28,12 +27,7 @@ let request =
   Test_common.make_test_request (module Vercel.Request) "now_with_body"
 
 let test_fixture = Test_common.test_fixture (module Vercel.Request)
-
-let test_runtime =
-  test_runtime_generic (module Runtime) ~lift:Lwt.return request
-
-let test_async_runtime = test_runtime_generic (module Runtime) ~lift:id request
-
+let test_runtime = test_runtime_generic (module Runtime) request
 let response = Piaf.Response.of_string `OK ~body:""
 
 let suite =
@@ -55,8 +49,7 @@ let suite =
               "runtime invoke output"
               response
               result
-          | Error e ->
-            Alcotest.fail e) )
+          | Error e -> Alcotest.fail e) )
   ; ( "failed handler invocation"
     , `Quick
     , test_runtime
@@ -67,7 +60,6 @@ let suite =
             let result_str =
               response
               |> Vercel.Response.to_yojson
-              |> Lwt_main.run
               |> Yojson.Safe.pretty_to_string
             in
             Alcotest.fail
@@ -78,8 +70,8 @@ let suite =
             Alcotest.(check string "Runtime invoke error" "I failed" e)) )
   ; ( "simple asynchronous handler invocation"
     , `Quick
-    , test_async_runtime
-        (fun _event _ctx -> Lwt_result.return response)
+    , test_runtime
+        (fun _event _ctx -> Ok response)
         (fun output ->
           match output with
           | Ok result ->
@@ -88,6 +80,5 @@ let suite =
               "runtime invoke output"
               response
               result
-          | Error e ->
-            Alcotest.fail e) )
+          | Error e -> Alcotest.fail e) )
   ]

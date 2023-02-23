@@ -7,16 +7,11 @@ module Runtime = struct
       (Lambda_runtime__.Json.Id)
 
   type event = Lambda_runtime__.Json.Id.t
-
   type response = Lambda_runtime__.Json.Id.t
 end
 
 let request = `String "test"
-
-let test_runtime =
-  test_runtime_generic (module Runtime) ~lift:Lwt.return request
-
-let test_async_runtime = test_runtime_generic (module Runtime) ~lift:id request
+let test_runtime = test_runtime_generic (module Runtime) request
 
 exception User_code_exception
 
@@ -33,8 +28,7 @@ let suite =
               "runtime invoke output"
               (`String "Hello")
               result
-          | Error e ->
-            Alcotest.fail e) )
+          | Error e -> Alcotest.fail e) )
   ; ( "failed handler invocation"
     , `Quick
     , test_runtime
@@ -51,8 +45,8 @@ let suite =
             Alcotest.(check string "Runtime invoke error" "I failed" e)) )
   ; ( "simple asynchronous handler invocation"
     , `Quick
-    , test_async_runtime
-        (fun _event _ctx -> Lwt_result.return (`String "Hello"))
+    , test_runtime
+        (fun _event _ctx -> Ok (`String "Hello"))
         (fun output ->
           match output with
           | Ok result ->
@@ -61,8 +55,7 @@ let suite =
               "runtime invoke output"
               (`String "Hello")
               result
-          | Error e ->
-            Alcotest.fail e) )
+          | Error e -> Alcotest.fail e) )
   ; ( "failed handler invocation"
     , `Quick
     , test_runtime
