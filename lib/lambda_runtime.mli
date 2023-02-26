@@ -124,57 +124,128 @@ module Http : sig
 
   (* APIGatewayRequestIdentity contains identity information for the request
    * caller. *)
-  type api_gateway_request_identity =
-    { cognito_identity_pool_id : string option
-    ; account_id : string option
-    ; cognito_identity_id : string option
-    ; caller : string option
-    ; access_key : string option
-    ; api_key : string option
-    ; source_ip : string
-    ; cognito_authentication_type : string option
-    ; cognito_authentication_provider : string option
-    ; user_arn : string option
-    ; user_agent : string option
-    ; user : string option
-    }
+  type api_gateway_request_identity = {
+    cognito_identity_pool_id : string option;
+    account_id : string option;
+    cognito_identity_id : string option;
+    caller : string option;
+    access_key : string option;
+    api_key : string option;
+    source_ip : string;
+    cognito_authentication_type : string option;
+    cognito_authentication_provider : string option;
+    user_arn : string option;
+    user_agent : string option;
+    user : string option;
+  }
 
   (* APIGatewayProxyRequestContext contains the information to identify the AWS
    * account and resources invoking the Lambda function. It also includes
    * Cognito identity information for the caller. *)
-  type api_gateway_proxy_request_context =
-    { account_id : string
-    ; resource_id : string
-    ; stage : string
-    ; request_id : string
-    ; identity : api_gateway_request_identity
-    ; resource_path : string
-    ; authorizer : string StringMap.t option
-    ; http_method : string
-    ; protocol : string option
-    ; path : string option
-    ; api_id : string  (** The API Gateway REST API ID *)
-    }
+  type api_gateway_proxy_request_context = {
+    account_id : string;
+    resource_id : string;
+    stage : string;
+    request_id : string;
+    identity : api_gateway_request_identity;
+    resource_path : string;
+    authorizer : string StringMap.t option;
+    http_method : string;
+    protocol : string option;
+    path : string option;
+    api_id : string;  (** The API Gateway REST API ID *)
+  }
 
-  type api_gateway_proxy_request =
-    { resource : string
-    ; path : string
-    ; http_method : string
-    ; headers : string StringMap.t
-    ; query_string_parameters : string StringMap.t
-    ; path_parameters : string StringMap.t
-    ; stage_variables : string StringMap.t
-    ; request_context : api_gateway_proxy_request_context
-    ; body : string option
-    ; is_base64_encoded : bool
-    }
+  (* A request to API Gateway using the proxy integration *)
+  type api_gateway_proxy_request = {
+    resource : string;
+    path : string;
+    http_method : string;
+    headers : string StringMap.t;
+    query_string_parameters : string StringMap.t;
+    path_parameters : string StringMap.t;
+    stage_variables : string StringMap.t;
+    request_context : api_gateway_proxy_request_context;
+    body : string option;
+    is_base64_encoded : bool;
+  }
 
-  type api_gateway_proxy_response =
-    { status_code : int
-    ; headers : string StringMap.t
-    ; body : string
-    ; is_base64_encoded : bool
-    }
+  type api_gateway_proxy_response = {
+    status_code : int;
+    headers : string StringMap.t;
+    body : string;
+    is_base64_encoded : bool;
+  }
+
+  include
+    LambdaRuntime
+      with type event := api_gateway_proxy_request
+       and type response := api_gateway_proxy_response
+end
+
+module Http2 : sig
+  open Util
+
+  type api_gateway_proxy_request_context_http = {
+    method_ : string;
+    path : string;
+    protocol : string;
+    source_ip : string;
+    user_agent : string;
+  }
+
+  type api_gateway_request_context_jwt = {
+    claims : string StringMap.t; [@default StringMap.empty]
+    scopes : string StringMap.t; [@default StringMap.empty]
+  }
+
+  type api_gateway_proxy_request_context_authorizer = {
+    jwt : api_gateway_request_context_jwt;
+  }
+
+  (* APIGatewayProxyRequestContext contains the information to identify the AWS
+   * account and resources invoking the Lambda function. It also includes Cognito
+   * identity information for the caller. *)
+  type api_gateway_proxy_request_context = {
+    account_id : string;
+    api_id : string;
+    domain_name : string;
+    domain_prefix : string;
+    http : api_gateway_proxy_request_context_http;
+    resource_id : string option;
+    stage : string;
+    request_id : string;
+    route_key : string;
+    time : string;
+    time_epoch : int64;
+    authorizer : api_gateway_proxy_request_context_authorizer option;
+  }
+
+  (* A request to API Gateway using the proxy integration (v2).
+
+    This differs from Http.api_gateway_proxy_request in that it
+    does away with multi_value_headers
+  *)
+  type api_gateway_proxy_request = {
+    version : string;
+    route_key : string;
+    raw_query_string : string;
+    cookies : string list option;
+    headers : string StringMap.t;
+    query_string_parameters : string StringMap.t;
+    request_context : api_gateway_proxy_request_context;
+    body : string option;
+    path_parameters : string StringMap.t;
+    is_base64_encoded : bool;
+    stage_variables : string StringMap.t;
+  }
+
+  type api_gateway_proxy_response = {
+    status_code : int;
+    headers : string StringMap.t;
+    body : string;
+    is_base64_encoded : bool;
+  }
 
   include
     LambdaRuntime
