@@ -1,0 +1,5 @@
+(library
+  (name lambda_runtime_dev)
+  (public_name lambda-runtime-dev)
+  (libraries lambda-runtime lwt lwt.unix yojson ppx_deriving_yojson.runtime piaf uuidm)
+  (preprocess (pps ppx_deriving_yojson)))
