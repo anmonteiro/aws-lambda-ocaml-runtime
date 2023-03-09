@@ -70,7 +70,7 @@ let suite =
                  result_str)
           | Error e ->
             let expected =
-              "Handler raised: Runtime_test.User_code_exception\n"
+              "Handler raised: Dune__exe__Runtime_test.User_code_exception\n"
             in
             Alcotest.(
               check

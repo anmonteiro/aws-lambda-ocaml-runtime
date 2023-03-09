@@ -43,7 +43,7 @@ type vercel_proxy_request =
   ; body : string option [@default None]
   ; encoding : string option [@default None]
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 type vercel_event =
   { action : string [@key "Action"]
