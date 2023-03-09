@@ -86,10 +86,20 @@ let of_yojson json =
           path
       in
       Ok request
-    | Error _ -> Error "Failed to parse event to Vercel request type"
+    | Error _ ->
+      Error
+        (Format.asprintf
+           "Failed to parse event to Vercel request type: %a"
+           (Yojson.Safe.pretty_print ?std:None)
+           json)
     | exception Yojson.Json_error error ->
       Error
         (Printf.sprintf
            "Failed to parse event to Vercel request type: %s"
            error))
-  | Error _ -> Error "Failed to parse event to Vercel request type"
+  | Error _ ->
+    Error
+      (Format.asprintf
+         "Failed to parse event to Vercel request type: %a"
+         (Yojson.Safe.pretty_print ?std:None)
+         json)

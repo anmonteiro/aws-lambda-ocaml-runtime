@@ -1,11 +1,6 @@
-(executable
+(test
  (name test)
- (libraries alcotest lambda-runtime vercel fmt piaf uri))
-
-(alias
- (name runtest)
  (deps
   (:test_exe test.exe)
   (source_tree "fixtures"))
- (action
-  (run %{test_exe})))
+ (libraries alcotest lambda-runtime vercel fmt piaf uri))
