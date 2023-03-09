@@ -40,6 +40,9 @@ let suite =
   ; ( "deserialize Vercel Proxy Request 2/2023"
     , `Quick
     , test_fixture "vercel-request" )
+  ; ( "deserialize Vercel Proxy Request 2/2023 / 2"
+    , `Quick
+    , test_fixture "vercel-request-2" )
   ; ( "successful handler invocation"
     , `Quick
     , test_runtime

@@ -1,6 +1,6 @@
-open Lambda_runtime
 open Test_common
 module Http = Lambda_runtime__.Http
+module StringMap = Map.Make (String)
 
 let apigw_response =
   (module struct

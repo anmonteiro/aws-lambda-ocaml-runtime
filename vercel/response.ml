@@ -30,12 +30,30 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module StringMap = Lambda_runtime.StringMap
 module Response = Piaf.Response
+module StringSet = Set.Make (String)
+
+module Headers = struct
+  include Piaf.Headers
+
+  let to_yojson headers =
+    let keys = StringSet.of_list (List.map fst (to_list headers)) in
+    `Assoc
+      (StringSet.fold
+         (fun name acc ->
+           let element =
+             match get_multi headers name with
+             | [ x ] -> name, `String x
+             | xs -> name, `List (List.map (fun v -> `String v) xs)
+           in
+           element :: acc)
+         keys
+         [])
+end
 
 type vercel_proxy_response =
   { status_code : int [@key "statusCode"]
-  ; headers : string StringMap.t
+  ; headers : Headers.t
   ; body : string
   ; encoding : string option
   }
@@ -46,10 +64,6 @@ type t = Response.t
 let to_yojson { Response.status; headers; body; _ } =
   let body = Result.get_ok (Piaf.Body.to_string body) in
   let vercel_proxy_response =
-    { status_code = Piaf.Status.to_code status
-    ; headers = Message.headers_to_string_map headers
-    ; body
-    ; encoding = None
-    }
+    { status_code = Piaf.Status.to_code status; headers; body; encoding = None }
   in
   vercel_proxy_response_to_yojson vercel_proxy_response
