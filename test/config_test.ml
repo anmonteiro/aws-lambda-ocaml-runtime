@@ -1,5 +1,5 @@
-open Lambda_runtime
 module Config = Lambda_runtime__.Config
+module StringMap = Map.Make (String)
 
 let set_endpoint_env_var () =
   let open Config in

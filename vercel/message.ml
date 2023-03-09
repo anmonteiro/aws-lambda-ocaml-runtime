@@ -30,9 +30,6 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module StringMap = Lambda_runtime.StringMap
-module Headers = Piaf.Headers
-
 let decode_body ~encoding body =
   match body, encoding with
   | None, _ -> None
@@ -41,9 +38,3 @@ let decode_body ~encoding body =
   | Some body, _ ->
     (* base64 is the only supported encoding *)
     Some body
-
-let string_map_to_headers ?(init = Headers.empty) map =
-  StringMap.fold (fun name value hs -> Headers.add hs name value) map init
-
-let headers_to_string_map hs =
-  Headers.fold ~f:StringMap.add ~init:StringMap.empty hs

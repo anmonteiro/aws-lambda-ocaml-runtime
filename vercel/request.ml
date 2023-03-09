@@ -30,26 +30,53 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
-module StringMap = Lambda_runtime.StringMap
 module Request = Piaf.Request
 module Body = Piaf.Body
-module Headers = Piaf.Headers
+
+module Headers = struct
+  include Piaf.Headers
+
+  let of_yojson json =
+    match json with
+    | `Assoc xs ->
+      let exception Local in
+      (try
+         Ok
+           (List.fold_left
+              (fun hs (name, json) ->
+                match json with
+                | `String value -> add hs name value
+                | `List values ->
+                  let values = List.map Yojson.Safe.Util.to_string values in
+                  add_multi hs [ name, values ]
+                | _ -> raise Local)
+              empty
+              xs)
+       with
+      | Local ->
+        Error
+          (Format.asprintf
+             "Failed to parse event to Vercel request type: %a"
+             (Yojson.Safe.pretty_print ?std:None)
+             json))
+    | _ -> Ok empty
+end
 
 type vercel_proxy_request =
   { path : string
   ; http_method : string [@key "method"]
   ; host : string
-  ; headers : string StringMap.t
+  ; headers : Headers.t
   ; body : string option [@default None]
   ; encoding : string option [@default None]
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 type vercel_event =
   { action : string [@key "Action"]
   ; body : string
   }
-[@@deriving of_yojson]
+[@@deriving of_yojson { strict = false }]
 
 type t = Request.t
 
@@ -62,14 +89,9 @@ let of_yojson json =
     | Ok { body; encoding; path; http_method; host; headers } ->
       let meth = Piaf.Method.of_string http_method in
       let headers =
-        Message.string_map_to_headers
-          ~init:
-            (match
-               StringMap.(find_opt "host" headers, find_opt "Host" headers)
-             with
-            | Some _, _ | _, Some _ -> Headers.empty
-            | None, None -> Headers.of_list [ "Host", host ])
-          headers
+        match Headers.mem headers "host" with
+        | true -> headers
+        | false -> Headers.add headers "host" host
       in
       let body =
         match Message.decode_body ~encoding body with
@@ -86,10 +108,20 @@ let of_yojson json =
           path
       in
       Ok request
-    | Error _ -> Error "Failed to parse event to Vercel request type"
+    | Error _ ->
+      Error
+        (Format.asprintf
+           "Failed to parse event to Vercel request type: %a"
+           (Yojson.Safe.pretty_print ?std:None)
+           json)
     | exception Yojson.Json_error error ->
       Error
         (Printf.sprintf
            "Failed to parse event to Vercel request type: %s"
            error))
-  | Error _ -> Error "Failed to parse event to Vercel request type"
+  | Error _ ->
+    Error
+      (Format.asprintf
+         "Failed to parse event to Vercel request type: %a"
+         (Yojson.Safe.pretty_print ?std:None)
+         json)

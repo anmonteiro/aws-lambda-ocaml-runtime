@@ -90,8 +90,6 @@ module Context : sig
     }
 end
 
-module StringMap : module type of Util.StringMap
-
 module type LambdaEvent = sig
   type t
 

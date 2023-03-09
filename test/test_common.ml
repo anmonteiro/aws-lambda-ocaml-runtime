@@ -67,8 +67,8 @@ module type Runtime = sig
     ; max_retries : int
     }
 
-  val make
-    :  handler:(event -> Context.t -> ('a, string) result)
+  val make :
+     handler:(event -> Context.t -> ('a, string) result)
     -> max_retries:int
     -> settings:Config.function_settings
     -> Client.t
