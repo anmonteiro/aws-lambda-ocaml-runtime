@@ -53,7 +53,12 @@ module Headers = struct
               empty
               xs)
        with
-      | Local -> Error "")
+      | Local ->
+        Error
+          (Format.asprintf
+             "Failed to parse event to Vercel request type: %a"
+             (Yojson.Safe.pretty_print ?std:None)
+             json))
     | _ -> Ok empty
 end
 
