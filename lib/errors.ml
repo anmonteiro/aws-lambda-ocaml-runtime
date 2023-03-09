@@ -84,8 +84,8 @@ let to_lambda_error : type a. ?handled:bool -> a t -> Yojson.Safe.t =
     { error_message = e.msg
     ; error_type =
         (if handled
-        then Constants.error_type_handled
-        else Constants.error_type_unhandled)
+         then Constants.error_type_handled
+         else Constants.error_type_unhandled)
     }
   in
   let lambda_error =
