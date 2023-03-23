@@ -3,4 +3,12 @@
  (public_name lambda-runtime)
  (preprocess
   (pps ppx_deriving_yojson))
- (libraries yojson ppx_deriving_yojson.runtime bigstringaf uri logs eio piaf))
+ (libraries
+  yojson
+  ppx_deriving_yojson.runtime
+  bigstringaf
+  uri
+  logs
+  eio
+  eio_main
+  piaf))
