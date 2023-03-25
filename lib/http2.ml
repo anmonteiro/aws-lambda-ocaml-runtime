@@ -33,69 +33,69 @@
 
 open Util
 
-type api_gateway_proxy_request_context_http = {
-  method_ : string [@key "method"];
-  path : string;
-  protocol : string;
-  source_ip : string; [@key "sourceIp"]
-  user_agent : string; [@key "userAgent"]
-}
+type api_gateway_proxy_request_context_http =
+  { method_ : string [@key "method"]
+  ; path : string
+  ; protocol : string
+  ; source_ip : string [@key "sourceIp"]
+  ; user_agent : string [@key "userAgent"]
+  }
 [@@deriving of_yojson { strict = false }]
 
-type api_gateway_request_context_jwt = {
-  claims : string StringMap.t; [@default StringMap.empty]
-  scopes : string StringMap.t; [@default StringMap.empty]
-}
+type api_gateway_request_context_jwt =
+  { claims : string StringMap.t [@default StringMap.empty]
+  ; scopes : string StringMap.t [@default StringMap.empty]
+  }
 [@@deriving of_yojson { strict = false }]
 
-type api_gateway_proxy_request_context_authorizer = {
-  jwt : api_gateway_request_context_jwt;
-}
+type api_gateway_proxy_request_context_authorizer =
+  { jwt : api_gateway_request_context_jwt }
 [@@deriving of_yojson { strict = false }]
 
 (* APIGatewayProxyRequestContext contains the information to identify the AWS
  * account and resources invoking the Lambda function. It also includes Cognito
  * identity information for the caller. *)
-type api_gateway_proxy_request_context = {
-  account_id : string; [@key "accountId"]
-  api_id : string; [@key "apiId"] (* The API Gateway REST API ID *)
-  domain_name : string; [@key "domainName"]
-  domain_prefix : string; [@key "domainPrefix"]
-  http : api_gateway_proxy_request_context_http;
-  resource_id : string option; [@key "resourceId"] [@default None]
-  stage : string;
-  request_id : string; [@key "requestId"]
-  route_key : string; [@key "routeKey"]
-  time : string;
-  time_epoch : int64 [@key "timeEpoch"];
-  authorizer : api_gateway_proxy_request_context_authorizer option [@default None];
-}
+type api_gateway_proxy_request_context =
+  { account_id : string [@key "accountId"]
+  ; api_id : string [@key "apiId"] (* The API Gateway REST API ID *)
+  ; domain_name : string [@key "domainName"]
+  ; domain_prefix : string [@key "domainPrefix"]
+  ; http : api_gateway_proxy_request_context_http
+  ; resource_id : string option [@key "resourceId"] [@default None]
+  ; stage : string
+  ; request_id : string [@key "requestId"]
+  ; route_key : string [@key "routeKey"]
+  ; time : string
+  ; time_epoch : int64 [@key "timeEpoch"]
+  ; authorizer : api_gateway_proxy_request_context_authorizer option
+        [@default None]
+  }
 [@@deriving of_yojson { strict = false }]
 
-type api_gateway_proxy_request = {
-  version : string;
-  route_key : string; [@key "routeKey"]
-  raw_query_string : string; [@key "rawQueryString"]
-  cookies : string list option [@default None];
-  headers : string StringMap.t;
-  query_string_parameters : string StringMap.t;
-      [@key "queryStringParameters"] [@default StringMap.empty]
-  request_context : api_gateway_proxy_request_context; [@key "requestContext"]
-  body : string option [@default None];
-  path_parameters : string StringMap.t;
-      [@key "pathParameters"] [@default StringMap.empty]
-  is_base64_encoded : bool; [@key "isBase64Encoded"]
-  stage_variables : string StringMap.t;
-      [@key "stageVariables"] [@default StringMap.empty]
-}
+type api_gateway_proxy_request =
+  { version : string
+  ; route_key : string [@key "routeKey"]
+  ; raw_query_string : string [@key "rawQueryString"]
+  ; cookies : string list option [@default None]
+  ; headers : string StringMap.t
+  ; query_string_parameters : string StringMap.t
+        [@key "queryStringParameters"] [@default StringMap.empty]
+  ; request_context : api_gateway_proxy_request_context [@key "requestContext"]
+  ; body : string option [@default None]
+  ; path_parameters : string StringMap.t
+        [@key "pathParameters"] [@default StringMap.empty]
+  ; is_base64_encoded : bool [@key "isBase64Encoded"]
+  ; stage_variables : string StringMap.t
+        [@key "stageVariables"] [@default StringMap.empty]
+  }
 [@@deriving of_yojson { strict = false }]
 
-type api_gateway_proxy_response = {
-  status_code : int; [@key "statusCode"]
-  headers : string StringMap.t;
-  body : string;
-  is_base64_encoded : bool; [@key "isBase64Encoded"]
-}
+type api_gateway_proxy_response =
+  { status_code : int [@key "statusCode"]
+  ; headers : string StringMap.t
+  ; body : string
+  ; is_base64_encoded : bool [@key "isBase64Encoded"]
+  }
 [@@deriving to_yojson]
 
 module API_gateway_request = struct
