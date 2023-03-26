@@ -36,6 +36,7 @@ module StringMap = Util.StringMap
 module Make = Runtime.Make
 module Json = Json
 module Http = Http
+module Httpv2 = Httpv2
 
 module type LambdaEvent = Runtime.LambdaEvent
 module type LambdaResponse = Runtime.LambdaResponse
