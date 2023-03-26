@@ -119,6 +119,7 @@ module Json : sig
        and type response := Yojson.Safe.t
 end
 
+(** API Gateway v1 event and response definitions *)
 module Http : sig
   open Util
 
@@ -183,7 +184,8 @@ module Http : sig
        and type response := api_gateway_proxy_response
 end
 
-module Http2 : sig
+(** API Gateway v2 event and response definitions *)
+module Httpv2 : sig
   open Util
 
   type api_gateway_proxy_request_context_http =
