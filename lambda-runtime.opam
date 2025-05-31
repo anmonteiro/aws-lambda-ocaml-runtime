@@ -26,3 +26,4 @@ description: """
 lambda-runtime is a runtime for AWS Lambda that makes it easy to run AWS Lambda
 Functions written in OCaml.
 """
+x-maintenance-intent: [ "(latest)" ]
