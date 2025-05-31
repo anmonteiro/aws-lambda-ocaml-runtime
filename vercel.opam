@@ -28,3 +28,4 @@ description:
   package provides an adapter and API for lambda-runtime that works with
   Vercel's (Now v2) service.
   """
+x-maintenance-intent: [ "(latest)" ]
